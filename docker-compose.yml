@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  db:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wdpai
+    ports:
+      - "5432:5432"
+    networks:
+        roz-network:
+          ipv4_address: 172.18.0.3
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    networks:
+       roz-network:
+
+  django:
+    container_name: django
+    build:
+      context: .
+      dockerfile: docker/django/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app/
+    networks:
+        roz-network:
+  
+  react:
+    container_name: react
+    build:
+      context: .
+      dockerfile: docker/react/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app/
+    networks:
+        roz-network:
+    
+
+
+networks:
+  roz-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
