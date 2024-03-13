@@ -3,7 +3,8 @@ version: '3.7'
 services:
   backend:
     volumes:
-      - static:/static
+      - ./backend:/app
+      - /app/__pycache__
     env_file:
       - .env
     build:
