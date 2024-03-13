@@ -1,21 +1,25 @@
 from django.db import models
 
 class Mother(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     child_id = models.IntegerField()
 
 class Father(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     child_id = models.IntegerField()
 
 class Notes(models.Model):
+    id = models.AutoField(primary_key=True)
     create_date = models.DateField()
     modification_date = models.DateField()
     note_text = models.TextField()
 
 class Address(models.Model):
+    id = models.AutoField(primary_key=True)
     country = models.TextField()
     city = models.TextField()
     street = models.TextField()
@@ -23,12 +27,14 @@ class Address(models.Model):
     apartment_number = models.IntegerField(null=True, blank=True)
 
 class FosterCarer(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     email = models.EmailField(unique=True)
     password = models.TextField()
 
 class AddressRegistered(models.Model):
+    id = models.AutoField(primary_key=True)
     country = models.TextField()
     city = models.TextField()
     street = models.TextField()
@@ -36,6 +42,7 @@ class AddressRegistered(models.Model):
     apartment_number = models.IntegerField(null=True, blank=True)
 
 class Child(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     birth_date = models.DateField(null=True, blank=True)
@@ -51,13 +58,16 @@ class Child(models.Model):
     note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
 
 class Siblings(models.Model):
+    id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, related_name='child', on_delete=models.CASCADE)
     child_sibling = models.ForeignKey(Child, related_name='child_sibling', on_delete=models.CASCADE)
 
 class Category(models.Model):
+    id = models.AutoField(primary_key=True)
     category_name = models.TextField()
 
 class Documents(models.Model):
+    id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     document_path = models.TextField()
