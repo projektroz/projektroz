@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "projektRoz",
     "rest_framework",
-    "core",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
