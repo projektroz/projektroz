@@ -5,3 +5,5 @@ gunicorn==21.2.0
 djangorestframework
 django-cors-headers
 Faker
+psycopg2
+

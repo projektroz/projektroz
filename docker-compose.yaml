@@ -3,7 +3,8 @@ version: '3.7'
 services:
   backend:
     volumes:
-      - static:/static
+      - ./backend:/app
+      - /app/__pycache__
     env_file:
       - .env
     build:
@@ -14,7 +15,12 @@ services:
     build:
       context: ./frontend
     volumes:
-      - frontend:/app/build
+      - ./frontend/src:/app/src
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+    ports:
+      - "3000:3000"
   nginx:
     build:
       context: ./nginx
