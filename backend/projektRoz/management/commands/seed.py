@@ -8,7 +8,7 @@ fake = Faker('pl_PL')
 How to use seeder:
     Docker ps
     seek backend container id
-    docker exec <backend_ps> python manage.py seed
+    docker exec <backend_id> python manage.py seed
     wait :)
 """
 
