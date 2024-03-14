@@ -7,54 +7,114 @@ from projektRoz.models import Father
 from projektRoz.serializer import FatherSerializer
 
 class FatherApiView(APIView):
-        permission_classes = [permissions.IsAuthenticated]
+    """
+    API view for handling CRUD operations related to Father model.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
         
-        def get(self, request, father_id = None, *args, **kwargs):
-            if father_id is None:
-                father = Father.objects.all().order_by('id')
-            else:
-                father = Father.objects.filter(id = father_id)
+    def get(self, request, father_id=None, *args, **kwargs):
+        """
+        Retrieve a list of all fathers or a specific father by ID.
+
+        Parameters:
+        - request: The HTTP request object.
+        - father_id (optional): The ID of the father to retrieve.
+
+        Returns:
+        - If father_id is None, returns a list of all fathers.
+        - If father_id is provided, returns the specific father with the given ID.
+
+        Raises:
+        - None.
+        """
+        if father_id is None:
+            father = Father.objects.all().order_by('id')
+        else:
+            father = Father.objects.filter(id=father_id)
                 
-            serializer = FatherSerializer(father, many=True)
+        serializer = FatherSerializer(father, many=True)
             
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
         
-        def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        """
+        Create a new father.
+
+        Parameters:
+        - request: The HTTP request object.
+
+        Returns:
+        - If the request data is valid, returns the created father data.
+        - If the request data is invalid, returns the validation errors.
+
+        Raises:
+        - None.
+        """
+        serializer = FatherSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+                
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def put(self, request, father_id, *args, **kwargs):
+        """
+        Update an existing father.
+
+        Parameters:
+        - request: The HTTP request object.
+        - father_id: The ID of the father to update.
+
+        Returns:
+        - If the father with the given ID exists, returns the updated father data.
+        - If the father with the given ID does not exist, creates a new father with the provided data.
+        - If the request data is invalid, returns the validation errors.
+
+        Raises:
+        - None.
+        """
+        father = Father.objects.get(id=father_id)
+            
+        if father is not None:
+            serializer = FatherSerializer(father, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                    
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        elif father is None:
             serializer = FatherSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                
+                    
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             
+        else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        def put(self, request, father_id, *args, **kwargs):
-            father = Father.objects.get(id = father_id)
+    def delete(self, request, father_id, *args, **kwargs):
+        """
+        Delete an existing father.
+
+        Parameters:
+        - request: The HTTP request object.
+        - father_id: The ID of the father to delete.
+
+        Returns:
+        - If the father with the given ID exists, deletes the father and returns a success response.
+        - If the father with the given ID does not exist, returns a not found response.
+
+        Raises:
+        - None.
+        """
+        father = Father.objects.get(id=father_id)
             
-            if father is not None:
-                serializer = FatherSerializer(father, data=request.data)
-                if serializer.is_valid():
-                    serializer.save()
-                    
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-            
-            elif father is None:
-                serializer = FatherSerializer(data=request.data)
-                if serializer.is_valid():
-                    serializer.save()
-                    
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        def delete(self, request, father_id, *args, **kwargs):
-            father = Father.objects.get(id = father_id)
-            
-            if father is not None:
-                father.delete()
+        if father is not None:
+            father.delete()
                 
-                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
             
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
