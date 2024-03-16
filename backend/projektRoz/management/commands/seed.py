@@ -43,12 +43,12 @@ class Command(BaseCommand):
                 postal_code=fake.postcode(),
                 apartment_number=fake.random_int(min=1, max=100)
             )
-            FosterCarer.objects.create(
-                name=fake.first_name(),
-                surname=fake.last_name(),
-                email=fake.email(),
-                password=fake.password()
-            )
+            # FosterCarer.objects.create(
+            #     name=fake.first_name(),
+            #     surname=fake.last_name(),
+            #     email=fake.email(),
+            #     password=fake.password()
+            # )
             AddressRegistered.objects.create(
                 country=fake.country(),
                 city=fake.city(),

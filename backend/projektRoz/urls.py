@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib import admin
+from .apiViews.RegistrationView import RegistrationView
 from projektRoz.apiViews import (
     AddressApiView,
     ChildrenApiView,
@@ -50,4 +51,6 @@ urlpatterns = [
     path("documents/api", DocumentsApiView.as_view(), name="documents"),
     path('documents/api/<int:documents_id>/', DocumentsApiView.as_view(), name='documents'),
     
+    path('register/', RegistrationView.as_view(), name='register'),
+
 ]

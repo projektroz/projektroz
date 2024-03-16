@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Mother, Father, Notes, Address, FosterCarer, AddressRegistered, Child, Siblings, Category, Documents
+from django.contrib.auth.models import User
+
 
 class MotherSerializer(serializers.ModelSerializer):
     """
@@ -177,3 +179,70 @@ class DocumentsSerializer(serializers.ModelSerializer):
         model = Documents
         fields = "__all__"
 
+class UserSerializer(serializers.ModelSerializer):
+    
+    password = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )
+        return user
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
+        )
+        return user
+    
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already exists")
+        return value
+
+
+    def validate(self, data):
+        if data['password'].isdigit() or data['password'].isalpha():
+            raise serializers.ValidationError({'password': 'Password must contain both letters and numbers.'})
+
+        if data['password'].islower():
+            raise serializers.ValidationError({'password': 'Password must contain at least one uppercase letter.'})
+    
+        if len(data['password']) < 8:
+            raise serializers.ValidationError({'password': 'Password must be at least 8 characters long.'})
+
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': 'Passwords must match.'})
+        
+        return data
+
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password', 'password2', 'email', 'first_name', 'last_name']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'password2': {'write_only': True},
+            'email': {'required': True, 'write_only': True},
+            'first_name': {'required': True},
+            'last_name': {'required': True}
+        }
