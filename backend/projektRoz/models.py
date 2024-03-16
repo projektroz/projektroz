@@ -1,24 +1,38 @@
+from typing import Iterable
 from django.db import models
+from django.contrib.auth.models import User
 
 class Mother(models.Model):
+    """
+    Represents a mother in the system.
+    """
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     child_id = models.IntegerField()
 
 class Father(models.Model):
+    """
+    Represents a father in the system.
+    """
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
     child_id = models.IntegerField()
 
 class Notes(models.Model):
+    """
+    Represents a note in the system.
+    """
     id = models.AutoField(primary_key=True)
     create_date = models.DateField()
     modification_date = models.DateField()
     note_text = models.TextField()
 
 class Address(models.Model):
+    """
+    Represents an address in the system.
+    """
     id = models.AutoField(primary_key=True)
     country = models.TextField()
     city = models.TextField()
@@ -27,13 +41,25 @@ class Address(models.Model):
     apartment_number = models.IntegerField(null=True, blank=True)
 
 class FosterCarer(models.Model):
+    """
+    Represents a foster carer in the system.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
-    name = models.TextField()
-    surname = models.TextField()
-    email = models.EmailField(unique=True)
-    password = models.TextField()
+    name = models.TextField(default="Noname")
+    surname = models.TextField(default="Nosurname")
+    email = models.EmailField(default="noemail@example.com")
+
+    def save(self, *args, **kwargs) -> None:
+        self.name = self.user.first_name
+        self.surname = self.user.last_name
+        self.email = self.user.email
+        return super().save(*args, **kwargs)
 
 class AddressRegistered(models.Model):
+    """
+    Represents a registered address in the system.
+    """
     id = models.AutoField(primary_key=True)
     country = models.TextField()
     city = models.TextField()
@@ -42,6 +68,9 @@ class AddressRegistered(models.Model):
     apartment_number = models.IntegerField(null=True, blank=True)
 
 class Child(models.Model):
+    """
+    Represents a child in the system.
+    """
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
@@ -58,15 +87,24 @@ class Child(models.Model):
     note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
 
 class Siblings(models.Model):
+    """
+    Represents a sibling relationship in the system.
+    """
     id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, related_name='child', on_delete=models.CASCADE)
     child_sibling = models.ForeignKey(Child, related_name='child_sibling', on_delete=models.CASCADE)
 
 class Category(models.Model):
+    """
+    Represents a category in the system.
+    """
     id = models.AutoField(primary_key=True)
     category_name = models.TextField()
 
 class Documents(models.Model):
+    """
+    Represents a document in the system.
+    """
     id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

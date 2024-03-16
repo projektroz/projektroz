@@ -7,9 +7,23 @@ from projektRoz.models import Documents
 from projektRoz.serializer import DocumentsSerializer
 
 class DocumentsApiView(APIView):
+    """
+    API view for managing documents.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request, document_id = None, *args, **kwargs):
+        """
+        Retrieve a list of documents or a specific document by ID.
+
+        Parameters:
+        - request: The HTTP request object.
+        - document_id (optional): The ID of the document to retrieve.
+
+        Returns:
+        - Response: The serialized data of the documents or the specific document.
+        """
         if document_id is None:
             document = Documents.objects.all().order_by('id')
         else:
@@ -20,6 +34,15 @@ class DocumentsApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
+        """
+        Create a new document.
+
+        Parameters:
+        - request: The HTTP request object.
+
+        Returns:
+        - Response: The serialized data of the created document.
+        """
         serializer = DocumentsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -29,6 +52,16 @@ class DocumentsApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, document_id, *args, **kwargs):
+        """
+        Update an existing document.
+
+        Parameters:
+        - request: The HTTP request object.
+        - document_id: The ID of the document to update.
+
+        Returns:
+        - Response: The serialized data of the updated document.
+        """
         document = Documents.objects.get(id = document_id)
         
         if document is not None:
@@ -49,6 +82,16 @@ class DocumentsApiView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, document_id, *args, **kwargs):
+        """
+        Delete an existing document.
+
+        Parameters:
+        - request: The HTTP request object.
+        - document_id: The ID of the document to delete.
+
+        Returns:
+        - Response: A success status indicating the document was deleted.
+        """
         document = Documents.objects.get(id = document_id)
         
         if document is not None:
