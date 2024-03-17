@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib import admin
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .apiViews.RegistrationView import RegistrationView
 from projektRoz.apiViews import (
     AddressApiView,
@@ -52,5 +53,7 @@ urlpatterns = [
     path('documents/api/<int:documents_id>/', DocumentsApiView.as_view(), name='documents'),
     
     path('register/', RegistrationView.as_view(), name='register'),
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
