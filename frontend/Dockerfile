@@ -8,9 +8,13 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+RUN npm install react-router-dom
 
-# CMD ["npm", "run", "build"]
+
+#  Kompilacja aplikacji w trybie produkcyjnym
+#  CMD ["npm", "run", "build"]
+
+EXPOSE 3000
 
 # Change CMD to start the development server
 CMD ["npm", "start"]
