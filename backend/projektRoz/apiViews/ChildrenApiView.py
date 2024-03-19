@@ -19,7 +19,7 @@ class ChildrenApiView(APIView):
         put: Update an existing child object.
         delete: Delete a child object.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, child_id=None, *args, **kwargs):
         """
@@ -37,12 +37,12 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        if child_id is None:
-            children = Child.objects.all().order_by('id')
-        else:
-            children = Child.objects.filter(id=child_id)
-        serializer = ChildSerializer(children, many=True)
+        children = Child.objects.filter(foster_career=request.user.id).order_by('id')
         
+        if child_id:
+            children = Child.objects.filter(id=child_id)
+        
+        serializer = ChildSerializer(children, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):

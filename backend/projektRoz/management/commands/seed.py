@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-from projektRoz.models import Mother, Father, Notes, Address, FosterCarer, AddressRegistered, Child, Siblings, Category, Documents
+from projektRoz.models import Mother, Father, Notes, Address, FosterCareer, AddressRegistered, Child, Siblings, Category, Documents
 
 fake = Faker('pl_PL')  
 
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 postal_code=fake.postcode(),
                 apartment_number=fake.random_int(min=1, max=100)
             )
-            # FosterCarer.objects.create(
+            # FosterCareer.objects.create(
             #     name=fake.first_name(),
             #     surname=fake.last_name(),
             #     email=fake.email(),
@@ -71,7 +71,7 @@ class Command(BaseCommand):
                 court_decision=fake.bothify(text='###/####'),
                 mother=Mother.objects.order_by('?').first(),
                 father=Father.objects.order_by('?').first(),
-                foster_career=FosterCarer.objects.order_by('?').first(),
+                foster_career=FosterCareer.objects.order_by('?').first(),
                 note=Notes.objects.order_by('?').first()
             )
             Siblings.objects.create(

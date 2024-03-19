@@ -8,7 +8,7 @@ from projektRoz.apiViews import (
     MotherApiView,
     FatherApiView,
     NotesApiView,
-    FosterCarerApiView,
+    FosterCareerApiView,
     AddressRegisteredApiView,
     SiblingsApiView,
     CategoryApiView,
@@ -37,8 +37,8 @@ urlpatterns = [
     path("address/api", AddressApiView.as_view(), name="address"),
     path('address/api/<int:address_id>/', AddressApiView.as_view(), name='address'),
     
-    path("foster_carer/api", FosterCarerApiView.as_view(), name="foster_carer"),
-    path('foster_carer/api/<int:foster_carer_id>/', FosterCarerApiView.as_view(), name='foster_carer'),
+    path("foster_carer/api", FosterCareerApiView.as_view(), name="foster_carer"),
+    path('foster_carer/api/<int:foster_carer_id>/', FosterCareerApiView.as_view(), name='foster_carer'),
     
     path("address_registered/api", AddressRegisteredApiView.as_view(), name="address_registered"),
     path('address_registered/api/<int:address_registered_id>/', AddressRegisteredApiView.as_view(), name='address_registered'),
