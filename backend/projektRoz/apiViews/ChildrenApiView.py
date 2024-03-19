@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Child
+from projektRoz.models import Child, FosterCareer
 from projektRoz.serializer import ChildSerializer
 
 class ChildrenApiView(APIView):
@@ -19,7 +19,7 @@ class ChildrenApiView(APIView):
         put: Update an existing child object.
         delete: Delete a child object.
     """
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, child_id=None, *args, **kwargs):
         """
@@ -37,11 +37,17 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        children = Child.objects.filter(foster_career=request.user.id).order_by('id')
-        
+    
+        try:
+            foster_career = FosterCareer.objects.get(user=request.user.id)
+        except FosterCareer.DoesNotExist:
+            return Response({"error": "Foster career not found for this user."}, status=status.HTTP_404_NOT_FOUND)
+
+        children = Child.objects.filter(foster_career=foster_career)
+
         if child_id:
-            children = Child.objects.filter(id=child_id)
-        
+            children = Child.objects.filter(id=child_id, foster_career=foster_career)
+
         serializer = ChildSerializer(children, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
@@ -63,10 +69,11 @@ class ChildrenApiView(APIView):
         """
         serializer = ChildSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            
+
+            foster_career = FosterCareer.objects.get(user=request.user)
+
+            serializer.save(foster_career=foster_career)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, child_id, *args, **kwargs):
@@ -121,12 +128,15 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        child = Child.objects.get(id=child_id)
+        # child = self.get_object(child_id, request.user)
+        # child.delete()
+        # return Response(status=status.HTTP_204_NO_CONTENT)
+        # child = Child.objects.get(id=child_id, foster_Career=request.user)
+        
+        # if child is not None:
+        #     child.delete()
 
-        if child is not None:
-            child.delete()
+        #     return Response(status=status.HTTP_204_NO_CONTENT)
 
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        # else:
+        #     return Response(status=status.HTTP_404_NOT_FOUND)
