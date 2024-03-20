@@ -1,0 +1,26 @@
+// src/pages/Home.scss
+
+.home-page {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+  
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.words {
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    margin: 0;
+}
+  
