@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Address
+from projektRoz.models import Address, Child, FosterCareer
 from projektRoz.serializer import AddressSerializer
 
 class AddressApiView(APIView):
@@ -23,14 +23,34 @@ class AddressApiView(APIView):
         Returns:
         - Response: The serialized address(es) in the response body.
         """
-        if address_id is None:
-            address = Address.objects.all().order_by('id')
-        else:
-            address = Address.objects.filter(id=address_id)
+        if address_id:
+            address = Address.objects.get(id=address_id)
+            children = Child.objects.filter(address = address)
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
             
-        serializer = AddressSerializer(address, many=True)
+            for child in children:
+                if child.foster_career == fosterCareer:
+                    serializer = AddressSerializer(address, many=False)
+                    
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                
+        else:
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_career = fosterCareer)
+            addresses = Address.objects.all()
+            ret = []
+            
+            for child in children:
+                for address in addresses:
+                    if child.address == address:
+                        ret.append(address)     
+            
+            serializer = AddressSerializer(ret, many=True)
+                    
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request, *args, **kwargs):
         """
@@ -50,7 +70,7 @@ class AddressApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, address_id, *args, **kwargs):
+    def put(self, request, address_id = None, *args, **kwargs):
         """
         Update an existing address.
 
@@ -61,24 +81,27 @@ class AddressApiView(APIView):
         Returns:
         - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
-        address = Address.objects.get(id=address_id)
-        
-        if address is not None:
-            serializer = AddressSerializer(address, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif address is None:
+        if address_id:
+            address = Address.objects.get(id=address_id)
+            children = Child.objects.filter(address = address)
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+
+            for child in children:
+                if child.foster_career == fosterCareer:
+                    serializer = AddressSerializer(address, data = request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+                    
+                        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            
             serializer = AddressSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def delete(self, request, address_id, *args, **kwargs):
         """
@@ -92,11 +115,14 @@ class AddressApiView(APIView):
         - Response: No content if successful, or the error message if the address is not found.
         """
         address = Address.objects.get(id=address_id)
+        children = Child.objects.filter(address = address)
+        fosterCareer = FosterCareer.objects.get(id = request.user.id)
+
+        for child in children:
+            if child.foster_career == fosterCareer:
+                address.delete()
+                    
+                return Response(status=status.HTTP_204_NO_CONTENT)
         
-        if address is not None:
-            address.delete()
-            
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+       
+        return Response(status=status.HTTP_404_NOT_FOUND)

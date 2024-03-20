@@ -93,7 +93,8 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        child = Child.objects.get(id=child_id)
+        fosterCareer = FosterCareer.objects.get(user=request.user)
+        child = Child.objects.get(id=child_id, foster_career=fosterCareer)
         
         if child is not None:
             serializer = ChildSerializer(child, data=request.data)
@@ -105,7 +106,7 @@ class ChildrenApiView(APIView):
         elif child is None:
             serializer = ChildSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(foster_career=fosterCareer)
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         
@@ -128,15 +129,13 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        # child = self.get_object(child_id, request.user)
-        # child.delete()
-        # return Response(status=status.HTTP_204_NO_CONTENT)
-        # child = Child.objects.get(id=child_id, foster_Career=request.user)
+        fosterCareer = FosterCareer.objects.get(user=request.user) 
+        child = Child.objects.get(id=child_id, foster_career=fosterCareer)
         
-        # if child is not None:
-        #     child.delete()
+        if child is not None:
+            child.delete()
 
-        #     return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        # else:
-        #     return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)

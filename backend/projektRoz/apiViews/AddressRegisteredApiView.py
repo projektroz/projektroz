@@ -3,44 +3,64 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import AddressRegistered
+from projektRoz.models import AddressRegistered, Child, FosterCareer
 from projektRoz.serializer import AddressRegisteredSerializer
 
 class AddressRegisteredApiView(APIView):
     """
-    API view for managing AddressRegistered objects.
+    API view for managing addresses.
     """
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, address_registered_id = None, *args, **kwargs):
+    def get(self, request, address_id=None, *args, **kwargs):
         """
-        Retrieve a list of AddressRegistered objects or a specific AddressRegistered object by ID.
-        
+        Retrieve a list of addresses or a specific address by ID.
+
         Parameters:
-        - address_registered_id (int): Optional. ID of the AddressRegistered object to retrieve.
-        
+        - address_id (int): Optional. The ID of the address to retrieve.
+
         Returns:
-        - Response: HTTP response containing the serialized AddressRegistered object(s).
+        - Response: The serialized address(es) in the response body.
         """
-        if address_registered_id is None:
-            address_registered = AddressRegistered.objects.all().order_by('id')
-        else:
-            address_registered = AddressRegistered.objects.filter(id = address_registered_id)
+        if address_id:
+            address = AddressRegistered.objects.get(id=address_id)
+            children = Child.objects.filter(address_registered = address)
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
             
-        serializer = AddressRegisteredSerializer(address_registered, many=True)
+            for child in children:
+                if child.foster_career == fosterCareer:
+                    serializer = AddressRegisteredSerializer(address, many=False)
+                    
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                
+        else:
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_career = fosterCareer)
+            addresses = AddressRegistered.objects.all()
+            ret = []
+            
+            for child in children:
+                for address in addresses:
+                    if child.address == address:
+                        ret.append(address)     
+            
+            serializer = AddressRegisteredSerializer(ret, many=True)
+                    
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request, *args, **kwargs):
         """
-        Create a new AddressRegistered object.
-        
+        Create a new address.
+
         Parameters:
-        - request (Request): HTTP request object containing the data for the new AddressRegistered object.
-        
+        - request (Request): The HTTP request object.
+
         Returns:
-        - Response: HTTP response containing the serialized AddressRegistered object if creation is successful, or the error message if there are validation errors.
+        - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
         serializer = AddressRegisteredSerializer(data=request.data)
         if serializer.is_valid():
@@ -50,52 +70,59 @@ class AddressRegisteredApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, address_registered_id, *args, **kwargs):
+    def put(self, request, address_id = None, *args, **kwargs):
         """
-        Update an existing AddressRegistered object by ID or create a new AddressRegistered object if the ID does not exist.
-        
+        Update an existing address.
+
         Parameters:
-        - request (Request): HTTP request object containing the data for the AddressRegistered object.
-        - address_registered_id (int): ID of the AddressRegistered object to update or create.
-        
+        - request (Request): The HTTP request object.
+        - address_id (int): The ID of the address to update.
+
         Returns:
-        - Response: HTTP response containing the serialized AddressRegistered object if update or creation is successful, or the error message if there are validation errors.
+        - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
-        address_registered = AddressRegistered.objects.get(id = address_registered_id)
-        
-        if address_registered is not None:
-            serializer = AddressRegisteredSerializer(address_registered, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif address_registered is None:
+        if address_id:
+            address = AddressRegistered.objects.get(id=address_id)
+            children = Child.objects.filter(address_registered = address)
+            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+
+            for child in children:
+                if child.foster_career == fosterCareer:
+                    serializer = AddressRegisteredSerializer(address, data = request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+                    
+                        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            
             serializer = AddressRegisteredSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def delete(self, request, address_registered_id, *args, **kwargs):
+    def delete(self, request, address_id, *args, **kwargs):
         """
-        Delete an existing AddressRegistered object by ID.
-        
+        Delete an existing address.
+
         Parameters:
-        - address_registered_id (int): ID of the AddressRegistered object to delete.
-        
+        - request (Request): The HTTP request object.
+        - address_id (int): The ID of the address to delete.
+
         Returns:
-        - Response: HTTP response indicating the success or failure of the deletion.
+        - Response: No content if successful, or the error message if the address is not found.
         """
-        address_registered = AddressRegistered.objects.get(id = address_registered_id)
+        address = AddressRegistered.objects.get(id=address_id)
+        children = Child.objects.filter(address_registered = address)
+        fosterCareer = FosterCareer.objects.get(id = request.user.id)
+
+        for child in children:
+            if child.foster_career == fosterCareer:
+                address.delete()
+                    
+                return Response(status=status.HTTP_204_NO_CONTENT)
         
-        if address_registered is not None:
-            address_registered.delete()
-            
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+       
+        return Response(status=status.HTTP_404_NOT_FOUND)
