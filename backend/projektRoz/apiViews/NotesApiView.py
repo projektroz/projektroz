@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Notes, Child, FosterCareer
+from projektRoz.models import Notes, Child, FosterCarer
 from projektRoz.serializer import NotesSerializer
 
 class NotesApiView(APIView):
@@ -27,15 +27,15 @@ class NotesApiView(APIView):
         if note_id:
             note = Notes.objects.get(id=note_id)
             child = Child.objects.get(note = note)
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
-            if child.foster_career == fosterCareer:
+            if child.foster_carer == fosterCarer:
                 serializer = NotesSerializer(note, many = False)
 
                 return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
-            children = Child.objects.filter(foster_career = fosterCareer)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_carer = fosterCarer)
             notes = Notes.objects.all()
             ret = []
 
@@ -43,11 +43,13 @@ class NotesApiView(APIView):
                 for note in notes:
                     if child.note == note:
                         ret.append(note)
-            
-            serializer = NotesSerializer(ret, many=True)
 
-            return Response(serializer.data, status = status.HTTP_200_OK)
-
+            if ret != []:
+                serializer = NotesSerializer(ret, many = True)
+                return Response(serializer.data, status = status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+                
 
     def post(self, request, *args, **kwargs):
         """
@@ -81,9 +83,9 @@ class NotesApiView(APIView):
         if note_id:
             note = Notes.objects.get(id=note_id)
             child = Child.objects.get(note = note)
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
-            if child.foster_career == fosterCareer:
+            if child.foster_carer == fosterCarer:
                 serializer = NotesSerializer(note, data = request.data)
                 if serializer.is_valid():
                     serializer.save()
@@ -109,9 +111,9 @@ class NotesApiView(APIView):
         """
         note = Notes.objects.get(id=note_id)
         child = Child.objects.get(note = note)
-        fosterCareer = FosterCareer.objects.get(id = request.user.id)
+        fosterCarer = FosterCarer.objects.get(id = request.user.id)
         
-        if child.foster_career == fosterCareer:
+        if child.foster_carer == fosterCarer:
             note.delete()
             
             return Response(status=status.HTTP_204_NO_CONTENT)

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Siblings
+from projektRoz.models import Siblings, FosterCarer, Child
 from projektRoz.serializer import SiblingsSerializer
 
 class SiblingsApiView(APIView):
@@ -13,7 +13,7 @@ class SiblingsApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, siblings_id=None, *args, **kwargs):
+    def get(self, request, siblings_id = None, *args, **kwargs):
         """
         Retrieve siblings.
 
@@ -24,14 +24,33 @@ class SiblingsApiView(APIView):
         Returns:
             Response: The response object containing the serialized siblings data.
         """
-        if siblings_id is None:
-            siblings = Siblings.objects.all().order_by('id')
-        else:
-            siblings = Siblings.objects.filter(id=siblings_id)
+        if siblings_id:
+            siblings = Siblings.objects.get(id = siblings_id)
+            child = siblings.child
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            if child.foster_carer == fosterCarer:
+                serializer = SiblingsSerializer(siblings, many = False)
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
             
-        serializer = SiblingsSerializer(siblings, many=True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            siblings = Siblings.objects.all()
+            ret = []
+
+            for i in siblings:
+                if i.child.foster_carer == fosterCarer:
+                    ret.append(i)
+            
+            if ret != []:
+                serializer = SiblingsSerializer(ret, many = True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     
     def post(self, request, *args, **kwargs):
         """
@@ -52,7 +71,7 @@ class SiblingsApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, siblings_id, *args, **kwargs):
+    def put(self, request, siblings_id = None, *args, **kwargs):
         """
         Update an existing sibling.
 
@@ -64,24 +83,32 @@ class SiblingsApiView(APIView):
             Response: The response object containing the serialized sibling data if successful, 
                       or the error message if validation fails.
         """
-        siblings = Siblings.objects.get(id=siblings_id)
         
-        if siblings is not None:
-            serializer = SiblingsSerializer(siblings, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif siblings is None:
-            serializer = SiblingsSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if siblings_id:
+            siblings = Siblings.objects.get(id = siblings_id)
+            child = siblings.child
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            if child.foster_carer == fosterCarer:
+                serializer = SiblingsSerializer(siblings, data = request.data)
+                if serializer.is_valid():
+                    serializer.save()
+
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                    
+        # else:
+        #     siblings = Siblings.objects.get(id = siblings_id)
+        #     child = siblings.child
+        #     fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+        #     if child.foster_carer == fosterCarer:
+        #         serializer = SiblingsSerializer(siblings, data = request.data)
+        #         if serializer.is_valid():
+        #             serializer.save()
+
+        #             return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, siblings_id, *args, **kwargs):
         """
@@ -94,12 +121,16 @@ class SiblingsApiView(APIView):
         Returns:
             Response: The response object with no content if successful, or the error message if the sibling is not found.
         """
+
         siblings = Siblings.objects.get(id=siblings_id)
-        
-        if siblings is not None:
+        child = siblings.child
+        fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+        if child.foster_carer == fosterCarer:
             siblings.delete()
             
             return Response(status=status.HTTP_204_NO_CONTENT)
         
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        

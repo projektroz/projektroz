@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Documents
+from projektRoz.models import Documents, Child, FosterCarer
 from projektRoz.serializer import DocumentsSerializer
 
 class DocumentsApiView(APIView):
@@ -24,14 +24,34 @@ class DocumentsApiView(APIView):
         Returns:
         - Response: The serialized data of the documents or the specific document.
         """
-        if document_id is None:
-            document = Documents.objects.all().order_by('id')
+        if document_id:
+            document = Documents.objects.get(id = document_id)
+            child = document.child
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            if child.foster_carer == fosterCarer:
+                serializer = DocumentsSerializer(document, many = False)
+
+                return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            document = Documents.objects.filter(id = document_id)
             
-        serializer = DocumentsSerializer(document, many=True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_carer = fosterCarer)
+            documents = Documents.objects.all()
+            ret = []
+
+            for child in children:
+                for document in documents:
+                    if child == document.child:
+                        ret.append(document)
+
+            if ret != []:
+                serializer = DocumentsSerializer(ret, many = True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request, *args, **kwargs):
         """
@@ -51,7 +71,7 @@ class DocumentsApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, document_id, *args, **kwargs):
+    def put(self, request, document_id = None, *args, **kwargs):
         """
         Update an existing document.
 
@@ -62,24 +82,25 @@ class DocumentsApiView(APIView):
         Returns:
         - Response: The serialized data of the updated document.
         """
-        document = Documents.objects.get(id = document_id)
-        
-        if document is not None:
-            serializer = DocumentsSerializer(document, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif document is None:
-            serializer = DocumentsSerializer(data=request.data)
+        if document_id:
+            document = Documents.objects.get(id = document_id)
+            child = document.child
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            if child.foster_carer == fosterCarer:
+                serializer = DocumentsSerializer(document, data = request.data)
+                if serializer.is_valid():
+                    serializer.save()
+
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            serializer = DocumentsSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save()
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def delete(self, request, document_id, *args, **kwargs):
         """
@@ -93,11 +114,12 @@ class DocumentsApiView(APIView):
         - Response: A success status indicating the document was deleted.
         """
         document = Documents.objects.get(id = document_id)
+        child = document.child
+        fosterCarer = FosterCarer.objects.get(id = request.user.id)
         
-        if document is not None:
+        if child.foster_carer == fosterCarer:
             document.delete()
             
             return Response(status=status.HTTP_204_NO_CONTENT)
         
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)

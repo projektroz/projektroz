@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import AddressRegistered, Child, FosterCareer
+from projektRoz.models import AddressRegistered, Child, FosterCarer
 from projektRoz.serializer import AddressRegisteredSerializer
 
 class AddressRegisteredApiView(APIView):
@@ -26,17 +26,17 @@ class AddressRegisteredApiView(APIView):
         if address_id:
             address = AddressRegistered.objects.get(id=address_id)
             children = Child.objects.filter(address_registered = address)
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
             for child in children:
-                if child.foster_career == fosterCareer:
+                if child.foster_carer == fosterCarer:
                     serializer = AddressRegisteredSerializer(address, many=False)
                     
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 
         else:
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
-            children = Child.objects.filter(foster_career = fosterCareer)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_carer = fosterCarer)
             addresses = AddressRegistered.objects.all()
             ret = []
             
@@ -44,10 +44,11 @@ class AddressRegisteredApiView(APIView):
                 for address in addresses:
                     if child.address == address:
                         ret.append(address)     
-            
-            serializer = AddressRegisteredSerializer(ret, many=True)
-                    
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if ret != []:
+                serializer = AddressRegisteredSerializer(ret, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
         
         
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -84,10 +85,10 @@ class AddressRegisteredApiView(APIView):
         if address_id:
             address = AddressRegistered.objects.get(id=address_id)
             children = Child.objects.filter(address_registered = address)
-            fosterCareer = FosterCareer.objects.get(id = request.user.id)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
-                if child.foster_career == fosterCareer:
+                if child.foster_carer == fosterCarer:
                     serializer = AddressRegisteredSerializer(address, data = request.data)
                     if serializer.is_valid():
                         serializer.save()
@@ -116,10 +117,10 @@ class AddressRegisteredApiView(APIView):
         """
         address = AddressRegistered.objects.get(id=address_id)
         children = Child.objects.filter(address_registered = address)
-        fosterCareer = FosterCareer.objects.get(id = request.user.id)
+        fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
         for child in children:
-            if child.foster_career == fosterCareer:
+            if child.foster_carer == fosterCarer:
                 address.delete()
                     
                 return Response(status=status.HTTP_204_NO_CONTENT)

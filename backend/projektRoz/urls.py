@@ -8,7 +8,7 @@ from projektRoz.apiViews import (
     MotherApiView,
     FatherApiView,
     NotesApiView,
-    FosterCareerApiView,
+    FosterCarerApiView,
     AddressRegisteredApiView,
     SiblingsApiView,
     CategoryApiView,
@@ -37,8 +37,8 @@ urlpatterns = [
     path("address/api/", AddressApiView.as_view(), name="address"),
     path('address/api/<int:address_id>', AddressApiView.as_view(), name='address'),
     
-    path("foster_carer/api/", FosterCareerApiView.as_view(), name="foster_carer"),
-    path('foster_carer/api/<int:foster_carer_id>', FosterCareerApiView.as_view(), name='foster_carer'),
+    path("foster_carer/api/", FosterCarerApiView.as_view(), name="foster_carer"),
+    path('foster_carer/api/<int:foster_carer_id>', FosterCarerApiView.as_view(), name='foster_carer'),
     
     path("address_registered/api/", AddressRegisteredApiView.as_view(), name="address_registered"),
     path('address_registered/api/<int:address_registered_id>', AddressRegisteredApiView.as_view(), name='address_registered'),
@@ -50,7 +50,7 @@ urlpatterns = [
     path('category/api/<int:category_id>', CategoryApiView.as_view(), name='category'),
     
     path("documents/api/", DocumentsApiView.as_view(), name="documents"),
-    path('documents/api/<int:documents_id>', DocumentsApiView.as_view(), name='documents'),
+    path('documents/api/<int:document_id>', DocumentsApiView.as_view(), name='documents'),
     
     path('register/', RegistrationView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

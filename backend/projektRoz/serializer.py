@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Mother, Father, Notes, Address, FosterCareer, AddressRegistered, Child, Siblings, Category, Documents
+from .models import Mother, Father, Notes, Address, FosterCarer, AddressRegistered, Child, Siblings, Category, Documents
 from django.contrib.auth.models import User
 
 
@@ -71,23 +71,23 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = "__all__"
 
-class FosterCareerSerializer(serializers.ModelSerializer):
+class FosterCarerSerializer(serializers.ModelSerializer):
     """
-    Serializer class for the fosterCareer model.
+    Serializer class for the fosterCarer model.
 
-    This serializer is used to convert fosterCareer model instances into JSON
-    representation and vice versa. It specifies all the fields of the fosterCareer
+    This serializer is used to convert fosterCarer model instances into JSON
+    representation and vice versa. It specifies all the fields of the fosterCarer
     model to be included in the serialized output.
 
     Attributes:
         model: The model class that the serializer is based on.
         fields: A string or list of strings specifying the fields to include in the
                 serialized output. In this case, "__all__" is used to include all
-                fields of the fosterCareer model.
+                fields of the fosterCarer model.
 
     """
     class Meta:
-        model = FosterCareer
+        model = FosterCarer
         fields = "__all__"
 
 class AddressRegisteredSerializer(serializers.ModelSerializer):
