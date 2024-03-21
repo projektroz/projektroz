@@ -1,0 +1,50 @@
+#scroll-action {
+  position: absolute;
+  bottom: 2vh;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.scroll-box {
+  height: 7vh;
+  width: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-right: 10px;
+}
+.scroll-element {
+  height: 3vh;
+  width: 5px;
+  background-color: rgba(255, 255, 255, 0.6);
+  animation: scroll 2s ease-in-out 0s infinite normal forwards;
+}
+@keyframes scroll {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    transform: translateY(0);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  85% {
+    transform: translateY(4vh);
+  }
+
+  90% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

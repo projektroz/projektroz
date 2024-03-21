@@ -1,6 +1,7 @@
 // components/Rectangle/Rectangle.tsx
-import React from 'react';
-import './Rectangle.scss';
+import React from "react";
+import "./Rectangle.scss";
+import Navmenu from "../Navmenu/Navmenu";
 
 interface RectangleProps {
   children: React.ReactNode;
@@ -8,8 +9,18 @@ interface RectangleProps {
 
 const Rectangle: React.FC<RectangleProps> = ({ children }) => {
   return (
-    <div className="rectangle">
-      {children}
+    <div id="rectangle">
+      <div id="rectangleFace">
+        <div id="rectangleLeft">{children}</div>
+        <div id="rectangleRight">
+          <Navmenu />
+          <div className="blur"></div>
+        </div>
+      </div>
+      <div className="blur">
+        <div id="elipse1"></div>
+        <div id="elipse2"></div>
+      </div>
     </div>
   );
 };
