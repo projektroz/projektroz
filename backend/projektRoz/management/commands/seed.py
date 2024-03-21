@@ -71,7 +71,7 @@ class Command(BaseCommand):
                 court_decision=fake.bothify(text='###/####'),
                 mother=Mother.objects.order_by('?').first(),
                 father=Father.objects.order_by('?').first(),
-                foster_career=FosterCarer.objects.order_by('?').first(),
+                foster_carer=FosterCarer.objects.order_by('?').first(),
                 note=Notes.objects.order_by('?').first()
             )
             Siblings.objects.create(

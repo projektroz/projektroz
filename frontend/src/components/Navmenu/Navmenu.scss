@@ -1,25 +1,24 @@
 // components/Navmenu/Navmenu.scss
 
 .nav-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  
-    a {
-      text-decoration: none;
-      color: #ffffff;
-      font-size: 24px;
-      margin-bottom: 30px;
-      transition: color 0.3s ease;
-  
-      &:hover {
-        color: #555555; 
-      }
-      
-      &.active {
-        color: #555555;
-        font-weight: bold;
-      }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 24px;
+    margin-bottom: 30px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #aaa;
+    }
+
+    &.active {
+      color: #555555;
+      font-weight: bold;
     }
   }
-  
+}

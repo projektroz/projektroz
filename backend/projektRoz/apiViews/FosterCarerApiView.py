@@ -8,41 +8,40 @@ from projektRoz.serializer import FosterCarerSerializer
 
 class FosterCarerApiView(APIView):
     """
-    API view for interacting with FosterCarer objects.
+    API view for interacting with fosterCarer objects.
     """
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, foster_career_id=None, *args, **kwargs):
+    def get(self, request, foster_carer_id, *args, **kwargs):
         """
-        Retrieve a list of FosterCarer objects or a specific FosterCarer object by ID.
+        Retrieve a list of fosterCarer objects or a specific fosterCarer object by ID.
 
         Parameters:
         - request: The HTTP request object.
-        - foster_career_id: Optional. The ID of the FosterCarer object to retrieve.
+        - foster_carer_id: Optional. The ID of the fosterCarer object to retrieve.
 
         Returns:
-        - If foster_career_id is None, returns a list of all FosterCarer objects.
-        - If foster_career_id is provided, returns the specified FosterCarer object.
+        - If foster_carer_id is None, returns a list of all fosterCarer objects.
+        - If foster_carer_id is provided, returns the specified fosterCarer object.
         """
-        if foster_career_id is None:
-            foster_career = FosterCarer.objects.all().order_by('id')
-        else:
-            foster_career = FosterCarer.objects.filter(id=foster_career_id)
-            
-        serializer = FosterCarerSerializer(foster_career, many=True)
+        foster_carer = FosterCarer.objects.get(id=foster_carer_id)
+        if foster_carer.id == request.user.id:
+            serializer = FosterCarerSerializer(foster_carer, many = False)
+    
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request, *args, **kwargs):
         """
-        Create a new FosterCarer object.
+        Create a new fosterCarer object.
 
         Parameters:
         - request: The HTTP request object.
 
         Returns:
-        - If the data is valid, returns the serialized FosterCarer object with status 201.
+        - If the data is valid, returns the serialized fosterCarer object with status 201.
         - If the data is invalid, returns the serializer errors with status 400.
         """
         serializer = FosterCarerSerializer(data=request.data)
@@ -53,54 +52,56 @@ class FosterCarerApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, foster_career_id, *args, **kwargs):
+    def put(self, request, foster_carer_id = None, *args, **kwargs):
         """
-        Update an existing FosterCarer object.
+        Update an existing fosterCarer object.
 
         Parameters:
         - request: The HTTP request object.
-        - foster_career_id: The ID of the FosterCarer object to update.
+        - foster_carer_id: The ID of the fosterCarer object to update.
 
         Returns:
-        - If the FosterCarer object exists, updates and returns the serialized FosterCarer object with status 200.
-        - If the FosterCarer object does not exist, creates a new FosterCarer object and returns it with status 201.
+        - If the fosterCarer object exists, updates and returns the serialized fosterCarer object with status 200.
+        - If the fosterCarer object does not exist, creates a new fosterCarer object and returns it with status 201.
         - If the data is invalid, returns the serializer errors with status 400.
         """
-        foster_career = FosterCarer.objects.get(id=foster_career_id)
-        
-        if foster_career is not None:
-            serializer = FosterCarerSerializer(foster_career, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
+        if foster_carer_id:
+            foster_carer = FosterCarer.objects.get(id=foster_carer_id)
+            if foster_carer.id == request.user.id:
+                serializer = FosterCarerSerializer(foster_carer, data = request.data)
+                if serializer.is_valid():
+                    serializer.save()
                 
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
         
-        elif foster_career is None:
-            serializer = FosterCarerSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
+        # elif foster_carer is None:
+        #     serializer = FosterCarerSerializer(data=request.data)
+        #     if serializer.is_valid():
+        #         serializer.save()
                 
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def delete(self, request, foster_career_id, *args, **kwargs):
+    def delete(self, request, foster_carer_id, *args, **kwargs):
         """
-        Delete an existing FosterCarer object.
+        Delete an existing fosterCarer object.
 
         Parameters:
         - request: The HTTP request object.
-        - foster_career_id: The ID of the FosterCarer object to delete.
+        - foster_carer_id: The ID of the fosterCarer object to delete.
 
         Returns:
-        - If the FosterCarer object exists, deletes it and returns status 204.
-        - If the FosterCarer object does not exist, returns status 404.
+        - If the fosterCarer object exists, deletes it and returns status 204.
+        - If the fosterCarer object does not exist, returns status 404.
         """
-        foster_career = FosterCarer.objects.get(id=foster_career_id)
+        foster_carer = FosterCarer.objects.get(id=foster_carer_id)
         
-        if foster_career is not None:
-            foster_career.delete()
+        if foster_carer == request.user.id:
+            foster_carer.delete()
             
             return Response(status=status.HTTP_204_NO_CONTENT)
         

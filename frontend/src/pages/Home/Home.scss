@@ -7,27 +7,18 @@
   justify-content: center;
   align-items: center;
   height: 100vh; /* Ustaw wysokość na 100% wysokości ekranu */
-
-  .content {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .left {
-      margin-bottom: 20px; /* Dodaj odstęp między logo a nagłówkiem */
-      width: 70%; /* Ustaw szerokość menu na 20% prostokąta */
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Wysrodkuj zawartość w pionie */
-      justify-content: center; /* Wysrodkuj zawartość w poziomie */
-    }
-
-    .right {
-      width: 30%; /* Ustaw szerokość menu na 20% prostokąta */
-      align-items: center; /* Wysrodkuj zawartość w pionie */
-      justify-content: center; /* Wysrodkuj zawartość w poziomie */
-    }
-  }
 }
 
+.info-section {
+  height: 100vh;
+  color: black; /* Ustaw kolor tekstu na biały */
+  border-radius: 30px;
+  padding: 10%;
+}
+
+.logo {
+  font-size: 50px; /* Ustaw rozmiar czcionki na 50px */
+  color: white; /* Ustaw kolor tekstu na biały */
+  margin-bottom: 20px; /* Dodaj odstęp między logo a nagłówkiem */
+  width: 40%;
+}

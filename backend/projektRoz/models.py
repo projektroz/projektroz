@@ -49,7 +49,7 @@ class FosterCarer(models.Model):
     name = models.TextField(default="Noname")
     surname = models.TextField(default="Nosurname")
     email = models.EmailField(default="noemail@example.com")
-
+    
     def save(self, *args, **kwargs) -> None:
         self.name = self.user.first_name
         self.surname = self.user.last_name
@@ -83,7 +83,7 @@ class Child(models.Model):
     court_decision = models.CharField(max_length=30, null=True, unique=True)
     mother = models.ForeignKey(Mother, on_delete=models.CASCADE, null=True, blank=True)
     father = models.ForeignKey(Father, on_delete=models.CASCADE, null=True, blank=True)
-    foster_career = models.ForeignKey(FosterCarer, on_delete=models.CASCADE, null=True, blank=True)
+    foster_carer = models.ForeignKey(FosterCarer, on_delete=models.CASCADE, null=True, blank=True)
     note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
 
 class Siblings(models.Model):

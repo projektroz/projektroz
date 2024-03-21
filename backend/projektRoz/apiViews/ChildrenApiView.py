@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Child
+from projektRoz.models import Child, FosterCarer
 from projektRoz.serializer import ChildSerializer
 
 class ChildrenApiView(APIView):
@@ -37,12 +37,18 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        if child_id is None:
-            children = Child.objects.all().order_by('id')
-        else:
-            children = Child.objects.filter(id=child_id)
+    
+        try:
+            foster_carer = FosterCarer.objects.get(user=request.user.id)
+        except FosterCarer.DoesNotExist:
+            return Response({"error": "Foster carer not found for this user."}, status=status.HTTP_404_NOT_FOUND)
+
+        children = Child.objects.filter(foster_carer=foster_carer)
+
+        if child_id:
+            children = Child.objects.filter(id=child_id, foster_carer=foster_carer)
+
         serializer = ChildSerializer(children, many=True)
-        
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
@@ -63,10 +69,11 @@ class ChildrenApiView(APIView):
         """
         serializer = ChildSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            
+
+            foster_carer = FosterCarer.objects.get(user=request.user)
+
+            serializer.save(foster_carer=foster_carer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, child_id, *args, **kwargs):
@@ -86,7 +93,8 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        child = Child.objects.get(id=child_id)
+        fosterCarer = FosterCarer.objects.get(user=request.user)
+        child = Child.objects.get(id=child_id, foster_carer=fosterCarer)
         
         if child is not None:
             serializer = ChildSerializer(child, data=request.data)
@@ -98,7 +106,7 @@ class ChildrenApiView(APIView):
         elif child is None:
             serializer = ChildSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(foster_carer=fosterCarer)
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         
@@ -121,8 +129,9 @@ class ChildrenApiView(APIView):
         Raises:
             None
         """
-        child = Child.objects.get(id=child_id)
-
+        fosterCarer = FosterCarer.objects.get(user=request.user) 
+        child = Child.objects.get(id=child_id, foster_carer=fosterCarer)
+        
         if child is not None:
             child.delete()
 

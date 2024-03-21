@@ -3,6 +3,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./styles/global.scss";
 
 import PrivateRoutes from './components/PrivateRoute/PrivateRoute';
 
@@ -24,6 +25,6 @@ const App = () => {
         </Routes>
     </>
   );
-}
+};
 
 export default App;

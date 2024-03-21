@@ -73,17 +73,17 @@ class AddressSerializer(serializers.ModelSerializer):
 
 class FosterCarerSerializer(serializers.ModelSerializer):
     """
-    Serializer class for the FosterCarer model.
+    Serializer class for the fosterCarer model.
 
-    This serializer is used to convert FosterCarer model instances into JSON
-    representation and vice versa. It specifies all the fields of the FosterCarer
+    This serializer is used to convert fosterCarer model instances into JSON
+    representation and vice versa. It specifies all the fields of the fosterCarer
     model to be included in the serialized output.
 
     Attributes:
         model: The model class that the serializer is based on.
         fields: A string or list of strings specifying the fields to include in the
                 serialized output. In this case, "__all__" is used to include all
-                fields of the FosterCarer model.
+                fields of the fosterCarer model.
 
     """
     class Meta:
