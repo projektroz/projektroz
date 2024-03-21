@@ -1,40 +1,34 @@
 // pages/Login/Login.tsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Login.scss';
+import { Link, Navigate } from 'react-router-dom';
+
+import useNavigation from '../../hooks/useNavigation';
+import useAuth from '../../hooks/useAuth';
+
 import Rectangle from '../../components/Rectangle/Rectangle'; 
 import Navmenu from '../../components/Navmenu/Navmenu'; 
+
+import './Login.scss';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string>('');
+    const { isLoggedIn, loginUser } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8000/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Niepoprawne dane logowania.');
-            }
-
-            const { access, refresh } = await response.json();
-            localStorage.setItem('access_token', access);
-            localStorage.setItem('refresh_token', refresh);
+            await loginUser(username, password);
             setError('');
-            // Przekierowanie do innej strony po poprawnym zalogowaniu
         } catch (error: any) {
             setError(error.message);
         }
     };
+    if (isLoggedIn) {
+        return <Navigate to="/dashboard" />;
+    }
 
     return (
         <div className="login-page">

@@ -2,6 +2,7 @@
 
 .login-page {
     background-color: #111111;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,10 +29,11 @@
           border-radius: 5px;
           text-align: center;
         }
-        
+
         h2 {
           margin-bottom: 20px;
         }
+        
       }
   
       .right {

@@ -11,7 +11,7 @@ const Home = () => {
       <Rectangle>
         <div className="content">
           <div className="left">
-            <img src="../../assets/images/logo.png" alt="Logo" className="logo" />
+            <img src="src/assets/images/logo.png" alt="Logo" className="logo" />
             <h1>Witaj na stronie głównej</h1>
           </div>
           <div className="right">
