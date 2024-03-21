@@ -1,25 +1,26 @@
-// src/pages/Home.tsx
+// pages/HomePage/Home.tsx
+import './Home.scss';
 
-import React from 'react'
-import Navbar from '../../components/Navbar/Navbar'
-import './Home.scss'
-import background from '../../assets/images/background.png'; 
+import Button from '../../components/Button/Button';
+import Rectangle from '../../components/Rectangle/Rectangle'; 
+import Navmenu from '../../components/Navmenu/Navmenu'; 
 
-function Home() {
+const Home = () => {
   return (
-    <div className="home-page" style={{ backgroundImage: `url(${background})`}}>
-      <Navbar />
-      <div className="content">
-        <h1>PROJEKT ROZ</h1>
-        <div className="words">
-          <h2>ROZWÓJ</h2>
-          <h2>OPIEKA</h2>
-          <h2>ZAUFANIE</h2>
+    <div className='home-page'>
+      <Rectangle>
+        <div className="content">
+          <div className="left">
+            <img src="../../assets/images/logo.png" alt="Logo" className="logo" />
+            <h1>Witaj na stronie głównej</h1>
+          </div>
+          <div className="right">
+              <Navmenu />
+          </div>
         </div>
-        <button className="btn btn-primary">Logowanie</button>
-      </div>
+      </Rectangle>
     </div>
   );
-}
+};
 
 export default Home;
