@@ -29,9 +29,14 @@ function Login() {
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
   }
+
+  const links = [
+    { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
+  ];
+
   return (
     <div className="login-page">
-      <Rectangle>
+      <Rectangle links={links}>
         <div className="content">
           <h2>Zaloguj się</h2>
           <form onSubmit={handleSubmit} className="login-form">

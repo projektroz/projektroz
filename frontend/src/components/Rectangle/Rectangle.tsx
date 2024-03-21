@@ -5,15 +5,18 @@ import Navmenu from "../Navmenu/Navmenu";
 
 interface RectangleProps {
   children: React.ReactNode;
+  links: { name: string; url: string; icon: string }[];
 }
 
-const Rectangle: React.FC<RectangleProps> = ({ children }) => {
+const Rectangle: React.FC<RectangleProps> = ({ children, links }) => {
+  links = links;
+
   return (
     <div id="rectangle">
       <div id="rectangleFace">
         <div id="rectangleLeft">{children}</div>
         <div id="rectangleRight">
-          <Navmenu />
+          <Navmenu links={links} />
           <div className="blur"></div>
         </div>
       </div>

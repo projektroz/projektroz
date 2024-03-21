@@ -4,12 +4,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 30px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  }
+
+  ul > li {
+    width: 100%;
+  }
 
   a {
     text-decoration: none;
     color: #ffffff;
-    font-size: 24px;
-    margin-bottom: 30px;
+    font-size: 2rem;
     transition: color 0.3s ease;
 
     &:hover {

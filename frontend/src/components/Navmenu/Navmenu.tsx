@@ -3,18 +3,29 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Navmenu.scss";
 
-const Navmenu: React.FC = () => {
+interface Link {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+interface Links {
+  links: Link[];
+}
+
+const Navmenu: React.FC<Links> = ({ links }) => {
   return (
     <div className="nav-menu">
-      <Link to="/home" className="link">
-        Strona główna
-      </Link>
-      <Link to="/home/#info" className="link">
-        Informacje
-      </Link>
-      <Link to="/login" className="link">
-        Logowanie
-      </Link>
+      <ul>
+        {links.map((link, index) => (
+          <li key={index}>
+            <div className="menu-link">
+              <img src={link.icon} alt="icon" height="40px" />
+              <Link to={link.url}>{link.name}</Link>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

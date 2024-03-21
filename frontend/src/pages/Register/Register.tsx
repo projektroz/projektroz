@@ -30,9 +30,17 @@ function Register() {
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
   }
+  const links = [
+    {
+      name: "Strona główna",
+      url: "/home",
+      icon: "src/assets/icons/home.png",
+    },
+  ];
+
   return (
     <div className="register-page">
-      <Rectangle>
+      <Rectangle links={links}>
         <div className="content">
           <h2>Rejestracja</h2>
           <form onSubmit={handleSubmit} className="login-form">

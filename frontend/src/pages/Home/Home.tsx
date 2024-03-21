@@ -7,20 +7,18 @@ import ScrollAction from "../../components/ScrollAction/ScrollAction";
 // import Navmenu from "../../components/Navmenu/Navmenu";
 
 const Home = () => {
-  return (
+  const links = [
+    { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
+    { name: "O nas", url: "#info", icon: "src/assets/icons/user.png" },
+    { name: "Logowanie", url: "/login", icon: "src/assets/icons/login.png" },
+  ];
 
+  return (
     <div>
       <div className="home-page">
-        <Rectangle>
-          {/* <div className="content">
-          <div className="left"> */}
+        <Rectangle links={links}>
           <img src="src/assets/images/logo.png" alt="Logo" className="logo" />
           <h1>Witaj na stronie głównej</h1>
-          {/* </div>
-          <div className="right">
-            <Navmenu />
-          </div>
-        </div> */}
         </Rectangle>
         <ScrollAction />
       </div>

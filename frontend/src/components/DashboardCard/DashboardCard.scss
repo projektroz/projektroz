@@ -1,0 +1,36 @@
+.card {
+  background-color: rgba(100, 100, 100, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+  color: white;
+
+  padding: 20px;
+  width: 150px;
+  height: 200px;
+  position: relative;
+  margin: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: center;
+
+  transition: all 0.3s ease-in-out;
+
+  .icon {
+    width: 100%;
+  }
+
+  .blur {
+    filter: blur(30px);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.card:hover {
+  background-color: rgba(150, 150, 150, 0.2);
+  scale: 1.05;
+}
