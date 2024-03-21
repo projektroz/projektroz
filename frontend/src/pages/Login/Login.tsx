@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./Login.scss";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import Navmenu from "../../components/Navmenu/Navmenu";
+import ScrollAction from "../../components/ScrollAction/ScrollAction";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -72,16 +73,25 @@ function Login() {
             </div>
             {error && <p className="text-danger">{error}</p>}
             <button type="submit" className="btn btn-primary">
-              Zaloguj się
+              <span>Zaloguj się</span>
             </button>
           </form>
           <p>
             Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
           </p>
           <hr className="line"></hr>
-          <button>Zaloguj z Google</button>
+          <button>
+            <img
+              src="src/assets/images/google_logo.png"
+              alt="google"
+              width="40px"
+            />
+            Zaloguj z Google
+          </button>
+          <label htmlFor=""></label>
         </div>
       </Rectangle>
+      {/* <ScrollAction /> */}
     </div>
   );
 }

@@ -36,8 +36,15 @@
       text-align: center;
     }
 
-    button {
+    .line {
       width: 100%;
+      height: 3px;
+      background-color: white;
+      margin: 20px 0;
+    }
+
+    button {
+      width: 290px;
       height: 50px;
       border-radius: 30px;
       border: none;
@@ -45,6 +52,20 @@
       color: black;
       font-weight: bold;
       margin-top: 20px;
+      display: flex;
+      justify-items: start;
+      align-items: center;
+
+      span {
+        width: 100%;
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+      }
     }
 
     h2 {
