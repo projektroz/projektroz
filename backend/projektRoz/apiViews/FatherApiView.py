@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Father
+from projektRoz.models import Father, FosterCarer, Child
 from projektRoz.serializer import FatherSerializer
 
 class FatherApiView(APIView):
@@ -13,7 +13,7 @@ class FatherApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
         
-    def get(self, request, father_id=None, *args, **kwargs):
+    def get(self, request, father_id = None, *args, **kwargs):
         """
         Retrieve a list of all fathers or a specific father by ID.
 
@@ -28,14 +28,33 @@ class FatherApiView(APIView):
         Raises:
         - None.
         """
-        if father_id is None:
-            father = Father.objects.all().order_by('id')
+        if father_id:
+            father = Father.objects.get(id=father_id)
+            children = Child.objects.filter(father = father)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            for child in children:
+                if child.foster_carer == fosterCarer:
+                    serializer = FatherSerializer(father, many = False)
+
+                    return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            father = Father.objects.filter(id=father_id)
-                
-        serializer = FatherSerializer(father, many=True)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_carer = fosterCarer)
+            fathers = Father.objects.all()
+            ret = []
+
+            for child in children:
+                for father in fathers:
+                    if child.father == father:
+                        ret.append(father)
+
+            if ret != []:
+                serializer = FatherSerializer(ret, many = True)
+                return Response(serializer.data, status = status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
             
-        return Response(serializer.data, status=status.HTTP_200_OK)
         
     def post(self, request, *args, **kwargs):
         """
@@ -59,7 +78,7 @@ class FatherApiView(APIView):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    def put(self, request, father_id, *args, **kwargs):
+    def put(self, request, father_id = None, *args, **kwargs):
         """
         Update an existing father.
 
@@ -75,24 +94,24 @@ class FatherApiView(APIView):
         Raises:
         - None.
         """
-        father = Father.objects.get(id=father_id)
-            
-        if father is not None:
-            serializer = FatherSerializer(father, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                    
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            
-        elif father is None:
-            serializer = FatherSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                    
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+        if father_id:
+            father = Father.objects.get(id=father_id)
+            children = Child.objects.filter(father = father)
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+            for child in children:
+                if child.foster_carer == fosterCarer:
+                    serializer = FatherSerializer(father, data = request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = FatherSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status = status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
         
     def delete(self, request, father_id, *args, **kwargs):
         """
@@ -110,11 +129,13 @@ class FatherApiView(APIView):
         - None.
         """
         father = Father.objects.get(id=father_id)
-            
-        if father is not None:
-            father.delete()
+        children = Child.objects.filter(father = father)
+        fosterCarer = FosterCarer.objects.get(id = request.user.id)
+
+        for child in children:
+            if child.foster_carer == fosterCarer:
+                father.delete()
+                    
+                return Response(status=status.HTTP_204_NO_CONTENT)
                 
-            return Response(status=status.HTTP_204_NO_CONTENT)
-            
-        else:
             return Response(status=status.HTTP_404_NOT_FOUND)
