@@ -1,13 +1,12 @@
-// src/pages/Login/Login.tsx
-
+// pages/Login/Login.tsx
 import React, { useState } from 'react';
-import Navbar from '../../components/Navbar/Navbar';
 import { Link } from 'react-router-dom';
 import './Login.scss';
+import Rectangle from '../../components/Rectangle/Rectangle'; 
+import Navmenu from '../../components/Navmenu/Navmenu'; 
 
 function Login() {
-
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string>('');
 
@@ -15,64 +14,71 @@ function Login() {
         e.preventDefault();
 
         try {
-        const response = await fetch('http://localhost:8000/api-auth/login', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+            const response = await fetch('http://localhost:8000/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
 
-        if (!response.ok) {
-            throw new Error('Niepoprawne dane logowania.');
-        }
+            if (!response.ok) {
+                throw new Error('Niepoprawne dane logowania.');
+            }
 
-        const data = await response.json();
-        localStorage.setItem('token', data.token); // Zapis tokena JWT do local storage
-        setError('');
-        // Przekierowanie do innej strony po poprawnym zalogowaniu
+            const { access, refresh } = await response.json();
+            localStorage.setItem('access_token', access);
+            localStorage.setItem('refresh_token', refresh);
+            setError('');
+            // Przekierowanie do innej strony po poprawnym zalogowaniu
         } catch (error: any) {
-        setError(error.message);
+            setError(error.message);
         }
     };
 
-  return (
-    <div className="login-page">
-      <Navbar />
-      <div className="login-form">
-        <h2>Zaloguj się</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              id="email" 
-              placeholder="Wprowadź email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">Hasło</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              id="password" 
-              placeholder="Wprowadź hasło" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-          </div>
-          {error && <p className="text-danger">{error}</p>}
-          <button type="submit" className="btn btn-primary">Zaloguj się</button>
-        </form>
-        <p>Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link></p>
-      </div>
-    </div>
-  );
+    return (
+        <div className="login-page">
+            <Rectangle>
+                <div className="content">
+                    <div className="left">
+                        <h2>Zaloguj się</h2>
+                        <form onSubmit={handleSubmit} className="login-form">
+                            <div className="mb-3">
+                                <label htmlFor="username" className="form-label">Nazwa użytkownika</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="username"
+                                    placeholder="Wprowadź nazwę użytkownika"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">Hasło</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    placeholder="Wprowadź hasło"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {error && <p className="text-danger">{error}</p>}
+                            <button type="submit" className="btn btn-primary">Zaloguj się</button>
+                        </form>
+                        <p>Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link></p>
+                    </div>
+                    <div className="right">
+                        <Navmenu />
+                    </div>
+                </div>
+            </Rectangle>
+        </div>
+    );
 }
 
 export default Login;

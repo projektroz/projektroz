@@ -1,26 +1,32 @@
-// src/pages/Home.scss
+// pages/HomePage/Home.scss
 
 .home-page {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-}
-  
-.content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+  background-color: #111111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ustaw wysokość na 100% wysokości ekranu */
+
+  .content {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .left {
+      margin-bottom: 20px; /* Dodaj odstęp między logo a nagłówkiem */
+      width: 70%; /* Ustaw szerokość menu na 20% prostokąta */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Wysrodkuj zawartość w pionie */
+      justify-content: center; /* Wysrodkuj zawartość w poziomie */
+    }
+
+    .right {
+      width: 30%; /* Ustaw szerokość menu na 20% prostokąta */
+      align-items: center; /* Wysrodkuj zawartość w pionie */
+      justify-content: center; /* Wysrodkuj zawartość w poziomie */
+    }
+  }
 }
 
-.words {
-    margin-bottom: 20px;
-}
-
-h1, h2 {
-    margin: 0;
-}
-  
