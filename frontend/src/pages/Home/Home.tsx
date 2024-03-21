@@ -8,6 +8,7 @@ import ScrollAction from "../../components/ScrollAction/ScrollAction";
 
 const Home = () => {
   return (
+
     <div>
       <div className="home-page">
         <Rectangle>
