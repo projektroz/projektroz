@@ -43,6 +43,7 @@
   top: 35%;
   left: 5%;
   z-index: -1;
+  animation: fadeEclipse random(2) + 2s infinite;
 }
 #elipse2 {
   border-radius: 50%;
@@ -53,7 +54,21 @@
   top: 25%;
   left: 15%;
   z-index: -1;
+  animation: fadeEclipse random(4) + 4s infinite;
 }
+
+@keyframes fadeEclipse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .blur {
   height: 100%;
   width: 100%;

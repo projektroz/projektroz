@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-import useNavigation from "../../hooks/useNavigation";
+// import useNavigation from "../../hooks/useNavigation";
 import useAuth from "../../hooks/useAuth";
 
 import Rectangle from "../../components/Rectangle/Rectangle";
-import Navmenu from "../../components/Navmenu/Navmenu";
+// import Navmenu from "../../components/Navmenu/Navmenu";
 
 import "./Login.scss";
 
@@ -69,7 +69,10 @@ function Login() {
             </button>
           </form>
           <p>
-            Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
+            Nie masz jeszcze konta?{" "}
+            <Link to="/register" className="link">
+              Zarejestruj się
+            </Link>
           </p>
           <hr className="line"></hr>
           <button>
