@@ -48,13 +48,17 @@ function AddChild() {
   };
 
   const links = [
-    { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
+    {
+      name: "Strona główna",
+      url: "/home",
+      icon: "../src/assets/icons/home.png",
+    },
     {
       name: "Panel sterowania",
       url: "/dashboard",
-      icon: "src/assets/icons/manage.png",
+      icon: "../src/assets/icons/manage.png",
     },
-    { name: "Wyloguj", url: "/logout", icon: "src/assets/icons/logout.png" },
+    { name: "Wyloguj", url: "/logout", icon: "../src/assets/icons/logout.png" },
   ];
 
   interface DataInput {

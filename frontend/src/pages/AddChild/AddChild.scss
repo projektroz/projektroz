@@ -28,3 +28,50 @@
     color: var(--creamy);
   }
 }
+
+.child-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    width: 350px;
+    padding: 30px;
+  }
+
+  button {
+    width: 290px;
+    height: 50px;
+    border-radius: 15px;
+    border: none;
+    background-color: rgba($color: #fff, $alpha: 0.7);
+    font-weight: bold;
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+  }
+  button:hover {
+    background-color: rgba($color: #fff, $alpha: 0.9);
+  }
+
+  input {
+    width: 290px;
+    height: 50px;
+    border-radius: 15px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #111;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+  }
+  input:focus {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  input::placeholder {
+    color: #111;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+}
