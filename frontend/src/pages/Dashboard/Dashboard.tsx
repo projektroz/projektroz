@@ -19,20 +19,44 @@ function Dashboard() {
   ];
 
   const childCards = [
-    { title: "Dodaj dziecko", url:"/add-child", image: "src/assets/icons/add.png"},
-    { title: "Zarządzaj dziećmi", url:"/dashboard",  image: "src/assets/icons/manage.png" },
+    {
+      title: "Dodaj dziecko",
+      url: "/dashboard/add-child",
+      image: "src/assets/icons/add.png",
+    },
+    {
+      title: "Zarządzaj dziećmi",
+      url: "/dashboard",
+      image: "src/assets/icons/manage.png",
+    },
     // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
   ];
 
   const documentsCards = [
-    { title: "Dodaj dokument",url:"/dashboard", image: "src/assets/icons/add.png" },
-    { title: "Zarządzaj dokumentami",url:"/dashboard", image: "src/assets/icons/manage.png" },
+    {
+      title: "Dodaj dokument",
+      url: "/dashboard",
+      image: "src/assets/icons/add.png",
+    },
+    {
+      title: "Zarządzaj dokumentami",
+      url: "/dashboard",
+      image: "src/assets/icons/manage.png",
+    },
     // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
   ];
 
   const templateCards = [
-    { title: "Dodaj szablon",url:"/dashboard", image: "src/assets/icons/add.png" },
-    { title: "Zarządzaj szablonami",url:"/dashboard", image: "src/assets/icons/manage.png" },
+    {
+      title: "Dodaj szablon",
+      url: "/dashboard",
+      image: "src/assets/icons/add.png",
+    },
+    {
+      title: "Zarządzaj szablonami",
+      url: "/dashboard",
+      image: "src/assets/icons/manage.png",
+    },
     // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
   ];
 

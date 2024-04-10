@@ -25,7 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/add-child" element={<AddChild />} />
+        <Route path="/dashboard/add-child" element={<AddChild />} />
 
         {/* <Route element={<PrivateRoutes />}> */}
         <Route path="/dashboard" element={<Dashboard />} />
