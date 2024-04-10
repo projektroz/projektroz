@@ -31,10 +31,14 @@
   }
 
   a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-decoration: none;
     color: var(--text);
-    font-size: 2rem;
+    font-size: calc(16px + 2 * ((100vw - 568px) / (768 - 568)));
     transition: color 0.3s ease;
+    height: 40px;
 
     &:hover {
       color: var(--third);

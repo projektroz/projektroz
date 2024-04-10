@@ -1,32 +1,7 @@
-// .add-child-page {
-//   //   background-color: #111;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: flex-start;
-//   justify-content: center;
-//   padding: 2% 0;
-//   height: 100%;
-// }
-
 .add-child-form {
   min-width: 320px;
   display: flex;
   flex-direction: column;
-
-  label {
-    width: 100%;
-    text-align: left;
-  }
-
-  button,
-  h4 {
-    align-self: flex-end;
-    display: block;
-  }
-
-  h4 {
-    color: var(--creamy);
-  }
 }
 
 .child-content {
@@ -34,13 +9,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 90%;
 
   form {
-    width: 350px;
-    padding: 30px;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    // padding: 30px;
   }
 
   button {
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s ease-in-out;
+  }
+  button:hover {
+    scale: 1.1;
+  }
+
+  .btn {
     width: 290px;
     height: 50px;
     border-radius: 15px;
@@ -50,13 +40,14 @@
     margin-top: 20px;
     transition: all 0.3s ease-in-out;
   }
-  button:hover {
+
+  .btn:hover {
     background-color: rgba($color: #fff, $alpha: 0.9);
   }
 
   input {
     width: 290px;
-    height: 50px;
+    height: 40px;
     border-radius: 15px;
     border: none;
     background-color: rgba(255, 255, 255, 0.4);
@@ -73,5 +64,8 @@
 
   h2 {
     margin-bottom: 20px;
+  }
+  h3 {
+    font-size: calc(16px + 2 * ((100vw - 568px) / (768 - 568)));
   }
 }

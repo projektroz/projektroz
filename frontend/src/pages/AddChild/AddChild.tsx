@@ -182,7 +182,9 @@ function AddChild() {
           <h2>Dodaj dziecko</h2>
           <form onSubmit={handleSubmit}>
             <ChildDataCard dataSets={dataSets} setters={setters} />
-            <button type="submit">Dodaj dziecko</button>
+            {/* <button type="submit" className="btn">
+              Dodaj dziecko
+            </button> */}
           </form>
           <div className="error">{error}</div>
         </div>

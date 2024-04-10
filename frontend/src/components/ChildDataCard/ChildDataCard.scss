@@ -1,0 +1,72 @@
+.data-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 450px;
+}
+
+.childData-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 80%;
+  width: 80%; /* Dodane szerokości */
+  margin: auto; /* Dodane wyśrodkowanie */
+}
+
+.content-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: var(--white);
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+}
+
+.slide-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.slide-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.slide-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.scroll-progress-container {
+  width: 290px;
+  height: 10px;
+  background-color: var(--text);
+  margin: 2% 0;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--fifth);
+  border-radius: 10px;
+}
