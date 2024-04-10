@@ -5,7 +5,7 @@ type AddChildResponse = {
   surname: string;
 }
 
-export async function addChild(name: string, surname: string): Promise<AddChildResponse> {
+export async function addChild(name: string, surname: string, birthDate?: Date): Promise<AddChildResponse> {
     const response = await fetch('http://localhost:8000/children/api/', {
         method: 'POST',
         headers: {
