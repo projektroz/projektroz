@@ -1,10 +1,23 @@
-#root {
-  /* max-width: 1280px; */
-  /* margin: 0 auto;
-  padding: 2rem;
-  text-align: center; */
-  height: 100%;
+:root {
+  --primary: #78152B;
+  --secondary: #F87575;
+  --third: #FFA9A3;
+  --forth: #B9E6FF;
+  --fifth: #5C95FF;
+  --background: #111;
+  --text: #fcf8ec;
+  --text-dark: #111;
+  --white: #fff;
 }
+
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  height: 100%;
+  position: relative
+} */
 
 .logo {
   height: 6em;
@@ -14,11 +27,11 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--fifth));
 }
 
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em var(--forth));
 }
 
 @keyframes logo-spin {

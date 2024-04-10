@@ -39,7 +39,7 @@ function Register() {
   ];
 
   return (
-    <div className="register-page">
+    <div className="app-page register-page">
       <Rectangle links={links}>
         <div className="content">
           <h2>Rejestracja</h2>

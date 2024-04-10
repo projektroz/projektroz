@@ -40,7 +40,7 @@
   border-radius: 50%;
   width: 15vw;
   height: 15vw;
-  background-color: #5c95ff;
+  background-color: var(--fifth);
   position: absolute;
   top: 35%;
   left: 5%;
@@ -51,7 +51,7 @@
   border-radius: 50%;
   width: 20vw;
   height: 20vw;
-  background-color: #f87575;
+  background-color: var(--secondary);
   position: absolute;
   top: 25%;
   left: 15%;
@@ -80,8 +80,4 @@
   left: 10%;
   background-color: rgba(0, 0, 0, 0);
   z-index: -1;
-}
-
-a {
-  height: 50px;
 }
