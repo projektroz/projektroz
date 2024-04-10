@@ -44,10 +44,9 @@ function AddChild() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // await addChild(formData); // Przykład wywołania API
+      // await addChild(formData);
       console.log(formData);
       setError("");
-      // Resetowanie formularza lub inne działania po sukcesie
     } catch (error: any) {
       setError(error.message);
     }
