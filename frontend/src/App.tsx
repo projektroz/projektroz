@@ -14,6 +14,7 @@ import Login from "./pages/Login/Login";
 import Logout from "./pages/Logout/Logout";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import AddChild from "./pages/AddChild/AddChild";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/add-child" element={<AddChild />} />
 
         {/* <Route element={<PrivateRoutes />}> */}
         <Route path="/dashboard" element={<Dashboard />} />
