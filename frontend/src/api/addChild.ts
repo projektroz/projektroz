@@ -6,10 +6,11 @@ type AddChildResponse = {
 }
 
 export async function addChild(name: string, surname: string): Promise<AddChildResponse> {
-    const response = await fetch('http://localhost:8000/api/children', {
+    const response = await fetch('http://localhost:8000/children/api/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
         body: JSON.stringify({ name, surname }),
     });
