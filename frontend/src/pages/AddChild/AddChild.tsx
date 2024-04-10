@@ -13,12 +13,6 @@ function AddChild() {
   const [admissionDate, setAdmissionDate] = useState("");
   const [courtDecision, setCourtDecision] = useState("");
 
-  const [motherName, setMotherName] = useState("");
-  const [motherSurname, setMotherSurname] = useState("");
-
-  const [fatherName, setFatherName] = useState("");
-  const [fatherSurname, setFatherSurname] = useState("");
-
   const [addressRegisteredCountry, setAddressRegisteredCountry] = useState("");
   const [addressRegisteredCity, setAddressRegisteredCity] = useState("");
   const [addressRegisteredStreet, setAddressRegisteredStreet] = useState("");
@@ -31,12 +25,19 @@ function AddChild() {
   const [addressCurrentPostalCode, setAddressCurrentPostalCode] = useState("");
   const [addressCurrentHouseNumber, setAddressCurrentHouseNumber] = useState("");
 
-  const setters[] = [
+  const [motherName, setMotherName] = useState("");
+  const [motherSurname, setMotherSurname] = useState("");
+
+  const [fatherName, setFatherName] = useState("");
+  const [fatherSurname, setFatherSurname] = useState("");
+  
+  const setters = [
     setName, setSurname, setBirthDate, setBirthPlace, setPesel, setAdmissionDate, setCourtDecision,
     setAddressRegisteredCountry, setAddressRegisteredCity, setAddressRegisteredStreet, setAddressRegisteredPostalCode, setAddressRegisteredHouseNumber,
     setAddressCurrentCountry, setAddressCurrentCity, setAddressCurrentStreet, setAddressCurrentPostalCode, setAddressCurrentHouseNumber,
     setMotherName, setMotherSurname, setFatherName, setFatherSurname
-  ]
+  ];
+
   const [error, setError] = useState<string>("");
 
 
@@ -110,6 +111,7 @@ function AddChild() {
             <form onSubmit={handleSubmit}>
               <ChildDataCard
                 dataSets={dataSets}
+                setters={setters}
               />
               <button type="submit">Dodaj dziecko</button>
             </form>
