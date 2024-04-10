@@ -66,6 +66,10 @@
     margin-bottom: 20px;
   }
   h3 {
-    font-size: calc(16px + 2 * ((100vw - 568px) / (768 - 568)));
+    font-size: calc(8px + 2 * ((100vw - 568px) / (768 - 568)));
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 36px;
+    width: 100%;
   }
 }

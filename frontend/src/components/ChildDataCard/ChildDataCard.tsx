@@ -63,11 +63,15 @@ const DataCard: React.FC<DataCardProps> = ({
                   overflow: currentSetIndex === index ? "visible" : "hidden",
                   transition: "all 0.25s ease-out",
                 }}
+                className="content-center"
               >
                 {dataSet.map((data, dataIndex) => {
                   const inputName = data.inputLabel.replace(/\s+/g, "");
                   return (
-                    <div className="childData-input" key={dataIndex}>
+                    <div
+                      className="childData-input content-center"
+                      key={dataIndex}
+                    >
                       <h3>{data.inputLabel}</h3>
                       <input
                         type={data.type}
