@@ -25,17 +25,17 @@ services:
     ports:
       - "3000:3000"
       - "3010:3010"
-  nginx:
-    build:
-      context: ./nginx
-    volumes:
-      - static:/static
-      - frontend:/var/www/frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - frontend
+  # nginx:
+  #   build:
+  #     context: ./nginx
+  #   volumes:
+  #     - static:/static
+  #     - frontend:/var/www/frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #     - frontend
   db:
     container_name: pg_container
     image: postgres
