@@ -37,7 +37,7 @@ function Dashboard() {
   ];
 
   return (
-    <div className="dashboard-page">
+    <div className="app-page dashboard-page">
       <Rectangle links={links}>
         <DashboardLine title="Dzieci" cards={childCards} />
         <DashboardLine title="Dokumenty" cards={documentsCards} />

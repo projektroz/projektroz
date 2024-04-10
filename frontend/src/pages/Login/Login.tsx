@@ -35,7 +35,7 @@ function Login() {
   ];
 
   return (
-    <div className="login-page">
+    <div className="app-page login-page">
       <Rectangle links={links}>
         <div className="content">
           <h2>Zaloguj się</h2>
@@ -88,7 +88,6 @@ function Login() {
             />
             Zaloguj z Google
           </button>
-          <label htmlFor=""></label>
         </div>
       </Rectangle>
       {/* <ScrollAction /> */}

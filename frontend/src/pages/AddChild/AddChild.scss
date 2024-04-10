@@ -1,0 +1,30 @@
+// .add-child-page {
+//   //   background-color: #111;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: flex-start;
+//   justify-content: center;
+//   padding: 2% 0;
+//   height: 100%;
+// }
+
+.add-child-form {
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    width: 100%;
+    text-align: left;
+  }
+
+  button,
+  h4 {
+    align-self: flex-end;
+    display: block;
+  }
+
+  h4 {
+    color: var(--creamy);
+  }
+}
