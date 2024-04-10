@@ -148,7 +148,7 @@ function AddChild() {
   ];
 
   return (
-    <div className="add-child-page">
+    <div className="app-page add-child-page">
       <Rectangle links={links}>
         <div className="child-content">
           <h2>Dodaj dziecko</h2>

@@ -1,7 +1,30 @@
 html {
   scroll-behavior: smooth;
+  color: var(--cretextamy);
+  background-color: var(--background);
 }
 
 body {
   height: 100vh;
+}
+
+a {
+  color: var(--fifth);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+a:hover {
+  color: var(--forth);
+}
+
+p {
+  color: var(--text);
+}
+
+.app-page {
+  background-color: var(--background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ustaw wysokość na 100% wysokości ekranu */
 }

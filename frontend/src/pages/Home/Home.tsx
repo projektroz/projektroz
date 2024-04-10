@@ -14,8 +14,8 @@ const Home = () => {
   ];
 
   return (
-    <div>
-      <div className="home-page">
+    <div className="app-page home-page">
+      <div className="main-section">
         <Rectangle links={links}>
           <img src="src/assets/images/logo.png" alt="Logo" className="logo" />
           <h1>Witaj na stronie głównej</h1>
