@@ -1,52 +1,53 @@
-import { useState } from "react";
+
+
+
+import React, { useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import "./AddChild.scss";
-import { addChild } from "../../api/addChild";
 import ChildDataCard from "../../components/ChildDataCard/ChildDataCard";
+import { addChild } from "../../api/addChild";
+import "./AddChild.scss";
 
 function AddChild() {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [birthPlace, setBirthPlace] = useState("");
-  const [pesel, setPesel] = useState("");
-  const [admissionDate, setAdmissionDate] = useState("");
-  const [courtDecision, setCourtDecision] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    birthDate: "",
+    birthPlace: "",
+    pesel: "",
+    admissionDate: "",
+    courtDecision: "",
+    addressRegisteredCountry: "",
+    addressRegisteredCity: "",
+    addressRegisteredStreet: "",
+    addressRegisteredPostalCode: "",
+    addressRegisteredHouseNumber: "",
+    addressCurrentCountry: "",
+    addressCurrentCity: "",
+    addressCurrentStreet: "",
+    addressCurrentPostalCode: "",
+    addressCurrentHouseNumber: "",
+    motherName: "",
+    motherSurname: "",
+    fatherName: "",
+    fatherSurname: ""
+  });
 
-  const [addressRegisteredCountry, setAddressRegisteredCountry] = useState("");
-  const [addressRegisteredCity, setAddressRegisteredCity] = useState("");
-  const [addressRegisteredStreet, setAddressRegisteredStreet] = useState("");
-  const [addressRegisteredPostalCode, setAddressRegisteredPostalCode] = useState("");
-  const [addressRegisteredHouseNumber, setAddressRegisteredHouseNumber] = useState("");
+  const [error, setError] = useState("");
 
-  const [addressCurrentCountry, setAddressCurrentCountry] = useState("");
-  const [addressCurrentCity, setAddressCurrentCity] = useState("");
-  const [addressCurrentStreet, setAddressCurrentStreet] = useState("");
-  const [addressCurrentPostalCode, setAddressCurrentPostalCode] = useState("");
-  const [addressCurrentHouseNumber, setAddressCurrentHouseNumber] = useState("");
+  const handleInputChange = (name: string, value: string | Date) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  };
 
-  const [motherName, setMotherName] = useState("");
-  const [motherSurname, setMotherSurname] = useState("");
-
-  const [fatherName, setFatherName] = useState("");
-  const [fatherSurname, setFatherSurname] = useState("");
-  
-  const setters = [
-    setName, setSurname, setBirthDate, setBirthPlace, setPesel, setAdmissionDate, setCourtDecision,
-    setAddressRegisteredCountry, setAddressRegisteredCity, setAddressRegisteredStreet, setAddressRegisteredPostalCode, setAddressRegisteredHouseNumber,
-    setAddressCurrentCountry, setAddressCurrentCity, setAddressCurrentStreet, setAddressCurrentPostalCode, setAddressCurrentHouseNumber,
-    setMotherName, setMotherSurname, setFatherName, setFatherSurname
-  ];
-
-  const [error, setError] = useState<string>("");
-
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      await addChild(name, surname);
+      // await addChild(formData); // Przykład wywołania API
+      console.log(formData);
       setError("");
+      // Resetowanie formularza lub inne działania po sukcesie
     } catch (error: any) {
       setError(error.message);
     }
@@ -54,12 +55,8 @@ function AddChild() {
 
   const links = [
     { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
-    {
-      name: "Panel sterowania",
-      url: "/dashboard",
-      icon: "src/assets/icons/manage.png",
-    },
-    { name: "Wyloguj", url: "/logout", icon: "src/assets/icons/logout.png" },
+    { name: "Panel sterowania", url: "/dashboard", icon: "src/assets/icons/manage.png" },
+    { name: "Wyloguj", url: "/logout", icon: "src/assets/icons/logout.png" }
   ];
 
   interface DataInput {
@@ -68,30 +65,30 @@ function AddChild() {
     type: 'date' | 'text';
     regex?: string;
   }
-
+  
   const dataSets: DataInput[][] = [
     [
-      { inputLabel: "Imię", placeholder: "Wpisz imię", type: "text" },
+      { inputLabel: "Imie", placeholder: "Wpisz imię", type: "text" },
       { inputLabel: "Nazwisko", placeholder: "Wpisz nazwisko", type: "text" },
-      { inputLabel: "Data urodzenia", placeholder: "Wpisz datę urodzenia", type: "date" },
-      { inputLabel: "Miejsce urodzenia", placeholder: "Wpisz miejsce urodzenia", type: "text" },
+      { inputLabel: "Data Urodzenia", placeholder: "Wpisz datę urodzenia", type: "date" },
+      { inputLabel: "Miejsce Urodzenia", placeholder: "Wpisz miejsce urodzenia", type: "text" },
       { inputLabel: "PESEL", placeholder: "Wpisz PESEL", type: "text", regex: "[0-9]{11}$" },
-      { inputLabel: "Data przyjęcia", placeholder: "Wpisz datę przyjęcia", type: "date" },
-      { inputLabel: "Decyzja sądu", placeholder: "Wpisz decyzję sądu", type: "text" },
+      { inputLabel: "Data Przyjęcia", placeholder: "Wpisz datę przyjęcia", type: "date" },
+      { inputLabel: "Decyzja Sadu", placeholder: "Wpisz decyzję sądu", type: "text" },
     ],
     [
-      {inputLabel: "Kraj", placeholder: "Wpisz kraj", type: "text"},
-      {inputLabel: "Miastio", placeholder: "Wpisz miasto", type: "text"},
-      {inputLabel: "Ulica", placeholder: "Wpisz ulicę", type: "text"},
-      {inputLabel: "Kod pocztowy", placeholder: "Wpisz kod pocztowy", type: "text"},
-      {inputLabel: "Numer domu", placeholder: "Wpisz numer domu", type: "text"},
+      {inputLabel: "Kraj Stalego Zameldowania", placeholder: "Wpisz kraj", type: "text"},
+      {inputLabel: "Miasto Stalego Zameldowania", placeholder: "Wpisz miasto", type: "text"},
+      {inputLabel: "Ulica Stalego Zameldowania", placeholder: "Wpisz ulicę", type: "text"},
+      {inputLabel: "Kod Pocztowy Stalego Zameldowania", placeholder: "Wpisz kod pocztowy", type: "text"},
+      {inputLabel: "Numer Domu Stalego Zameldowania", placeholder: "Wpisz numer domu", type: "text"},
     ],
     [
-      {inputLabel: "Kraj", placeholder: "Wpisz kraj", type: "text"},
-      {inputLabel: "Miastio", placeholder: "Wpisz miasto", type: "text"},
-      {inputLabel: "Ulica", placeholder: "Wpisz ulicę", type: "text"},
-      {inputLabel: "Kod pocztowy", placeholder: "Wpisz kod pocztowy", type: "text"},
-      {inputLabel: "Numer domu", placeholder: "Wpisz numer domu", type: "text"},
+      {inputLabel: "Kraj Zamieszkania", placeholder: "Wpisz kraj", type: "text"},
+      {inputLabel: "Miasto Zamieszkania", placeholder: "Wpisz miasto", type: "text"},
+      {inputLabel: "Ulica Zamieszkania", placeholder: "Wpisz ulicę", type: "text"},
+      {inputLabel: "Kod pocztowy Zamieszkania", placeholder: "Wpisz kod pocztowy", type: "text"},
+      {inputLabel: "Numer domu Zamieszkania", placeholder: "Wpisz numer domu", type: "text"},
     ],
     [
       {inputLabel: "Imie Matki", placeholder: "Wpisz imię matki", type: "text"},
@@ -108,14 +105,15 @@ function AddChild() {
       <Rectangle links={links}>
         <div className="child-content">
           <h2>Dodaj dziecko</h2>
-            <form onSubmit={handleSubmit}>
-              <ChildDataCard
-                dataSets={dataSets}
-                setters={setters}
-              />
-              <button type="submit">Dodaj dziecko</button>
-            </form>
-          <div className="error">{error}</div>
+          <form onSubmit={handleSubmit}>
+            <ChildDataCard
+              dataSets={dataSets}
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
+            <button type="submit">Dodaj dziecko</button>
+          </form>
+          {error && <div className="error">{error}</div>}
         </div>
       </Rectangle>
     </div>
