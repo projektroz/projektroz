@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ChildDataInput from "../ChildDataInput/ChildDataInput";
 
+// Define the props for the input data and the card component
 interface DataInput {
   inputLabel: string;
   placeholder: string;
@@ -8,11 +8,13 @@ interface DataInput {
   regex?: string;
 }
 
-interface Props {
+interface DataCardProps {
   dataSets: DataInput[][];
+  setters: React.Dispatch<React.SetStateAction<string>>[];
 }
 
-const ChildDataCard: React.FC<Props> = ({ dataSets }) => {
+// DataCard component with integrated input fields
+const DataCard: React.FC<DataCardProps> = ({ dataSets, setters }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
 
   const nextSet = () => setCurrentSetIndex((prevIndex) => (prevIndex + 1) % dataSets.length);
@@ -21,13 +23,13 @@ const ChildDataCard: React.FC<Props> = ({ dataSets }) => {
   return (
     <div className="childData-card">
       {dataSets[currentSetIndex].map((data, index) => (
-        <ChildDataInput
-          key={index}
-          inputLabel={data.inputLabel}
-          placeholder={data.placeholder}
-          type={data.type}
-          regex={data.regex} 
-        />
+        <div className="childData-input" key={index}>
+          <h3>{data.inputLabel}</h3>
+          <input 
+            type={data.type} 
+            placeholder={data.placeholder} 
+          />
+        </div>
       ))}
       <button onClick={prevSet} type="button">Poprzedni zestaw</button>
       <button onClick={nextSet} type="button">Następny zestaw</button>
@@ -35,4 +37,4 @@ const ChildDataCard: React.FC<Props> = ({ dataSets }) => {
   );
 };
 
-export default ChildDataCard;
+export default DataCard;
