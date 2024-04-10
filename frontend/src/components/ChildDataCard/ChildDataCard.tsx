@@ -19,14 +19,19 @@ interface DataCardProps {
 // DataCard component with integrated input fields
 const DataCard: React.FC<DataCardProps> = ({ dataSets, setters }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
+  const [animationDirection, setAnimationDirection] = useState<
+    "left" | "right"
+  >("left");
 
   const nextSet = () => {
+    setAnimationDirection("right");
     setCurrentSetIndex((prevIndex) =>
       Math.min(prevIndex + 1, dataSets.length - 1)
     );
   };
 
   const prevSet = () => {
+    setAnimationDirection("left");
     setCurrentSetIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
@@ -44,14 +49,16 @@ const DataCard: React.FC<DataCardProps> = ({ dataSets, setters }) => {
           {dataSets.map((dataSet, index) => (
             <CSSTransition
               key={index}
-              classNames="slide"
+              classNames={`slide-${animationDirection}`}
               timeout={300}
-              unmountOnExit
-              appear
             >
               <div
                 style={{
-                  display: currentSetIndex === index ? "block" : "none",
+                  visibility: currentSetIndex === index ? "visible" : "hidden",
+                  opacity: currentSetIndex === index ? 1 : 0,
+                  height: currentSetIndex === index ? "auto" : 0,
+                  overflow: currentSetIndex === index ? "visible" : "hidden",
+                  transition: "all 0.25s ease-out",
                 }}
               >
                 {dataSet.map((data, dataIndex) => (
@@ -77,6 +84,7 @@ const DataCard: React.FC<DataCardProps> = ({ dataSets, setters }) => {
           className="progress-bar"
           style={{
             width: `${((currentSetIndex + 1) / dataSets.length) * 100}%`,
+            transition: `width 0.3s ease-in-out`,
           }}
         ></div>
       </div>
