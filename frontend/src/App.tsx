@@ -5,6 +5,8 @@ import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/global.scss";
 
+import "./App.css";
+
 // import PrivateRoutes from "./components/PrivateRoute/PrivateRoute";
 
 import Home from "./pages/Home/Home";
@@ -17,6 +19,7 @@ const App = () => {
   return (
     <>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
