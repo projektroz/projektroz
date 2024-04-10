@@ -1,13 +1,9 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
 RUN pip install --upgrade pip 
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    postgresql-server-dev-all \
-    gcc \
-    libc-dev \
-    libpq5 \
-    xvfb
+RUN apk update && apk add postgresql-dev gcc libc-dev libpq xvfb
+
 COPY ./requirements.txt .
 
 RUN pip install -r requirements.txt
