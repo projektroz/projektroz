@@ -42,7 +42,7 @@ function AddChild() {
     e.preventDefault();
     try {
       await addChild();
-      
+
       setError("");
     } catch (error: any) {
       setError(error.message);
@@ -188,7 +188,7 @@ function AddChild() {
               formData={formData}
               handleInputChange={handleInputChange}
             />
-            <button type="submit">Dodaj dziecko</button>
+            {/* <button type="submit">Dodaj dziecko</button> */}
           </form>
           {error && <div className="error">{error}</div>}
         </div>
