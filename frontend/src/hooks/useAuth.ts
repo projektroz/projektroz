@@ -1,17 +1,17 @@
 // hooks/useAuth.tsx
 import { useState } from 'react';
-import { login } from '../api/auth'
+import { loginRequest } from '../api/auth'
 
 const useAuth = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const loginUser = async (username: string, password: string) => {
         try {
-            const { access, refresh } = await login(username, password);
-
+            const { access, refresh } = await loginRequest(username, password);
+            
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', refresh);
-
+            
             setIsLoggedIn(true);
         } catch (error) {
             throw new Error('Nie udało się zalogować. Spróbuj ponownie.');

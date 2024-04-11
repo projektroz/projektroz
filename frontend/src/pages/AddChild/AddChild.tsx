@@ -41,8 +41,8 @@ function AddChild() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // await addChild(formData);
-      console.log(formData);
+      await addChild();
+      
       setError("");
     } catch (error: any) {
       setError(error.message);
