@@ -13,18 +13,18 @@ class AddressRegisteredApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, address_id=None, *args, **kwargs):
+    def get(self, request, address_registered_id=None, *args, **kwargs):
         """
         Retrieve a list of addresses or a specific address by ID.
 
         Parameters:
-        - address_id (int): Optional. The ID of the address to retrieve.
+        - address_registered_id (int): Optional. The ID of the address to retrieve.
 
         Returns:
         - Response: The serialized address(es) in the response body.
         """
-        if address_id:
-            address = AddressRegistered.objects.get(id=address_id)
+        if address_registered_id:
+            address = AddressRegistered.objects.get(id=address_registered_id)
             children = Child.objects.filter(address_registered = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
@@ -42,7 +42,7 @@ class AddressRegisteredApiView(APIView):
             
             for child in children:
                 for address in addresses:
-                    if child.address == address:
+                    if child.address_registered == address:
                         ret.append(address)     
             if ret != []:
                 serializer = AddressRegisteredSerializer(ret, many=True)
@@ -71,19 +71,19 @@ class AddressRegisteredApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, address_id = None, *args, **kwargs):
+    def put(self, request, address_registered_id = None, *args, **kwargs):
         """
         Update an existing address.
 
         Parameters:
         - request (Request): The HTTP request object.
-        - address_id (int): The ID of the address to update.
+        - address_registered_id (int): The ID of the address to update.
 
         Returns:
         - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
-        if address_id:
-            address = AddressRegistered.objects.get(id=address_id)
+        if address_registered_id:
+            address = AddressRegistered.objects.get(id=address_registered_id)
             children = Child.objects.filter(address_registered = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
@@ -104,18 +104,18 @@ class AddressRegisteredApiView(APIView):
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def delete(self, request, address_id, *args, **kwargs):
+    def delete(self, request, address_registered_id, *args, **kwargs):
         """
         Delete an existing address.
 
         Parameters:
         - request (Request): The HTTP request object.
-        - address_id (int): The ID of the address to delete.
+        - address_registered_id (int): The ID of the address to delete.
 
         Returns:
         - Response: No content if successful, or the error message if the address is not found.
         """
-        address = AddressRegistered.objects.get(id=address_id)
+        address = AddressRegistered.objects.get(id=address_registered_id)
         children = Child.objects.filter(address_registered = address)
         fosterCarer = FosterCarer.objects.get(id = request.user.id)
 

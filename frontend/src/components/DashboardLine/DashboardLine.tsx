@@ -5,6 +5,7 @@ import "./DashboardLine.scss";
 interface Card {
   title: string;
   image: string;
+  url: string;
 }
 
 interface Props {
@@ -18,7 +19,12 @@ const DashboardLine: React.FC<Props> = ({ title, cards }) => {
       <h2>{title}</h2>
       <div className="dashboard-line__cards">
         {cards.map((card, index) => (
-          <DashboardCard key={index} title={card.title} image={card.image} />
+          <DashboardCard
+            key={index}
+            title={card.title}
+            image={card.image}
+            url={card.url}
+          />
         ))}
       </div>
     </div>

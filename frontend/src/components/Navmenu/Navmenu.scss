@@ -31,17 +31,21 @@
   }
 
   a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-decoration: none;
-    color: #ffffff;
-    font-size: 2rem;
+    color: var(--text);
+    font-size: calc(16px + 2 * ((100vw - 568px) / (768 - 568)));
     transition: color 0.3s ease;
+    height: 40px;
 
     &:hover {
-      color: #aaa;
+      color: var(--third);
     }
 
     &.active {
-      color: #555555;
+      color: var(--primary);
       font-weight: bold;
     }
   }

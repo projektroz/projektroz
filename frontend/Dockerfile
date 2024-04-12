@@ -1,19 +1,24 @@
+# Use the official Node.js Alpine image as base
 FROM node:alpine
 
+# Set the working directory inside the container
 WORKDIR /app
 
+# Copy package.json and package-lock.json files to the working directory
 COPY package.json .
+COPY pnpm-lock.yaml .
 
-RUN npm install
+# Install pnpm globally
+RUN npm install -g pnpm
 
+# Install dependencies using pnpm
+RUN pnpm install
+
+# Copy the rest of the application code
 COPY . .
 
-RUN npm install react-router-dom history sass
-# RUN npm run build
-
-# RUN npm install styled-components
-# RUN npm install @mantine/core
-
+# Expose port 3000 to the outside world
 EXPOSE 3000 3010
 
-CMD ["npm", "run", "dev"]
+# Command to run the application
+CMD ["pnpm", "run", "dev"]
