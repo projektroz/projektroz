@@ -33,5 +33,5 @@ class JWTMiddleware(MiddlewareMixin):
 
             if 'token_not_valid' in str(error_detail):
                 return JsonResponse(response_data, status=401)
-            return JsonResponse(response_data, status=401)
+            return JsonResponse(response_data, status=500)
         return None

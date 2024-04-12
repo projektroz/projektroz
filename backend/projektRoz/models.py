@@ -9,7 +9,6 @@ class Mother(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
-    child_id = models.IntegerField()
 
 class Father(models.Model):
     """
@@ -18,7 +17,6 @@ class Father(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
-    child_id = models.IntegerField()
 
 class Notes(models.Model):
     """

@@ -7,6 +7,13 @@ const login = axios.create({
     } 
 });
 
+const register = axios.create({
+    baseURL: 'http://localhost:8000/register',
+    headers: {
+        'Content-Type': 'application/json',
+    } 
+});
+
 const api = axios.create({
     baseURL: 'http://localhost:8000/api/',
     headers: {
@@ -63,4 +70,4 @@ api.interceptors.response.use(
     }
 );
 
-export { api, login, refresh };
+export { api, login, refresh, register };
