@@ -45,6 +45,8 @@ function AddChild() {
 			await addChild(getChildData(formData));
 
 			setError("");
+
+      window.location.href = "/dashboard";
 		} catch (error: any) {
 			setError(error.message);
 		}
