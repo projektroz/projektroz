@@ -221,7 +221,7 @@ function AddChild() {
               formData={formData}
               handleInputChange={handleInputChange}
             />
-            <button type="submit">Dodaj dziecko</button>
+            {/* <button type="submit">Dodaj dziecko</button> */}
           </form>
           {error && <div className="error">{error}</div>}
         </div>

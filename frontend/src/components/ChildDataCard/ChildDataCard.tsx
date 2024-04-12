@@ -106,6 +106,17 @@ const DataCard: React.FC<DataCardProps> = ({
           }}
         ></div>
       </div>
+      <button
+        type="submit"
+        style={{
+          opacity: currentSetIndex === 4 ? 1 : 0.3,
+          transition: "all 0.25s ease-out",
+        }}
+        className="btn"
+        disabled={currentSetIndex !== 4}
+      >
+        Dodaj dziecko
+      </button>
     </div>
   );
 };
