@@ -4,6 +4,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./ChildDataCard.scss";
 
 interface DataInput {
+  id: string;
   inputLabel: string;
   placeholder: string;
   type: "date" | "text";
@@ -66,7 +67,6 @@ const DataCard: React.FC<DataCardProps> = ({
                 className="content-center"
               >
                 {dataSet.map((data, dataIndex) => {
-                  const inputName = data.inputLabel.replace(/\s+/g, "");
                   return (
                     <div
                       className="childData-input content-center"
@@ -75,10 +75,10 @@ const DataCard: React.FC<DataCardProps> = ({
                       <h3>{data.inputLabel}</h3>
                       <input
                         type={data.type}
-                        name={inputName}
-                        value={formData[inputName] || ""}
+                        name={data.id} 
+                        value={formData[data.id] || ""} 
                         onChange={(e) =>
-                          handleInputChange(inputName, e.target.value)
+                          handleInputChange(data.id, e.target.value) 
                         }
                         placeholder={data.placeholder}
                       />

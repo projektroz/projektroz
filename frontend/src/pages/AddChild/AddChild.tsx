@@ -31,17 +31,17 @@ function AddChild() {
 
   const [error, setError] = useState("");
 
-  const handleInputChange = (name: string, value: string | Date) => {
+  const handleInputChange = (id: string, value: string | Date) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [id]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await addChild();
+      await addChild(formData);
       
       setError("");
     } catch (error: any) {
@@ -64,6 +64,7 @@ function AddChild() {
   ];
 
   interface DataInput {
+    id: string;
     inputLabel: string;
     placeholder: string;
     type: "date" | "text";
@@ -72,30 +73,44 @@ function AddChild() {
 
   const dataSets: DataInput[][] = [
     [
-      { inputLabel: "Imie", placeholder: "Wpisz imię", type: "text" },
-      { inputLabel: "Nazwisko", placeholder: "Wpisz nazwisko", type: "text" },
+      { 
+        id: "name",
+        inputLabel: "Imie", 
+        placeholder: "Wpisz imię", 
+        type: "text" 
+      },
+      { 
+        id: "surname",
+        inputLabel: "Nazwisko", 
+        placeholder: "Wpisz nazwisko", 
+        type: "text" },
       {
+        id: "birthDate",
         inputLabel: "Data Urodzenia",
         placeholder: "Wpisz datę urodzenia",
         type: "date",
       },
       {
+        id: "birthPlace: ",
         inputLabel: "Miejsce Urodzenia",
         placeholder: "Wpisz miejsce urodzenia",
         type: "text",
       },
       {
+        id: "pesel",
         inputLabel: "PESEL",
         placeholder: "Wpisz PESEL",
         type: "text",
         regex: "[0-9]{11}$",
       },
       {
+        id: "admissionDate",
         inputLabel: "Data Przyjęcia",
         placeholder: "Wpisz datę przyjęcia",
         type: "date",
       },
       {
+        id: "courtDecision",
         inputLabel: "Decyzja Sadu",
         placeholder: "Wpisz decyzję sądu",
         type: "text",
@@ -103,53 +118,63 @@ function AddChild() {
     ],
     [
       {
-        inputLabel: "Kraj Stalego Zameldowania",
+        id: "addressRegisteredCountry",
+        inputLabel: "Kraj Zameldowania",
         placeholder: "Wpisz kraj",
         type: "text",
       },
       {
-        inputLabel: "Miasto Stalego Zameldowania",
+        id: "addressRegisteredCity",
+        inputLabel: "Miasto Zameldowania",
         placeholder: "Wpisz miasto",
         type: "text",
       },
       {
-        inputLabel: "Ulica Stalego Zameldowania",
+        id: "addressRegisteredStreet",
+        inputLabel: "Ulica Zameldowania",
         placeholder: "Wpisz ulicę",
         type: "text",
       },
       {
-        inputLabel: "Kod Pocztowy Stalego Zameldowania",
+        id: "addressRegisteredPostalCode",
+        inputLabel: "Kod Pocztowy Zameldowania",
         placeholder: "Wpisz kod pocztowy",
         type: "text",
       },
       {
-        inputLabel: "Numer Domu Stalego Zameldowania",
+        id: "addressRegisteredHouseNumber",
+        inputLabel: "Numer Domu Zameldowania",
         placeholder: "Wpisz numer domu",
         type: "text",
       },
     ],
     [
       {
+        id: "addressCurrentCountry",
         inputLabel: "Kraj Zamieszkania",
         placeholder: "Wpisz kraj",
         type: "text",
       },
       {
+        id: "addressCurrentCity",
         inputLabel: "Miasto Zamieszkania",
         placeholder: "Wpisz miasto",
         type: "text",
       },
       {
+        id: "addressCurrentStreet",
         inputLabel: "Ulica Zamieszkania",
         placeholder: "Wpisz ulicę",
         type: "text",
       },
       {
+        id: "addressCurrentPostalCode",
         inputLabel: "Kod pocztowy Zamieszkania",
         placeholder: "Wpisz kod pocztowy",
         type: "text",
       },
       {
+        id: "addressCurrentHouseNumber",
         inputLabel: "Numer domu Zamieszkania",
         placeholder: "Wpisz numer domu",
         type: "text",
@@ -157,19 +182,27 @@ function AddChild() {
     ],
     [
       {
+        id: "motherName",
         inputLabel: "Imie Matki",
         placeholder: "Wpisz imię matki",
         type: "text",
       },
       {
+        id: "motherSurname",
         inputLabel: "Nazwisko Matki",
         placeholder: "Wpisz nazwisko matki",
         type: "text",
       },
     ],
     [
-      { inputLabel: "Imie Ojca", placeholder: "Wpisz imię ojca", type: "text" },
+      { 
+        id: "fatherName",
+        inputLabel: "Imie Ojca", 
+        placeholder: "Wpisz imię ojca", 
+        type: "text" 
+      },
       {
+        id: "fatherSurname",
         inputLabel: "Nazwisko Ojca",
         placeholder: "Wpisz nazwisko ojca",
         type: "text",

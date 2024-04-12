@@ -122,9 +122,36 @@ class ChildSerializer(serializers.ModelSerializer):
             fields of the model will be included.
 
     """
+    
+    address = AddressSerializer()
+    address_registered = AddressRegisteredSerializer()
+    mother = MotherSerializer()
+    father = FatherSerializer()
+    print("ChildSerializer")
     class Meta:
         model = Child
         fields = "__all__"
+        
+    def create(self, validated_data):
+        address_data = validated_data.pop('address')
+        address = Address.objects.create(**address_data)
+        
+        address_registered_data = validated_data.pop('addressRegistered')
+        address_registered = AddressRegistered.objects.create(**address_registered_data)
+        
+        mother_data = validated_data.pop('mother')
+        mother = Mother.objects.create(**mother_data)
+        
+        father_data = validated_data.pop('father')
+        father = Father.objects.create(**father_data)
+        
+        child = Child.objects.create(
+            address=address, address_registered=address_registered, 
+            mother=mother, father=father, **validated_data)
+        
+        return child
+        
+        
 
 class SiblingsSerializer(serializers.ModelSerializer):
     """
