@@ -122,9 +122,35 @@ class ChildSerializer(serializers.ModelSerializer):
             fields of the model will be included.
 
     """
+    
+    address = AddressSerializer()
+    address_registered = AddressRegisteredSerializer()
+    mother = MotherSerializer()
+    father = FatherSerializer()
+    
     class Meta:
         model = Child
         fields = "__all__"
+        
+    def create(self, validated_data):
+        address_data = validated_data.pop('address')
+        address = Address.objects.create(**address_data)
+        
+        address_registered_data = validated_data.pop('address_registered')
+        address_registered = AddressRegistered.objects.create(**address_registered_data)
+        
+        mother_data = validated_data.pop('mother')
+        mother = Mother.objects.create(**mother_data)
+        
+        father_data = validated_data.pop('father')
+        father = Father.objects.create(**father_data)
+        
+        child = Child.objects.create(
+            address=address, address_registered=address_registered, father = father, mother = mother, **validated_data)
+        
+        return child
+        
+        
 
 class SiblingsSerializer(serializers.ModelSerializer):
     """
@@ -201,7 +227,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    passwordRepeat = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -230,7 +256,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         if len(data['password']) < 8:
             raise serializers.ValidationError({'password': 'Password must be at least 8 characters long.'})
 
-        if data['password'] != data['password2']:
+        if data['password'] != data['passwordRepeat']:
             raise serializers.ValidationError({'password': 'Passwords must match.'})
         
         return data
@@ -238,10 +264,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'password2', 'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'password', 'passwordRepeat', 'email', 'first_name', 'last_name']
         extra_kwargs = {
             'password': {'write_only': True},
-            'password2': {'write_only': True},
+            'passwordRepeat': {'write_only': True},
             'email': {'required': True, 'write_only': True},
             'first_name': {'required': True},
             'last_name': {'required': True}

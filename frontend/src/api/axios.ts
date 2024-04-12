@@ -7,6 +7,13 @@ const login = axios.create({
     } 
 });
 
+const register = axios.create({
+    baseURL: 'http://localhost:8000/register',
+    headers: {
+        'Content-Type': 'application/json',
+    } 
+});
+
 const api = axios.create({
     baseURL: 'http://localhost:8000/api/',
     headers: {
@@ -37,21 +44,25 @@ api.interceptors.response.use(
     (response: any) => response,
     async (error: any) => {
         const originalRequest = error.config;
-
-        if(error.response.status == 401 && !originalRequest._retry) {
+        
+        if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
+               
             try {
                 const refreshToken = localStorage.getItem('refresh_token');
-                const response = await refresh.post('/', {'refresh': refreshToken});
-                const { token } = response.data;
+                const response = await refresh.post('/', { 'refresh': refreshToken });
+                const { access } = response.data;
 
-                localStorage.setItem('access_token', token);
-
-                originalRequest.headers.Authorization = `Bearer ${token}`;
-                return axios(originalRequest);
-            } catch (error) {
-                window.location.href = '/login';
+                originalRequest.headers.Authorization = `Bearer ${access}`;
+                return api(originalRequest); 
+            } catch (refreshError: any) {
+                
+                if (refreshError.response && (refreshError.response.status === 401 || refreshError.response.status === 403 || refreshError.response.status === 406)) {
+                    window.location.href = '/login'; 
+                } else {
+                    
+                    console.error("Nie udało się odświeżyć tokena z innego powodu", refreshError);
+                }
             }
         }
 
@@ -59,4 +70,4 @@ api.interceptors.response.use(
     }
 );
 
-export { api, login, refresh };
+export { api, login, refresh, register };

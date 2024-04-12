@@ -1,10 +1,8 @@
 // pages/Register/Register.tsx
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
 
 // import useNavigation from "../../hooks/useNavigation";
 import useAuth from "../../hooks/useAuth";
-
 import Rectangle from "../../components/Rectangle/Rectangle";
 // import Navmenu from "../../components/Navmenu/Navmenu";
 
@@ -14,22 +12,22 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [reapeatPassword, setRepeatPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
   const [error, setError] = useState<string>("");
-  const { isLoggedIn, loginUser } = useAuth();
+  const registerUser = useAuth().registerUser;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await loginUser(username, password);
+      await registerUser(username, first_name, last_name, email, password, reapeatPassword);
       setError("");
     } catch (error: any) {
       setError(error.message);
     }
   };
-  if (isLoggedIn) {
-    return <Navigate to="/dashboard" />;
-  }
   const links = [
     {
       name: "Strona główna",
@@ -59,6 +57,48 @@ function Register() {
               />
             </div>
             <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="email"
+                placeholder="Wprowadź email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Imie
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                placeholder="Wprowadź imie"
+                value={first_name}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="surname" className="form-label">
+                Nazwisko
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="surname"
+                placeholder="Wprowadź nazwisko"
+                value={last_name}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 Hasło
               </label>
@@ -77,7 +117,7 @@ function Register() {
                 Powtórz Hasło
               </label>
               <input
-                type="repeatPassword"
+                type="password"
                 className="form-control"
                 id="repeatPassword"
                 placeholder="Wprowadź hasło ponownie"

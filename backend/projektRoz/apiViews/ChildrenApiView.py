@@ -69,8 +69,10 @@ class ChildrenApiView(APIView):
         """
         serializer = ChildSerializer(data=request.data)
         if serializer.is_valid():
-
-            foster_carer = FosterCarer.objects.get(user=request.user)
+            try:
+                foster_carer = FosterCarer.objects.get(user=request.user)
+            except FosterCarer.DoesNotExist:
+                return Response({'error': 'Foster Carer not found'}, status=status.HTTP_404_NOT_FOUND)
 
             serializer.save(foster_carer=foster_carer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

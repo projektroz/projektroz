@@ -1,6 +1,6 @@
 // hooks/useAuth.tsx
 import { useState } from 'react';
-import { loginRequest } from '../api/auth'
+import { loginRequest, registerRequest } from '../api/auth'
 
 const useAuth = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,6 +18,17 @@ const useAuth = () => {
         }
     };
 
+    const registerUser = async(username: string, name: string, surname: string, email: string, password: string, passwordRepeat: string) => {
+        try {
+            const response = await registerRequest(username, name, surname, email, password, passwordRepeat);
+            console.log(response);
+
+            window.location.href = '/login';
+        } catch (error) {
+            throw new Error('Nie udało się zarejestrować. Spróbuj ponownie.');
+        }
+    };
+
     // Funkcja wylogowywania
     const logout = () => {
         // Usuwamy tokeny z localStorage
@@ -30,7 +41,7 @@ const useAuth = () => {
     };
 
     // Zwracamy stan autoryzacji (czy użytkownik jest zalogowany), oraz funkcje logowania i wylogowywania
-    return { isLoggedIn, loginUser, logout };
+    return { isLoggedIn, loginUser, logout, registerUser };
 };
 
 export default useAuth;
