@@ -1,0 +1,13 @@
+.content-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--white);
+}
+
+.childInfo {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,40 +1,42 @@
 .card {
-  background-color: rgba(100, 100, 100, 0.7);
-  border-radius: 20%;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
-  color: white;
+    background-color: rgba(100, 100, 100, 0.7);
+    border-radius: 25%;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+    color: white;
 
-  padding: 2%;
-  width: 20%;
-  // height: 200px;
-  position: relative;
-  margin: 10px;
+    aspect-ratio: 1/1;
+    padding: 2%;
+    max-width: 20%;
+    // height: 200px;
+    position: relative;
+    margin: 10px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
+    display: flex;
+    // flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
 
-  transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
-  .icon {
-    width: 50%;
-  }
-  .iconName {
-    font-size: 1.1vw;
-    margin: 0;
-  }
+    .icon {
+        width: 35%;
+    }
 
-  .blur {
-    filter: blur(30px);
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+    .iconName {
+        font-size: calc(6px + 2*(100vw - 568px) / 200);;
+        margin: 0;
+    }
+
+    .blur {
+        filter: blur(30px);
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
 
 .card:hover {
-  background-color: rgba(150, 150, 150, 0.2);
-  scale: 1.05;
+    background-color: rgba(150, 150, 150, 0.2);
+    scale: 1.05;
 }

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import ChildDataCard from "../../components/ChildDataForm/ChildDataForm";
-import { addChild, addFather, addMother } from "../../api/addChild";
-import { getChildData } from '../../functions/AddChildFunctions';
+import { addChild } from "../../api/addChild";
+import { getChildData, parseBackToFormData } from '../../functions/AddChildFunctions';
 import "./AddChild.scss";
+import Child from "types/Child";
 
-function AddChild() {
+function AddChild({title, method}: {title: string, method: string}) {
 	const [formData, setFormData] = useState({
 		name: "",
 		surname: "",
@@ -30,6 +31,14 @@ function AddChild() {
 		fatherSurname: "",
 	});
 
+	useEffect(() => {
+        const dataFromStorage = localStorage.getItem("childData");
+        if (dataFromStorage) {
+            setFormData(parseBackToFormData(dataFromStorage));
+			localStorage.removeItem("childData");
+        }
+    }, []);
+
 	const [error, setError] = useState("");
 
 	const handleInputChange = (id: string, value: string | Date) => {
@@ -42,7 +51,7 @@ function AddChild() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await addChild(getChildData(formData));
+			await addChild(getChildData(formData), method);
 
 			setError("");
 
@@ -95,7 +104,7 @@ function AddChild() {
 				type: "date",
 			},
 			{
-				id: "birthPlace: ",
+				id: "birthPlace",
 				inputLabel: "Miejsce Urodzenia",
 				placeholder: "Wpisz miejsce urodzenia",
 				type: "text",
@@ -218,7 +227,7 @@ function AddChild() {
 		<div className="app-page add-child-page">
 			<Rectangle links={links}>
 				<div className="child-content">
-					<h2>Dodaj dziecko</h2>
+					<h2>{title}</h2>
 					<form onSubmit={handleSubmit}>
 						<ChildDataCard
 							dataSets={dataSets}

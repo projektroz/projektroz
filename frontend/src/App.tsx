@@ -29,8 +29,9 @@ return (
         
         {/* <Route element={<PrivateRoutes />}> */}
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/add-child" element={<AddChild />} />
+        <Route path="/dashboard/add-child" element={<AddChild title= "Dodaj dziecko" method="POST"/>} />
         <Route path="/dashboard/manage-child" element={<ManageChild />} />
+        <Route path="/dashboard/manage-child/edit-child" element={<AddChild title= "Edytuj dziecko" method="PUT"/>} />
         {/* </Route> */}
     </Routes>
     </>
