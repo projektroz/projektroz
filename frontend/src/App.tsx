@@ -15,24 +15,26 @@ import Logout from "./pages/Logout/Logout";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddChild from "./pages/AddChild/AddChild";
+import ManageChild from "./pages/ManageChild/ManageChild";
 
 const App = () => {
-  return (
+return (
     <>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard/add-child" element={<AddChild />} />
-
+        
         {/* <Route element={<PrivateRoutes />}> */}
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/add-child" element={<AddChild />} />
+        <Route path="/dashboard/manage-child" element={<ManageChild />} />
         {/* </Route> */}
-      </Routes>
+    </Routes>
     </>
-  );
+);
 };
 
 export default App;

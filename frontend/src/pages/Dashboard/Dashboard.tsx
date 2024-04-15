@@ -26,7 +26,7 @@ function Dashboard() {
     },
     {
       title: "Zarządzaj dziećmi",
-      url: "/dashboard",
+      url: "/dashboard/manage-child",
       image: "src/assets/icons/manage.png",
     },
     // { title: "Tytuł 3", image: "url_do_zdjecia_3" },

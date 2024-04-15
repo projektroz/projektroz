@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 class JWTMiddleware(MiddlewareMixin):
     def process_request(self, request):
         exempt_paths = ['/login/', '/register/', '/refresh/']
-
+        print("chuj")
         if request.path in exempt_paths:
             return None  
 

@@ -10,6 +10,7 @@ const Home = () => {
   const links = [
     { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
     { name: "O nas", url: "#info", icon: "src/assets/icons/user.png" },
+    { name: "Panel użytkownika", url: "/dashboard", icon: "src/assets/icons/manage.png"},
     { name: "Logowanie", url: "/login", icon: "src/assets/icons/login.png" },
   ];
 

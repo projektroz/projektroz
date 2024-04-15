@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import ChildDataCard from "../../components/ChildDataCard/ChildDataCard";
+import ChildDataCard from "../../components/ChildDataForm/ChildDataForm";
 import { addChild, addFather, addMother } from "../../api/addChild";
 import { getChildData } from '../../functions/AddChildFunctions';
 import "./AddChild.scss";
@@ -56,7 +56,7 @@ function AddChild() {
 		{
 			name: "Strona główna",
 			url: "/home",
-			icon: "../src/assets/icons/home.png",
+			icon: "src/assets/icons/home.png",
 		},
 		{
 			name: "Panel sterowania",
