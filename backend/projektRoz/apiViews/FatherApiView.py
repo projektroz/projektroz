@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Father, FosterCarer, Child
-from projektRoz.serializer import FatherSerializer
+from projektRoz.models import Parent, FosterCarer, Child
+from projektRoz.serializer import ParentSerializer
 
 class FatherApiView(APIView):
     """
@@ -29,19 +29,19 @@ class FatherApiView(APIView):
         - None.
         """
         if father_id:
-            father = Father.objects.get(id=father_id)
+            father = Parent.objects.get(id=father_id)
             children = Child.objects.filter(father = father)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = FatherSerializer(father, many = False)
+                    serializer = ParentSerializer(father, many = False)
 
                     return Response(serializer.data, status = status.HTTP_200_OK)
         else:
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             children = Child.objects.filter(foster_carer = fosterCarer)
-            fathers = Father.objects.all()
+            fathers = Parent.objects.all()
             ret = []
 
             for child in children:
@@ -50,7 +50,7 @@ class FatherApiView(APIView):
                         ret.append(father)
 
             if ret != []:
-                serializer = FatherSerializer(ret, many = True)
+                serializer = ParentSerializer(ret, many = True)
                 return Response(serializer.data, status = status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
@@ -70,7 +70,7 @@ class FatherApiView(APIView):
         Raises:
         - None.
         """
-        serializer = FatherSerializer(data=request.data)
+        serializer = ParentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
                 
@@ -95,18 +95,18 @@ class FatherApiView(APIView):
         - None.
         """
         if father_id:
-            father = Father.objects.get(id=father_id)
+            father = Parent.objects.get(id=father_id)
             children = Child.objects.filter(father = father)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = FatherSerializer(father, data = request.data)
+                    serializer = ParentSerializer(father, data = request.data)
                     if serializer.is_valid():
                         serializer.save()
                         return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            serializer = FatherSerializer(data = request.data)
+            serializer = ParentSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status = status.HTTP_201_CREATED)
@@ -128,7 +128,7 @@ class FatherApiView(APIView):
         Raises:
         - None.
         """
-        father = Father.objects.get(id=father_id)
+        father = Parent.objects.get(id=father_id)
         children = Child.objects.filter(father = father)
         fosterCarer = FosterCarer.objects.get(id = request.user.id)
 

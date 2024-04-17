@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import Mother, Child, FosterCarer
-from projektRoz.serializer import MotherSerializer
+from projektRoz.models import Parent, Child, FosterCarer
+from projektRoz.serializer import ParentSerializer
 
 class MotherApiView(APIView):
     """
@@ -31,19 +31,19 @@ class MotherApiView(APIView):
         - Response: The serialized data of the mother(s).
         """
         if mother_id:
-            mother = Mother.objects.get(id=mother_id)
+            mother = Parent.objects.get(id=mother_id)
             children = Child.objects.filter(mother = mother)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = MotherSerializer(mother, many = False)
+                    serializer = ParentSerializer(mother, many = False)
 
                     return Response(serializer.data, status = status.HTTP_200_OK)
         else:
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             children = Child.objects.filter(foster_carer = fosterCarer)
-            mothers = Mother.objects.all()
+            mothers = Parent.objects.all()
             ret = []
 
             for child in children:
@@ -52,7 +52,7 @@ class MotherApiView(APIView):
                         ret.append(mother)
 
             if ret != []:
-                serializer = MotherSerializer(ret, many = True)
+                serializer = ParentSerializer(ret, many = True)
                 return Response(serializer.data, status = status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
@@ -67,7 +67,7 @@ class MotherApiView(APIView):
         Returns:
         - Response: The serialized data of the created mother.
         """
-        serializer = MotherSerializer(data=request.data)
+        serializer = ParentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             
@@ -87,18 +87,18 @@ class MotherApiView(APIView):
         - Response: The serialized data of the updated mother.
         """
         if mother_id:
-            mother = Mother.objects.get(id=mother_id)
+            mother = Parent.objects.get(id=mother_id)
             children = Child.objects.filter(mother = mother)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = MotherSerializer(mother, data = request.data)
+                    serializer = ParentSerializer(mother, data = request.data)
                     if serializer.is_valid():
                         serializer.save()
                         return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            serializer = MotherSerializer(data = request.data)
+            serializer = ParentSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status = status.HTTP_201_CREATED)
@@ -116,7 +116,7 @@ class MotherApiView(APIView):
         Returns:
         - Response: A success status indicating the deletion.
         """
-        mother = Mother.objects.get(id=mother_id)
+        mother = Parent.objects.get(id=mother_id)
         children = Child.objects.filter(mother = mother)
         fosterCarer = FosterCarer.objects.get(id = request.user.id)
 

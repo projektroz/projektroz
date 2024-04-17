@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from projektRoz.models import AddressRegistered, Child, FosterCarer
-from projektRoz.serializer import AddressRegisteredSerializer
+from projektRoz.models import Address, Child, FosterCarer
+from projektRoz.serializer import AddressSerializer
 
 class AddressRegisteredApiView(APIView):
     """
@@ -24,20 +24,20 @@ class AddressRegisteredApiView(APIView):
         - Response: The serialized address(es) in the response body.
         """
         if address_registered_id:
-            address = AddressRegistered.objects.get(id=address_registered_id)
+            address = Address.objects.get(id=address_registered_id)
             children = Child.objects.filter(address_registered = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = AddressRegisteredSerializer(address, many=False)
+                    serializer = AddressSerializer(address, many=False)
                     
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 
         else:
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             children = Child.objects.filter(foster_carer = fosterCarer)
-            addresses = AddressRegistered.objects.all()
+            addresses = Address.objects.all()
             ret = []
             
             for child in children:
@@ -45,7 +45,7 @@ class AddressRegisteredApiView(APIView):
                     if child.address_registered == address:
                         ret.append(address)     
             if ret != []:
-                serializer = AddressRegisteredSerializer(ret, many=True)
+                serializer = AddressSerializer(ret, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
@@ -63,7 +63,7 @@ class AddressRegisteredApiView(APIView):
         Returns:
         - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
-        serializer = AddressRegisteredSerializer(data=request.data)
+        serializer = AddressSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             
@@ -83,20 +83,20 @@ class AddressRegisteredApiView(APIView):
         - Response: The serialized address in the response body if successful, or the error message if validation fails.
         """
         if address_registered_id:
-            address = AddressRegistered.objects.get(id=address_registered_id)
+            address = Address.objects.get(id=address_registered_id)
             children = Child.objects.filter(address_registered = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
             for child in children:
                 if child.foster_carer == fosterCarer:
-                    serializer = AddressRegisteredSerializer(address, data = request.data)
+                    serializer = AddressSerializer(address, data = request.data)
                     if serializer.is_valid():
                         serializer.save()
                     
                         return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             
-            serializer = AddressRegisteredSerializer(data=request.data)
+            serializer = AddressSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 
@@ -115,7 +115,7 @@ class AddressRegisteredApiView(APIView):
         Returns:
         - Response: No content if successful, or the error message if the address is not found.
         """
-        address = AddressRegistered.objects.get(id=address_registered_id)
+        address = Address.objects.get(id=address_registered_id)
         children = Child.objects.filter(address_registered = address)
         fosterCarer = FosterCarer.objects.get(id = request.user.id)
 
