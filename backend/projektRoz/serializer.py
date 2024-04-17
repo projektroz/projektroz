@@ -149,6 +149,49 @@ class ChildSerializer(serializers.ModelSerializer):
             address=address, address_registered=address_registered, father = father, mother = mother, **validated_data)
         
         return child
+    
+    def update(self, instance, validated_data):
+        address_data = validated_data.pop('address')
+        address = instance.address
+        address.country = address_data.get('country', address.country)
+        address.street = address_data.get('street', address.street)
+        address.city = address_data.get('city', address.city)
+        address.postal_code = address_data.get('postal_code', address.postal_code)
+        address.apartment_number = address_data.get('apartment_number', address.apartment_number)
+        address.save()
+        
+        address_registered_data = validated_data.pop('address_registered')
+        address_registered = instance.address_registered
+        address_registered.country = address_registered_data.get('country', address_registered.country)
+        address_registered.street = address_registered_data.get('street', address_registered.street)
+        address_registered.city = address_registered_data.get('city', address_registered.city)
+        address_registered.postal_code = address_registered_data.get('postal_code', address_registered.postal_code)
+        address_registered.apartment_number = address_registered_data.get('apartment_number', address_registered.apartment_number)
+        address_registered.save()
+        
+        mother_data = validated_data.pop('mother')
+        mother = instance.mother
+        mother.name = mother_data.get('name', mother.name)
+        mother.surname = mother_data.get('surname', mother.surname)
+        mother.save()
+        
+        father_data = validated_data.pop('father')
+        father = instance.father
+        father.name = father_data.get('name', father.name)
+        father.surname = father_data.get('surname', father.surname)
+        father.save()
+        
+        instance.name = validated_data.get('name', instance.name)
+        instance.surname = validated_data.get('surname', instance.surname)
+        instance.birth_date = validated_data.get('birth_date', instance.birth_date)
+        instance.birth_place = validated_data.get('birth_place', instance.birth_place)
+        instance.pesel = validated_data.get('pesel', instance.pesel)
+        instance.date_of_admission = validated_data.get('date_of_admission', instance.date_of_admission)
+        instance.court_decision = validated_data.get('court_decision', instance.court_decision)
+
+        instance.save()
+
+        return instance
         
         
 

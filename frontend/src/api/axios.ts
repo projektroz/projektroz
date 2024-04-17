@@ -1,4 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+    _retry?: boolean;  // Optional boolean property
+}
 
 const login = axios.create({
     baseURL: 'http://localhost:8000/login',
@@ -31,37 +35,52 @@ const refresh = axios.create({
 
 api.interceptors.request.use(
     (config: any) => {
+        
         const token = localStorage.getItem('access_token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config
     },
-    (error: any) => Promise.reject(error)
+    (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-    (response: any) => response,
-    async (error: any) => {
-        const originalRequest = error.config;
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+        const originalRequest = error.config as CustomAxiosRequestConfig;
+    
+        if(originalRequest == undefined) return Promise.reject(error);
         
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-               
+            
             try {
-                const refreshToken = localStorage.getItem('refresh_token');
-                const response = await refresh.post('/', { 'refresh': refreshToken });
-                const { access } = response.data;
-
-                originalRequest.headers.Authorization = `Bearer ${access}`;
-                return api(originalRequest); 
-            } catch (refreshError: any) {
                 
-                if (refreshError.response && (refreshError.response.status === 401 || refreshError.response.status === 403 || refreshError.response.status === 406)) {
-                    window.location.href = '/login'; 
+                const refreshToken = localStorage.getItem('refresh_token');
+                
+                const response = await refresh.post('/', { 'refresh': refreshToken });
+                
+                const { access } = response.data;
+                
+                originalRequest.headers = originalRequest.headers || {};
+                originalRequest.headers['Authorization'] = `Bearer ${access}`;
+                
+                return api(originalRequest); 
+            } catch (refreshError: unknown) {
+                
+                if (refreshError instanceof AxiosError && refreshError.response) {
+                    
+                    if ([401, 403, 406].includes(refreshError.response.status)) {
+                        
+                        window.location.href = '/login';
+                    } else {
+                        
+                        console.error("Nie udało się odświeżyć tokena z innego powodu", refreshError);
+                    }
                 } else {
                     
-                    console.error("Nie udało się odświeżyć tokena z innego powodu", refreshError);
+                    console.error("Unhandled error type during token refresh", refreshError);
                 }
             }
         }

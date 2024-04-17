@@ -20,8 +20,9 @@ type AddChildResponse = {
 }
 
 export async function addChild(childData: any, method: string): Promise<AddChildResponse> {
+	const childId = childData.id;
 	try {
-		const response = (method === 'POST' ? await api.post('children/', childData) : await api.put('children/', childData));
+		const response = (method === 'POST' ? await api.post('children/', childData) : await api.put('children/childId', childData));
 
 		return response.data;
 	} catch (error: any) {
