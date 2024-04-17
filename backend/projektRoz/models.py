@@ -2,22 +2,6 @@ from typing import Iterable
 from django.db import models
 from django.contrib.auth.models import User
 
-# class Mother(models.Model):
-#     """
-#     Represents a mother in the system.
-#     """
-#     id = models.AutoField(primary_key=True)
-#     name = models.TextField()
-#     surname = models.TextField()
-
-# class Father(models.Model):
-#     """
-#     Represents a father in the system.
-#     """
-#     id = models.AutoField(primary_key=True)
-#     name = models.TextField()
-#     surname = models.TextField()
-
 class Person(models.Model):
     """
     Represents a person in the system.
@@ -47,17 +31,6 @@ class Notes(models.Model):
     create_date = models.DateField()
     modification_date = models.DateField()
     note_text = models.TextField()
-
-# class Address(models.Model):
-#     """
-#     Represents an address in the system.
-#     """
-#     id = models.AutoField(primary_key=True)
-#     country = models.TextField()
-#     city = models.TextField()
-#     street = models.TextField()
-#     postal_code = models.TextField()
-#     apartment_number = models.IntegerField(null=True, blank=True)
 
 class Address(models.Model):
     id = models.AutoField(primary_key=True)

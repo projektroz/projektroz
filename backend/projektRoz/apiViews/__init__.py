@@ -8,3 +8,4 @@ from .SiblingsApiView import SiblingsApiView
 from .CategoryApiView import CategoryApiView
 from .DocumentsApiView import DocumentsApiView
 from .AddressRegisteredApiView import AddressRegisteredApiView 
+from .ParentApiView import ParentApiView
