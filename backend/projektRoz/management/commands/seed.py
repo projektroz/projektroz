@@ -18,11 +18,11 @@ class Command(BaseCommand):
 
     def add_parents_notes(self):
         for _ in range(10):
-            gender = fake.random_element(elements=('M', 'F'))
+            role = fake.random_element(elements=('M', 'F'))
             Parent.objects.create(
-                name=fake.first_name_male() if gender == 'M' else fake.first_name_female(),
-                surname=fake.last_name_male() if gender == 'M' else fake.last_name_female(),
-                gender=gender
+                name=fake.first_name_male() if role == 'M' else fake.first_name_female(),
+                surname=fake.last_name_male() if role == 'M' else fake.last_name_female(),
+                role=role
             )
             Notes.objects.create(
                 create_date=fake.date(),
@@ -58,8 +58,8 @@ class Command(BaseCommand):
     def add_children_categories_documents(self):
         addresses_registered = Address.objects.filter(is_registered=True)
         addresses_not_registered = Address.objects.filter(is_registered=False)
-        mothers = Parent.objects.filter(gender='M')
-        fathers = Parent.objects.filter(gender='F')
+        mothers = Parent.objects.filter(role='M')
+        fathers = Parent.objects.filter(role='F')
 
         for _ in range(10):
             child = Child.objects.create(

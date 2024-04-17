@@ -13,44 +13,46 @@ class AddressApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, address_id=None, *args, **kwargs):
+    def get(self, request, type=None, address_id=None, *args, **kwargs):
         """
         Retrieve a list of addresses or a specific address by ID.
 
         Parameters:
+        - type (str): Optional. Specifies the type of address to retrieve ('R' for registered, 'U' for unregistered).
         - address_id (int): Optional. The ID of the address to retrieve.
 
         Returns:
-        - Response: The serialized address(es) in the response body.
+        - Response: The serialized address(es) in the response body if successful, or a 404 error if the address is not found.
         """
         if address_id:
             address = Address.objects.get(id=address_id)
-            children = Child.objects.filter(address = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            is_registered = True if type == 'R' else False
             
-            for child in children:
-                if child.foster_carer == fosterCarer:
+            if address.is_registered == is_registered:
+                children = Child.objects.filter(address=address, foster_carer=fosterCarer) | Child.objects.filter(address_registered=address, foster_carer=fosterCarer)
+                if children.exists():
                     serializer = AddressSerializer(address, many=False)
-                    
+                
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 
         else:
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             children = Child.objects.filter(foster_carer = fosterCarer)
-            addresses = Address.objects.all()
+
+            is_registered = True if type == 'R' else False
+
+            addresses = Address.objects.filter(is_registered=is_registered)
             ret = []
             
             for child in children:
                 for address in addresses:
-                    if child.address == address:
+                    if child.address == address or child.address_registered == address:
                         ret.append(address)
 
             if ret != []:
                 serializer = AddressSerializer(ret, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-        
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
@@ -62,50 +64,49 @@ class AddressApiView(APIView):
         - request (Request): The HTTP request object.
 
         Returns:
-        - Response: The serialized address in the response body if successful, or the error message if validation fails.
+        - Response: The serialized address in the response body if successful, or a 400 error if validation fails.
         """
         serializer = AddressSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, address_id = None, *args, **kwargs):
+    def put(self, request, type=None, address_id = None, *args, **kwargs):
         """
         Update an existing address.
 
         Parameters:
         - request (Request): The HTTP request object.
+        - type (str): Optional. Specifies the type of address to update ('R' for registered, 'U' for unregistered).
         - address_id (int): The ID of the address to update.
 
         Returns:
-        - Response: The serialized address in the response body if successful, or the error message if validation fails.
+        - Response: The serialized address in the response body if successful, or a 404 error if the address is not found.
         """
         if address_id:
             address = Address.objects.get(id=address_id)
-            children = Child.objects.filter(address = address)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
-
-            for child in children:
-                if child.foster_carer == fosterCarer:
-                    serializer = AddressSerializer(address, data = request.data)
+            is_registered = True if type == 'R' else False
+            
+            if address.is_registered == is_registered:
+                children = Child.objects.filter(address=address, foster_carer=fosterCarer) | Child.objects.filter(address_registered=address, foster_carer=fosterCarer)
+                if children.exists():
+                    serializer = AddressSerializer(address, data=request.data)
                     if serializer.is_valid():
                         serializer.save()
-                    
                         return Response(serializer.data, status=status.HTTP_200_OK)
+                    
         else:
-            
             serializer = AddressSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def delete(self, request, address_id, *args, **kwargs):
+    def delete(self, request, type, address_id, *args, **kwargs):
         """
         Delete an existing address.
 
@@ -114,17 +115,20 @@ class AddressApiView(APIView):
         - address_id (int): The ID of the address to delete.
 
         Returns:
-        - Response: No content if successful, or the error message if the address is not found.
+        - Response: No content if successful, or a 404 error if the address is not found.
         """
         address = Address.objects.get(id=address_id)
-        children = Child.objects.filter(address = address)
-        fosterCarer = FosterCarer.objects.get(id = request.user.id)
+        foster_carer = FosterCarer.objects.get(id = request.user.id)
+        is_registered = True if type == 'R' else False
 
-        for child in children:
-            if child.foster_carer == fosterCarer:
+        if address.is_registered == is_registered:
+            if address.is_registered:
+                children = Child.objects.filter(foster_carer=foster_carer, address_registered = address)
+            else:
+                children = Child.objects.filter(foster_carer=foster_carer, address = address)
+            
+            if children.exists():
                 address.delete()
-                    
                 return Response(status=status.HTTP_204_NO_CONTENT)
-        
        
         return Response(status=status.HTTP_404_NOT_FOUND)

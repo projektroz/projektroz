@@ -17,11 +17,11 @@ class Parent(Person):
     """
     Represents a parent in the system.
     """
-    GENDER_CHOICES = [
+    ROLE_CHOICES = [
         ('M', 'Mother'),
         ('F', 'Father'),
     ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES)
 
 class Notes(models.Model):
     """
