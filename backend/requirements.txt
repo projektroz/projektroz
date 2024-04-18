@@ -7,4 +7,4 @@ django-cors-headers
 djangorestframework-simplejwt==5.3.1
 Faker
 psycopg2
-
+drf-yasg
