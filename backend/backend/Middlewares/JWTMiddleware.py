@@ -4,10 +4,19 @@ from django.utils.deprecation import MiddlewareMixin
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class JWTMiddleware(MiddlewareMixin):
+    def __init__(self, get_response):
+        self.get_response = get_response
+        
     def process_request(self, request):
-        exempt_paths = ['/login/', '/register/', '/refresh/']
+
+        exempt_paths = ['/login/', '/register/', '/refresh/', '/swagger/', '/redoc/', '/swagger.json', '/token/']
+
         if request.path in exempt_paths:
             return None  
+        if request.path.startswith('/admin/'):
+            return None
+        if request.path.startswith('/accounts/'):
+            return None
 
         auth = JWTAuthentication()
         header = auth.get_header(request)

@@ -17,6 +17,7 @@ class MotherSerializer(serializers.ModelSerializer):
 
     """
     class Meta:
+        queryset = Mother.objects.all()
         model = Mother
         fields = "__all__"
 
