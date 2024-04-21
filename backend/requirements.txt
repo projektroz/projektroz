@@ -8,3 +8,4 @@ djangorestframework-simplejwt==5.3.1
 Faker
 psycopg2
 python-dotenv
+drf-yasg
