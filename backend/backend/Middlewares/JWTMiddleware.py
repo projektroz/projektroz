@@ -8,6 +8,7 @@ class JWTMiddleware(MiddlewareMixin):
         self.get_response = get_response
         
     def process_request(self, request):
+
         exempt_paths = ['/login/', '/register/', '/refresh/', '/swagger/', '/redoc/', '/swagger.json', '/token/']
 
         if request.path in exempt_paths:

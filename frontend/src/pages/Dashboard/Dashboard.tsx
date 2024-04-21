@@ -1,63 +1,40 @@
-// DashboardPage.tsx
-// import React from "react";
+import React from "react";
 import useAuth from "../../hooks/useAuth";
 import DashboardLine from "../../components/DashboardLine/DashboardLine";
+import Rectangle from "../../components/Rectangle/Rectangle";
+
+import homeIcon from "../../assets/icons/home.png";
+import logoutIcon from "../../assets/icons/logout.png";
+import addChildIcon from "../../assets/icons/add.png";
+import manageChildIcon from "../../assets/icons/manage.png";
 
 import "./Dashboard.scss";
-import Rectangle from "../../components/Rectangle/Rectangle";
 
 function Dashboard() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout(); // Wywołujemy funkcję logout, aby wylogować użytkownika
+    logout(); 
   };
 
   const links = [
-    { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
-    { name: "Wyloguj", url: "/logout", icon: "src/assets/icons/logout.png" },
+    { name: "Strona główna", url: "/home", icon: homeIcon },
+    { name: "Wyloguj", url: "/logout", icon: logoutIcon },
   ];
 
   const childCards = [
-    {
-      title: "Dodaj dziecko",
-      url: "/dashboard/add-child",
-      image: "src/assets/icons/add.png",
-    },
-    {
-      title: "Zarządzaj dziećmi",
-      url: "/dashboard",
-      image: "src/assets/icons/manage.png",
-    },
-    // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
+    { title: "Dodaj dziecko", url: "/dashboard/add-child", image: addChildIcon },
+    { title: "Zarządzaj dziećmi", url: "/dashboard/manage-child", image: manageChildIcon },
   ];
 
   const documentsCards = [
-    {
-      title: "Dodaj dokument",
-      url: "/dashboard",
-      image: "src/assets/icons/add.png",
-    },
-    {
-      title: "Zarządzaj dokumentami",
-      url: "/dashboard",
-      image: "src/assets/icons/manage.png",
-    },
-    // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
+    { title: "Dodaj dokument", url: "/dashboard", image: addChildIcon },
+    { title: "Zarządzaj dokumentami", url: "/dashboard", image: manageChildIcon },
   ];
 
   const templateCards = [
-    {
-      title: "Dodaj szablon",
-      url: "/dashboard",
-      image: "src/assets/icons/add.png",
-    },
-    {
-      title: "Zarządzaj szablonami",
-      url: "/dashboard",
-      image: "src/assets/icons/manage.png",
-    },
-    // { title: "Tytuł 3", image: "url_do_zdjecia_3" },
+    { title: "Dodaj szablon", url: "/dashboard", image: addChildIcon },
+    { title: "Zarządzaj szablonami", url: "/dashboard", image: manageChildIcon },
   ];
 
   return (
@@ -66,7 +43,6 @@ function Dashboard() {
         <DashboardLine title="Dzieci" cards={childCards} />
         <DashboardLine title="Dokumenty" cards={documentsCards} />
         <DashboardLine title="Szablony" cards={templateCards} />
-        {/* <button onClick={handleLogout}>Wyloguj</button> */}
       </Rectangle>
     </div>
   );
