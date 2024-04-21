@@ -139,12 +139,14 @@ class ChildSerializer(serializers.ModelSerializer):
         mother = instance.mother
         mother.name = mother_data.get('name', mother.name)
         mother.surname = mother_data.get('surname', mother.surname)
+        mother.role = mother_data.get('role', mother.role)
         mother.save()
         
         father_data = validated_data.pop('father')
         father = instance.father
         father.name = father_data.get('name', father.name)
         father.surname = father_data.get('surname', father.surname)
+        father.role = father_data.get('role', father.role)
         father.save()
         
         instance.name = validated_data.get('name', instance.name)

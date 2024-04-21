@@ -1,5 +1,6 @@
 function getChildData(formData: any) {
 	return {
+        id: formData.id || "",
 		name: formData.name || "",
 		surname: formData.surname || "",
 		birth_date: formData.birthDate || "",
@@ -13,6 +14,7 @@ function getChildData(formData: any) {
 			street: formData.addressRegisteredStreet || "",
 			postal_code: formData.addressRegisteredPostalCode || "",
 			apartment_number: formData.addressRegisteredHouseNumber || "",
+            is_registered: true,
 		},
 		address: {
 			country: formData.addressCurrentCountry || "",
@@ -20,14 +22,17 @@ function getChildData(formData: any) {
 			street: formData.addressCurrentStreet || "",
 			postal_code: formData.addressCurrentPostalCode || "",
 			apartment_number: formData.addressCurrentHouseNumber || "",
+            is_registered: false,
 		},
 		mother: {
 			name: formData.motherName || "",
 			surname: formData.motherSurname || "",
+            role: "M",
 		},
 		father: {
 			name: formData.fatherName || "",
 			surname: formData.fatherSurname || "",
+            role: "F",
 		},
 	}
 };
@@ -47,6 +52,7 @@ function parseBackToFormData(childDataString: string) {
     }
 
     return {
+        id: childData.id || "",
         name: childData.name || "",
         surname: childData.surname || "",
         birthDate: childData.birth_date || Date.now(),
@@ -73,6 +79,7 @@ function parseBackToFormData(childDataString: string) {
 
 function getDefaultFormData() {
     return {
+        id: -1,
         name: "",
         surname: "",
         birthDate: Date.now(),
