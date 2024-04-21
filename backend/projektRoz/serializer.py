@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Mother, Father, Notes, Address, FosterCarer, AddressRegistered, Child, Siblings, Category, Documents
+from .models import Parent, Notes, Address, FosterCarer, Child, Siblings, Category, Documents
 from django.contrib.auth.models import User
 
 
-class MotherSerializer(serializers.ModelSerializer):
+class ParentSerializer(serializers.ModelSerializer):
     """
-    Serializer class for the Mother model.
+    Serializer class for the Parent model.
 
     This serializer is used to convert the Mother model instances into JSON
     representation and vice versa. It specifies all the fields of the Mother
@@ -17,25 +17,7 @@ class MotherSerializer(serializers.ModelSerializer):
 
     """
     class Meta:
-        queryset = Mother.objects.all()
-        model = Mother
-        fields = "__all__"
-
-class FatherSerializer(serializers.ModelSerializer):
-    """
-    Serializer class for the Father model.
-
-    This serializer is used to convert the Father model instances into JSON
-    representation and vice versa. It specifies all the fields of the Father
-    model to be included in the serialized output.
-
-    Attributes:
-        Meta: A nested class that specifies the metadata for the serializer,
-              including the model to be serialized and the fields to be included.
-
-    """
-    class Meta:
-        model = Father
+        model = Parent
         fields = "__all__"
 
 class NotesSerializer(serializers.ModelSerializer):
@@ -91,23 +73,6 @@ class FosterCarerSerializer(serializers.ModelSerializer):
         model = FosterCarer
         fields = "__all__"
 
-class AddressRegisteredSerializer(serializers.ModelSerializer):
-    """
-    Serializer class for the AddressRegistered model.
-
-    This serializer is used to convert AddressRegistered model instances into JSON
-    and vice versa, allowing the data to be easily rendered into the desired format.
-
-    Attributes:
-        model (AddressRegistered): The model class that the serializer is based on.
-        fields (str): A string specifying the fields to include in the serialized representation.
-                      In this case, "__all__" is used to include all fields.
-
-    """
-    class Meta:
-        model = AddressRegistered
-        fields = "__all__"
-
 class ChildSerializer(serializers.ModelSerializer):
     """
     Serializer class for the Child model.
@@ -125,9 +90,9 @@ class ChildSerializer(serializers.ModelSerializer):
     """
     
     address = AddressSerializer()
-    address_registered = AddressRegisteredSerializer()
-    mother = MotherSerializer()
-    father = FatherSerializer()
+    address_registered = AddressSerializer()
+    mother = ParentSerializer()
+    father = ParentSerializer()
     
     class Meta:
         model = Child
@@ -138,13 +103,13 @@ class ChildSerializer(serializers.ModelSerializer):
         address = Address.objects.create(**address_data)
         
         address_registered_data = validated_data.pop('address_registered')
-        address_registered = AddressRegistered.objects.create(**address_registered_data)
+        address_registered = Address.objects.create(**address_registered_data)
         
         mother_data = validated_data.pop('mother')
-        mother = Mother.objects.create(**mother_data)
+        mother = Parent.objects.create(**mother_data)
         
         father_data = validated_data.pop('father')
-        father = Father.objects.create(**father_data)
+        father = Parent.objects.create(**father_data)
         
         child = Child.objects.create(
             address=address, address_registered=address_registered, father = father, mother = mother, **validated_data)
@@ -174,12 +139,14 @@ class ChildSerializer(serializers.ModelSerializer):
         mother = instance.mother
         mother.name = mother_data.get('name', mother.name)
         mother.surname = mother_data.get('surname', mother.surname)
+        mother.role = mother_data.get('role', mother.role)
         mother.save()
         
         father_data = validated_data.pop('father')
         father = instance.father
         father.name = father_data.get('name', father.name)
         father.surname = father_data.get('surname', father.surname)
+        father.role = father_data.get('role', father.role)
         father.save()
         
         instance.name = validated_data.get('name', instance.name)
