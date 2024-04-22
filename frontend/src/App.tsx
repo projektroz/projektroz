@@ -5,8 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/global.scss";
 
-import "./App.css";
-
 // import PrivateRoutes from "./components/PrivateRoute/PrivateRoute";
 
 import Home from "./pages/Home/Home";

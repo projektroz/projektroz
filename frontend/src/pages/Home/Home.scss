@@ -1,27 +1,17 @@
 // pages/HomePage/Home.scss
 
-.home-page {
-  background-color: var(--background);
-  display: flex;
-  flex-direction: column;
-  height: auto;
-}
-
-.main-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
-}
-
-.info-section {
-  border-radius: 30px;
-  padding: 10%;
-}
-
 .logo {
-  margin-bottom: 20px; /* Dodaj odstęp między logo a nagłówkiem */
+  margin-bottom: 40px;
   padding: 0;
+  width: 50%;
+}
+
+.description {
+  margin-bottom: 30px;
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+.btn-login {
+  font-size: 30px;
 }

@@ -2,11 +2,10 @@
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-// import useNavigation from "../../hooks/useNavigation";
-import useAuth from "../../hooks/useAuth";
-
 import Rectangle from "../../components/Rectangle/Rectangle";
-// import Navmenu from "../../components/Navmenu/Navmenu";
+import Button from "../../components/Button/Button";
+import BackButton from "../../components/BackButton/BackButton";
+import useAuth from "../../hooks/useAuth";
 
 import "./Login.scss";
 
@@ -36,9 +35,13 @@ function Login() {
 
   return (
     <div className="app-page login-page">
-      <Rectangle links={links}>
+      <Rectangle width="30%">
         <div className="content">
-          <h2>Zaloguj się</h2>
+          <div className="header">
+            <BackButton />
+            <h2>Zaloguj się</h2>
+          </div>
+
           <form onSubmit={handleSubmit} className="login-form">
             <div className="mb-3">
               <label htmlFor="username" className="form-label">
@@ -69,9 +72,7 @@ function Login() {
               />
             </div>
             {error && <p className="text-danger">{error}</p>}
-            <button type="submit" className="btn btn-primary">
-              <span>Zaloguj się</span>
-            </button>
+            <Button width="100%" label="Zaloguj się" type="submit" className="btn-login"></Button>
           </form>
           <p>
             Nie masz jeszcze konta?{" "}
@@ -80,17 +81,9 @@ function Login() {
             </Link>
           </p>
           <hr className="line"></hr>
-          <button>
-            <img
-              src="src/assets/images/google_logo.png"
-              alt="google"
-              width="40px"
-            />
-            Zaloguj z Google
-          </button>
+          <Button backgroundColor="var(--disabled)" color="var(--primary)" label="Zaloguj z Google" onClick={() => window.location.href = '/login'} />
         </div>
       </Rectangle>
-      {/* <ScrollAction /> */}
     </div>
   );
 }

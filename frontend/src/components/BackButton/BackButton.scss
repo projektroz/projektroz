@@ -1,0 +1,20 @@
+// components/BackButton/BackButton.scss
+.back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    left: 10px; 
+    z-index: 10;
+
+    img {
+        width: 36px;
+        height: auto;
+        filter: brightness(0) invert(1); 
+        transition: filter 0.3s ease;
+
+        &:hover {
+            filter: brightness(0) invert(0) sepia(1); // Zmiana na czarny
+        }
+    }
+}
