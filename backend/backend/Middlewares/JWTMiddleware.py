@@ -8,13 +8,11 @@ class JWTMiddleware(MiddlewareMixin):
         self.get_response = get_response
         
     def process_request(self, request):
-        exempt_paths = ['/login/', '/register/', '/refresh/', '/swagger/', '/redoc/', '/swagger.json', '/token/']
+        exempt_paths = ['/login/', '/register/', '/refresh/', '/swagger/', '/redoc/', '/swagger.json']
 
         if request.path in exempt_paths:
             return None  
         if request.path.startswith('/admin/'):
-            return None
-        if request.path.startswith('/accounts/'):
             return None
 
         auth = JWTAuthentication()
