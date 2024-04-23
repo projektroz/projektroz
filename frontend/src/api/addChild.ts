@@ -19,35 +19,12 @@ type AddChildResponse = {
 	note: string;
 }
 
-type AddParentResponse = {
-	id: number;
-	name: string;
-	surname: string;
-	child_id: number;
-}
-
-export async function addChild(childData: any): Promise<AddChildResponse> {
+export async function addChild(childData: any, method: string): Promise<AddChildResponse> {
+	const childId = childData.id;
+	console.log("childId:", childData.id);
 	try {
-		const response = await api.post('children/', childData);
-		return response.data;
-	} catch (error: any) {
-		throw new Error(error.response.data.detail);
-	}
-}
+		const response = (method === 'POST' ? await api.post('children/', childData) : await api.put(`children/${childId}`, childData));
 
-export async function addMother(motherData: any): Promise<AddParentResponse> {
-	try {
-		const response = await api.post('mother/', motherData);
-		return response.data;
-	
-	} catch (error: any) {
-		throw new Error(error.response.data.detail);
-	}
-}
-
-export async function addFather(fatherData: any): Promise<AddParentResponse> {
-	try{
-		const response = await api.post('father/', fatherData);
 		return response.data;
 	} catch (error: any) {
 		throw new Error(error.response.data.detail);

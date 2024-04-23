@@ -2,21 +2,26 @@ from typing import Iterable
 from django.db import models
 from django.contrib.auth.models import User
 
-class Mother(models.Model):
+class Person(models.Model):
     """
-    Represents a mother in the system.
+    Represents a person in the system.
     """
     id = models.AutoField(primary_key=True)
     name = models.TextField()
     surname = models.TextField()
 
-class Father(models.Model):
+    class Meta:
+        abstract = True
+
+class Parent(Person):
     """
-    Represents a father in the system.
+    Represents a parent in the system.
     """
-    id = models.AutoField(primary_key=True)
-    name = models.TextField()
-    surname = models.TextField()
+    ROLE_CHOICES = [
+        ('M', 'Mother'),
+        ('F', 'Father'),
+    ]
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES)
 
 class Notes(models.Model):
     """
@@ -28,15 +33,13 @@ class Notes(models.Model):
     note_text = models.TextField()
 
 class Address(models.Model):
-    """
-    Represents an address in the system.
-    """
     id = models.AutoField(primary_key=True)
     country = models.TextField()
     city = models.TextField()
     street = models.TextField()
     postal_code = models.TextField()
     apartment_number = models.IntegerField(null=True, blank=True)
+    is_registered = models.BooleanField(default=False)
 
 class FosterCarer(models.Model):
     """
@@ -47,6 +50,7 @@ class FosterCarer(models.Model):
     name = models.TextField(default="Noname")
     surname = models.TextField(default="Nosurname")
     email = models.EmailField(default="noemail@example.com")
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
     
     def save(self, *args, **kwargs) -> None:
         self.name = self.user.first_name
@@ -54,33 +58,19 @@ class FosterCarer(models.Model):
         self.email = self.user.email
         return super().save(*args, **kwargs)
 
-class AddressRegistered(models.Model):
-    """
-    Represents a registered address in the system.
-    """
-    id = models.AutoField(primary_key=True)
-    country = models.TextField()
-    city = models.TextField()
-    street = models.TextField()
-    postal_code = models.TextField()
-    apartment_number = models.IntegerField(null=True, blank=True)
-
-class Child(models.Model):
+class Child(Person):
     """
     Represents a child in the system.
     """
-    id = models.AutoField(primary_key=True)
-    name = models.TextField()
-    surname = models.TextField()
     birth_date = models.DateField(null=True, blank=True)
     birth_place = models.TextField(null=True, blank=True)
     pesel = models.CharField(max_length=11, null=True, unique=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
-    address_registered = models.ForeignKey(AddressRegistered, on_delete=models.CASCADE, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True, related_name='address')
+    address_registered = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True, related_name='address_registered')
     date_of_admission = models.DateField(null=True, blank=True)
     court_decision = models.CharField(max_length=30, null=True, unique=True)
-    mother = models.ForeignKey(Mother, on_delete=models.CASCADE, null=True, blank=True)
-    father = models.ForeignKey(Father, on_delete=models.CASCADE, null=True, blank=True)
+    mother = models.ForeignKey(Parent, on_delete=models.CASCADE, null=True, blank=True, related_name='mother')
+    father = models.ForeignKey(Parent, on_delete=models.CASCADE, null=True, blank=True, related_name='father')
     foster_carer = models.ForeignKey(FosterCarer, on_delete=models.CASCADE, null=True, blank=True)
     note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
 
