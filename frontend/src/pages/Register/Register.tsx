@@ -18,9 +18,29 @@ function Register() {
   const [error, setError] = useState<string>("");
   const registerUser = useAuth().registerUser;
 
+  const validateData = () => {
+    const emailRegex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$');
+    const passwordRegex = new RegExp('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,}$');
+    if (!passwordRegex.test(password)) {
+      setError("Hasło musi zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny oraz 8 znaków");
+      return false;
+    }
+    if (password !== reapeatPassword) {
+      setError("Hasła nie są takie same");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setError("Niepoprawny adres email");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!validateData()) {
+      return;
+    }
     try {
       await registerUser(username, first_name, last_name, email, password, reapeatPassword);
       setError("");

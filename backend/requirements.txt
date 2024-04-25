@@ -9,3 +9,4 @@ Faker
 psycopg2
 python-dotenv
 drf-yasg
+google-auth
