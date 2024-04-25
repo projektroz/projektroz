@@ -48,6 +48,8 @@ function AddChild({title, method}: {title: string, method: string}) {
 		}));
 	};
 
+
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {

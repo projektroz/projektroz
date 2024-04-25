@@ -13,7 +13,7 @@ class FosterCarerApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
-    def get(self, request, foster_carer_id, *args, **kwargs):
+    def get(self, request, foster_carer_id = None, *args, **kwargs):
         """
         Retrieve a list of fosterCarer objects or a specific fosterCarer object by ID.
 
@@ -25,11 +25,14 @@ class FosterCarerApiView(APIView):
         - If foster_carer_id is None, returns a list of all fosterCarer objects.
         - If foster_carer_id is provided, returns the specified fosterCarer object.
         """
-        foster_carer = FosterCarer.objects.get(id=foster_carer_id)
-        if foster_carer.id == request.user.id:
+        foster_carer = FosterCarer.objects.get(id = request.user.id)
+        if foster_carer.id == foster_carer_id:
             serializer = FosterCarerSerializer(foster_carer, many = False)
-    
             return Response(serializer.data, status=status.HTTP_200_OK)
+        elif foster_carer_id is None:
+            serializer = FosterCarerSerializer(foster_carer, many = False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
