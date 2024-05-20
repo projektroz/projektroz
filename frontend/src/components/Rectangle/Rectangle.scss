@@ -1,35 +1,36 @@
 // components/Rectangle/Rectangle.scss
 
 .rectangle {
-  width: 80%;
-  height: 90%;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--background-light);
-  border-radius: 30px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-  overflow-y: auto;
-  justify-content: flex-start;
-
-  .rectangle-content, .rectangle-nav {
-    padding: 20px;
+    width: 80%;
+    height: 90%;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    justify-content: space-between;
+    background-color: var(--background-light);
+    border-radius: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    justify-content: flex-start;
 
-  .rectangle-content {
-    width: 100%; 
-  }
-  
-  .rectangle-nav {
-    width: 40%;
-    background-color: var(--background-lighter);
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-  }
+    .rectangle-content, .rectangle-nav {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        }
+
+    .rectangle-content {
+        width: 100%; 
+        overflow-y: scroll;
+    }
+
+    .rectangle-nav {
+        width: 40%;
+        background-color: var(--background-lighter);
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
 }
 
 

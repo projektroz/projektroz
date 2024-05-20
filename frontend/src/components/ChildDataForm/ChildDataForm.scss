@@ -46,13 +46,19 @@
 .scroll-progress-container {
   width: 290px;
   height: 10px;
-  background-color: var(--text);
+  background-color: var(--additional-light);
   margin: 2% 0;
   border-radius: 10px;
 }
 
 .progress-bar {
   height: 100%;
-  background-color: var(--fifth);
+  background-color: var(--additional);
   border-radius: 10px;
+}
+
+input[type='date'] {
+  background-color: var(--disabled);
+  color: var(--text-light) !important;
+  transition: all 0.3s ease-in-out;
 }

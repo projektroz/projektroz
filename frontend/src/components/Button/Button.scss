@@ -1,24 +1,28 @@
 // components/Button/Button.scss
 
 .button {
-  padding: 15px 40px;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  color: var(--text-light);
-  background-color: var(--primary);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  // padding: 15px 40px;
+  // font-size: 16px;
+  // font-weight: bold;
+  // letter-spacing: 2px;
+  // color: var(--text-light);
+  background-color: var(--secondary);
+  border-color: var(--primary);
+  // border-radius: 5px;
+  // cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 
 
   &:hover {
-    background-color: var(--secondary);
+    background-color: var(--third);
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px var(--secondary);
     transform: scale(1.05);
   }
 
   &:active {
+    background-color: var(--primary) !important;
+    border-color: var(--secondary) !important;
     transform: scale(0.95);
   }
 
