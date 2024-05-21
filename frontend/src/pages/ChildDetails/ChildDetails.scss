@@ -1,0 +1,45 @@
+.child-details {
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-light);
+  }
+
+  .details-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+
+    .label {
+      font-weight: bold;
+      color: var(--text-light);
+    }
+
+    .value {
+      color: var(--text-light);
+    }
+  }
+
+  .details-item:last-child {
+    border-bottom: none;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    background-color: #0056b3;
+  }
+}

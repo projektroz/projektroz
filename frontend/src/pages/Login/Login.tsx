@@ -13,25 +13,26 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string>("");
+    const [loading, setLoading] = useState(false);
     const { isLoggedIn, loginUser } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             await loginUser(username, password);
             setError("");
         } catch (error: any) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
     };
+
     if (isLoggedIn) {
         return <Navigate to="/dashboard" />;
     }
-
-    // const links = [
-    //   { name: "Strona główna", url: "/home", icon: "src/assets/icons/home.png" },
-    // ];
 
     return (
         <div className="app-page login-page">
@@ -74,9 +75,11 @@ function Login() {
                         {error && <p className="text-danger">{error}</p>}
                         <Button
                             width="100%"
-                            label="Zaloguj się"
+                            label={loading ? "Logowanie..." : "Zaloguj się"}
                             type="submit"
-                            className="btn-login"></Button>
+                            className="btn-login"
+                            disabled={loading}
+                        />
                     </form>
                     <p>
                         Nie masz jeszcze konta?{" "}
@@ -84,7 +87,7 @@ function Login() {
                             Zarejestruj się
                         </Link>
                     </p>
-                    <hr className="line"></hr>
+                    <hr className="line" />
                     <Button
                         backgroundColor="var(--disabled)"
                         color="var(--primary)"
@@ -98,4 +101,3 @@ function Login() {
 }
 
 export default Login;
-

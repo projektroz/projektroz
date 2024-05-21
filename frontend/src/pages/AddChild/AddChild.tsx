@@ -65,11 +65,11 @@ function AddChild({ title, method }: { title: string; method: string }) {
     };
 
     const links = [
-        {
-            name: "Strona główna",
-            url: "/home",
-            icon: "../src/assets/icons/home.png",
-        },
+        // {
+        //     name: "Strona główna",
+        //     url: "/home",
+        //     icon: "../src/assets/icons/home.png",
+        // },
         {
             name: "Panel sterowania",
             url: "/dashboard",

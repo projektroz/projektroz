@@ -14,6 +14,7 @@ import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddChild from "./pages/AddChild/AddChild";
 import ManageChild from "./pages/ManageChild/ManageChild";
+import ChildDetails from "./pages/ChildDetails/ChildDetails.tsx";
 
 const App = () => {
 return (
@@ -29,6 +30,7 @@ return (
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/add-child" element={<AddChild title= "Dodaj dziecko" method="POST"/>} />
         <Route path="/dashboard/manage-child" element={<ManageChild />} />
+        <Route path="/dashboard/manage-child/:id" element={<ChildDetails />} />
         <Route path="/dashboard/manage-child/edit-child" element={<AddChild title= "Edytuj dziecko" method="PUT"/>} />
         {/* </Route> */}
     </Routes>

@@ -18,15 +18,16 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         }
 
     .rectangle-content {
         width: 100%; 
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     .rectangle-nav {
-        width: 40%;
+        width: 35%;
         background-color: var(--background-lighter);
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
