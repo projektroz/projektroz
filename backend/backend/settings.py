@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'drf_yasg',
+    "drf_yasg",
+    "gdstorage",
 ]
 
 MIDDLEWARE = [
@@ -184,3 +185,4 @@ SWAGGER_SETTINGS = {
 
 GOOGLE_API_CLIENT_ID = os.getenv("GOOGLE_API_CLIENT_ID")
 GOOGLE_API_CLIENT_SECRET = os.getenv("GOOGLE_API_CLIENT_SECRET")
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE_CONTENTS = os.getenv('GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE_CONTENTS')

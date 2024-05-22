@@ -11,7 +11,7 @@ from projektRoz.apiViews import (
     SiblingsApiView,
     CategoryApiView,
     DocumentsApiView,
-    
+    FileApiView,
 )
 
 from drf_yasg.views import get_schema_view
@@ -67,4 +67,5 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
+    path('upload/', FileApiView.as_view(), name='upload_map'),
 ]
