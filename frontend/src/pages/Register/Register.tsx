@@ -6,7 +6,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import useAuth from "../../hooks/useAuth";
 
 import "./Register.scss";
-
+ 
 function Register() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -24,7 +24,7 @@ function Register() {
             return;
         }
         try {
-            await registerUser(username, firstName, lastName, email, password, repeatPassword);
+            await registerUser(username,  password, repeatPassword, email, firstName, lastName);
             setError("");
         } catch (error: any) {
             setError(error.message);

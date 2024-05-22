@@ -29,15 +29,16 @@
 }
 
 .button-container button {
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 4px;
   flex: 1;
+  transition: background-color 0.3s;
 }
 
 .button-container button:hover {
-  background-color: #0056b3;
+  background-color: var(--secondary);
 }

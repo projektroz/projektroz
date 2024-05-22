@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import ChildDataCard from "../../components/ChildDataForm/ChildDataForm";
+import ChildDataForm from "../../components/ChildDataForm/ChildDataForm";
 import { addChild } from "../../api/addChild";
-import {
-    getChildData,
-    parseBackToFormData,
-} from "../../functions/AddChildFunctions";
+import { getChildData, parseBackToFormData } from "../../functions/AddChildFunctions";
 import "./AddChild.scss";
 import Child from "types/Child";
 
@@ -31,13 +28,13 @@ function AddChild({ title, method }: { title: string; method: string }) {
         motherName: "",
         motherSurname: "",
         fatherName: "",
-        fatherSurname: "",
+        fatherSurname: ""
     });
 
     useEffect(() => {
         const dataFromStorage = localStorage.getItem("childData");
         if (dataFromStorage) {
-            setFormData(parseBackToFormData(dataFromStorage));
+            setFormData(parseBackToFormData(JSON.parse(dataFromStorage)));
             localStorage.removeItem("childData");
         }
     }, []);
@@ -54,22 +51,19 @@ function AddChild({ title, method }: { title: string; method: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await addChild(getChildData(formData), method);
-
+            const data = getChildData(formData);
+            console.log("Sending data:", data); // Logowanie danych
+            await addChild(data, method);
             setError("");
 
             window.location.href = "/dashboard";
         } catch (error: any) {
+            console.error("Error:", error); // Logowanie błędu
             setError(error.message);
         }
     };
 
     const links = [
-        // {
-        //     name: "Strona główna",
-        //     url: "/home",
-        //     icon: "../src/assets/icons/home.png",
-        // },
         {
             name: "Panel sterowania",
             url: "/dashboard",
@@ -238,12 +232,11 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 <div className="child-content">
                     <h2>{title}</h2>
                     <form onSubmit={handleSubmit}>
-                        <ChildDataCard
+                        <ChildDataForm
                             dataSets={dataSets}
                             formData={formData}
                             handleInputChange={handleInputChange}
                         />
-                        {/* <button type="submit">Dodaj dziecko</button> */}
                     </form>
                     {error && <div className="error">{error}</div>}
                 </div>
@@ -253,4 +246,3 @@ function AddChild({ title, method }: { title: string; method: string }) {
 }
 
 export default AddChild;
-

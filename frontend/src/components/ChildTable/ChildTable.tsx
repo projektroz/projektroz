@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Child from "types/Child";
+import Child from "../../types/Child";
 import "./ChildTable.scss";
 
 interface ChildTableProps {
@@ -12,6 +12,8 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
+    console.log('Children passed to table:', children);  // Log the children data
+
     const sortedChildren = React.useMemo(() => {
         const sortableChildren = [...children];
         if (sortConfig !== null) {
@@ -21,10 +23,10 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
                     return sortConfig.direction === 'ascending'
                         ? (a[key] as string).localeCompare(b[key] as string)
                         : (b[key] as string).localeCompare(a[key] as string);
-                } else if (a[key] instanceof Date && b[key] instanceof Date) {
+                } else if (new Date(a[key] as string) instanceof Date && new Date(b[key] as string) instanceof Date) {
                     return sortConfig.direction === 'ascending'
-                        ? (a[key] as Date).getTime() - (b[key] as Date).getTime()
-                        : (b[key] as Date).getTime() - (a[key] as Date).getTime();
+                        ? new Date(a[key] as string).getTime() - new Date(b[key] as string).getTime()
+                        : new Date(b[key] as string).getTime() - new Date(a[key] as string).getTime();
                 } else if (typeof a[key] === 'number' && typeof b[key] === 'number') {
                     return sortConfig.direction === 'ascending'
                         ? (a[key] as number) - (b[key] as number)
@@ -84,7 +86,7 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
                     <tr key={child.id}>
                         <td>{child.name}</td>
                         <td>{child.surname}</td>
-                        <td>{child.birth_date.toLocaleDateString()}</td>
+                        <td>{new Date(child.birth_date).toLocaleDateString()}</td>
                         <td>{child.birth_place}</td>
                         <td>{child.pesel}</td>
                         <td>

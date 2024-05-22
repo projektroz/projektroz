@@ -8,7 +8,7 @@ const BackButton = () => {
 
     return (
         <button className="back-button" onClick={() => navigate(-1)}>
-            <img src="../src/assets/icons/back-button.svg" alt="Powrót" />
+            <img src="../../src/assets/icons/back-button.svg" alt="Powrót" />
         </button>
     );
 };

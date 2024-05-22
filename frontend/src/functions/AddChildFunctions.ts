@@ -1,40 +1,41 @@
 function getChildData(formData: any) {
-	return {
+    return {
         id: formData.id || "",
-		name: formData.name || "",
-		surname: formData.surname || "",
-		birth_date: formData.birthDate || "",
-		birth_place: formData.birthPlace || "",
-		pesel: formData.pesel || "",
-		date_of_admission: formData.admissionDate || "",
-		court_decision: formData.courtDecision || "",
-		address_registered: {
-			country: formData.addressRegisteredCountry || "",
-			city: formData.addressRegisteredCity || "",
-			street: formData.addressRegisteredStreet || "",
-			postal_code: formData.addressRegisteredPostalCode || "",
-			apartment_number: formData.addressRegisteredHouseNumber || "",
+        name: formData.name || "",
+        surname: formData.surname || "",
+        birth_date: formData.birthDate || "",
+        birth_place: formData.birthPlace || "",
+        pesel: formData.pesel || "",
+        date_of_admission: formData.admissionDate || "",
+        court_decision: formData.courtDecision || "",
+        address_registered: {
+            country: formData.addressRegisteredCountry || "",
+            city: formData.addressRegisteredCity || "",
+            street: formData.addressRegisteredStreet || "",
+            postal_code: formData.addressRegisteredPostalCode || "",
+            apartment_number: formData.addressRegisteredHouseNumber || "",
             is_registered: true,
-		},
-		address: {
-			country: formData.addressCurrentCountry || "",
-			city: formData.addressCurrentCity || "",
-			street: formData.addressCurrentStreet || "",
-			postal_code: formData.addressCurrentPostalCode || "",
-			apartment_number: formData.addressCurrentHouseNumber || "",
+        },
+        address: {
+            country: formData.addressCurrentCountry || "",
+            city: formData.addressCurrentCity || "",
+            street: formData.addressCurrentStreet || "",
+            postal_code: formData.addressCurrentPostalCode || "",
+            apartment_number: formData.addressCurrentHouseNumber || "",
             is_registered: false,
-		},
-		mother: {
-			name: formData.motherName || "",
-			surname: formData.motherSurname || "",
+        },
+        mother: {
+            name: formData.motherName || "",
+            surname: formData.motherSurname || "",
             role: "M",
-		},
-		father: {
-			name: formData.fatherName || "",
-			surname: formData.fatherSurname || "",
+        },
+        father: {
+            name: formData.fatherName || "",
+            surname: formData.fatherSurname || "",
             role: "F",
-		},
-	}
+        },
+        note: formData.note || 1  // Assuming a default note ID, adjust as necessary
+    };
 };
 
 function parseBackToFormData(childDataString: string) {
@@ -55,52 +56,55 @@ function parseBackToFormData(childDataString: string) {
         id: childData.id || "",
         name: childData.name || "",
         surname: childData.surname || "",
-        birthDate: childData.birth_date || Date.now(),
+        birthDate: childData.birth_date || "",
         birthPlace: childData.birth_place || "",
-        pesel: childData.pesel || 0,
-        admissionDate: childData.date_of_admission || Date.now(),
+        pesel: childData.pesel || "",
+        admissionDate: childData.date_of_admission || "",
         courtDecision: childData.court_decision || "",
         addressRegisteredCountry: childData.address_registered?.country || "",
         addressRegisteredCity: childData.address_registered?.city || "",
         addressRegisteredStreet: childData.address_registered?.street || "",
         addressRegisteredPostalCode: childData.address_registered?.postal_code || "",
-        addressRegisteredHouseNumber: childData.address_registered?.apartment_number || 0,
+        addressRegisteredHouseNumber: childData.address_registered?.apartment_number || "",
         addressCurrentCountry: childData.address?.country || "",
         addressCurrentCity: childData.address?.city || "",
         addressCurrentStreet: childData.address?.street || "", 
         addressCurrentPostalCode: childData.address?.postal_code || "",
-        addressCurrentHouseNumber: childData.address?.apartment_number || 0,
+        addressCurrentHouseNumber: childData.address?.apartment_number || "",
         motherName: childData.mother?.name || "",
         motherSurname: childData.mother?.surname || "",
         fatherName: childData.father?.name || "",
         fatherSurname: childData.father?.surname || "",
+        note: childData.note || 1  // Assuming a default note ID, adjust as necessary
     };
 }
 
 function getDefaultFormData() {
     return {
-        id: -1,
+        id: "",
         name: "",
         surname: "",
-        birthDate: Date.now(),
+        birthDate: "",
         birthPlace: "",
-        pesel: 0,
-        admissionDate: Date.now(),
+        pesel: "",
+        admissionDate: "",
         courtDecision: "",
         addressRegisteredCountry: "",
         addressRegisteredCity: "",
         addressRegisteredStreet: "",
         addressRegisteredPostalCode: "",
-        addressRegisteredHouseNumber: 0,
+        addressRegisteredHouseNumber: "",
         addressCurrentCountry: "",
         addressCurrentCity: "",
         addressCurrentStreet: "", 
         addressCurrentPostalCode: "",
-        addressCurrentHouseNumber: 0,
+        addressCurrentHouseNumber: "",
         motherName: "",
         motherSurname: "",
         fatherName: "",
         fatherSurname: "",
+        note: 1  // Assuming a default note ID, adjust as necessary
     };
 }
+
 export { getChildData, parseBackToFormData };
