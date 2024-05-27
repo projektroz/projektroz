@@ -12,5 +12,4 @@ drf-yasg
 google-auth
 django-googledrive-storage
 google-api-python-client
-gdstorage
 django-environ

@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import Map, Parent, Notes, Address, FosterCarer, Child, Siblings, Category, Documents
+from .models import  Parent, Notes, Address, FosterCarer, Child, Siblings, Category, Documents
 from django.contrib.auth.models import User
 
-class MapSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Map
-        fields = "__all__"
+
+# class MapSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Map
+#         fields = "__all__"
 
 class ParentSerializer(serializers.ModelSerializer):
     """
