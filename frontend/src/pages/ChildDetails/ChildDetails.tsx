@@ -8,7 +8,7 @@ import BackButton from "../../components/BackButton/BackButton";
 
 const ChildDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [child, setChild] = useState<Child | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,10 +17,10 @@ const ChildDetails: React.FC = () => {
         const fetchChildData = async () => {
             try {
                 const response = await api.get(`/children/${id}`);
-                setChild(response.data[0]);  // Assuming the API returns an array with one child
+                setChild(response.data[0]); // Assuming the API returns an array with one child
                 setLoading(false);
             } catch (err: any) {
-                setError('Nie udało się pobrać danych dziecka.');
+                setError("Nie udało się pobrać danych dziecka.");
                 setLoading(false);
             }
         };
@@ -43,7 +43,6 @@ const ChildDetails: React.FC = () => {
     return (
         <div className="app-page child-details">
             <Rectangle>
-                
                 <BackButton />
                 <h1>Szczegóły dziecka</h1>
                 <div className="details-grid">
@@ -59,7 +58,11 @@ const ChildDetails: React.FC = () => {
                         </div>
                         <div className="details-item">
                             <span className="label">Data urodzenia:</span>
-                            <span className="value">{new Date(child.birth_date).toLocaleDateString()}</span>
+                            <span className="value">
+                                {new Date(
+                                    child.birth_date
+                                ).toLocaleDateString()}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Miejsce urodzenia:</span>
@@ -71,11 +74,17 @@ const ChildDetails: React.FC = () => {
                         </div>
                         <div className="details-item">
                             <span className="label">Data przyjęcia:</span>
-                            <span className="value">{new Date(child.date_of_admission).toLocaleDateString()}</span>
+                            <span className="value">
+                                {new Date(
+                                    child.date_of_admission
+                                ).toLocaleDateString()}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Decyzja sądu:</span>
-                            <span className="value">{child.court_decision}</span>
+                            <span className="value">
+                                {child.court_decision}
+                            </span>
                         </div>
                         {/* <div className="details-item">
                             <span className="label">Notatka:</span>
@@ -86,23 +95,33 @@ const ChildDetails: React.FC = () => {
                         <h2>Adres zameldowania</h2>
                         <div className="details-item">
                             <span className="label">Kraj:</span>
-                            <span className="value">{child.address_registered.country}</span>
+                            <span className="value">
+                                {child.address_registered.country}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Miasto:</span>
-                            <span className="value">{child.address_registered.city}</span>
+                            <span className="value">
+                                {child.address_registered.city}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Ulica:</span>
-                            <span className="value">{child.address_registered.street}</span>
+                            <span className="value">
+                                {child.address_registered.street}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Kod pocztowy:</span>
-                            <span className="value">{child.address_registered.postal_code}</span>
+                            <span className="value">
+                                {child.address_registered.postal_code}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Numer domu:</span>
-                            <span className="value">{child.address_registered.apartment_number}</span>
+                            <span className="value">
+                                {child.address_registered.apartment_number}
+                            </span>
                         </div>
                     </div>
                     <div className="details-section">
@@ -113,7 +132,9 @@ const ChildDetails: React.FC = () => {
                         </div>
                         <div className="details-item">
                             <span className="label">Nazwisko matki:</span>
-                            <span className="value">{child.mother.surname}</span>
+                            <span className="value">
+                                {child.mother.surname}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Imię ojca:</span>
@@ -121,14 +142,18 @@ const ChildDetails: React.FC = () => {
                         </div>
                         <div className="details-item">
                             <span className="label">Nazwisko ojca:</span>
-                            <span className="value">{child.father.surname}</span>
+                            <span className="value">
+                                {child.father.surname}
+                            </span>
                         </div>
                     </div>
                     <div className="details-section">
                         <h2>Adres zamieszkania</h2>
                         <div className="details-item">
                             <span className="label">Kraj:</span>
-                            <span className="value">{child.address.country}</span>
+                            <span className="value">
+                                {child.address.country}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Miasto:</span>
@@ -136,21 +161,28 @@ const ChildDetails: React.FC = () => {
                         </div>
                         <div className="details-item">
                             <span className="label">Ulica:</span>
-                            <span className="value">{child.address.street}</span>
+                            <span className="value">
+                                {child.address.street}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Kod pocztowy:</span>
-                            <span className="value">{child.address.postal_code}</span>
+                            <span className="value">
+                                {child.address.postal_code}
+                            </span>
                         </div>
                         <div className="details-item">
                             <span className="label">Numer domu:</span>
-                            <span className="value">{child.address.apartment_number}</span>
+                            <span className="value">
+                                {child.address.apartment_number}
+                            </span>
                         </div>
                     </div>
                 </div>
-           </Rectangle>
+            </Rectangle>
         </div>
     );
 };
 
 export default ChildDetails;
+

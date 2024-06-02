@@ -11,41 +11,62 @@ import manageChildIcon from "../../assets/icons/manage.png";
 import "./Dashboard.scss";
 
 function Dashboard() {
-  const { logout } = useAuth();
+    const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout(); 
-  };
+    const handleLogout = () => {
+        logout();
+    };
 
-  const links = [
-    { name: "Strona główna", url: "/home", icon: homeIcon },
-    { name: "Wyloguj", url: "/logout", icon: logoutIcon },
-  ];
+    const links = [
+        { name: "Strona główna", url: "/home", icon: homeIcon },
+        { name: "Wyloguj", url: "/logout", icon: logoutIcon },
+    ];
 
-  const childCards = [
-    { title: "Dodaj dziecko", url: "/dashboard/add-child", image: addChildIcon },
-    { title: "Zarządzaj dziećmi", url: "/dashboard/manage-child", image: manageChildIcon },
-  ];
+    const childCards = [
+        {
+            title: "Dodaj dziecko",
+            url: "/dashboard/add-child",
+            image: addChildIcon,
+        },
+        {
+            title: "Zarządzaj dziećmi",
+            url: "/dashboard/manage-child",
+            image: manageChildIcon,
+        },
+    ];
 
-  const documentsCards = [
-    { title: "Dodaj dokument", url: "/dashboard", image: addChildIcon },
-    { title: "Zarządzaj dokumentami", url: "/dashboard", image: manageChildIcon },
-  ];
+    const documentsCards = [
+        {
+            title: "Dodaj dokument",
+            url: "/dashboard/add-document",
+            image: addChildIcon,
+        },
+        {
+            title: "Zarządzaj dokumentami",
+            url: "/dashboard",
+            image: manageChildIcon,
+        },
+    ];
 
-  const templateCards = [
-    { title: "Dodaj szablon", url: "/dashboard", image: addChildIcon },
-    { title: "Zarządzaj szablonami", url: "/dashboard", image: manageChildIcon },
-  ];
+    const templateCards = [
+        { title: "Dodaj szablon", url: "/dashboard", image: addChildIcon },
+        {
+            title: "Zarządzaj szablonami",
+            url: "/dashboard",
+            image: manageChildIcon,
+        },
+    ];
 
-  return (
-    <div className="app-page dashboard-page">
-      <Rectangle links={links}>
-        <DashboardLine title="Dzieci" cards={childCards} />
-        {/*<DashboardLine title="Dokumenty" cards={documentsCards} />*/}
-        <DashboardLine title="Szablony" cards={templateCards} />
-      </Rectangle>
-    </div>
-  );
+    return (
+        <div className="app-page dashboard-page">
+            <Rectangle links={links}>
+                <DashboardLine title="Dzieci" cards={childCards} />
+                <DashboardLine title="Dokumenty" cards={documentsCards} />
+                <DashboardLine title="Szablony" cards={templateCards} />
+            </Rectangle>
+        </div>
+    );
 }
 
 export default Dashboard;
+

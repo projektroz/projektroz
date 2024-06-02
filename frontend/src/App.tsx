@@ -13,12 +13,13 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import AddChild from "./pages/AddChild/AddChild";
 import ManageChild from "./pages/ManageChild/ManageChild";
 import ChildDetails from "./pages/ChildDetails/ChildDetails";
+import AddDocuments from "./pages/AddDocuments/AddDocuments";
 
 const App = () => {
     const { isLoggedIn, logout } = useAuth();
 
     useEffect(() => {
-        const access_token = localStorage.getItem('access_token');
+        const access_token = localStorage.getItem("access_token");
         if (!access_token) {
             console.log("Token nie znaleziony, wywołuję logout");
             logout();
@@ -35,13 +36,38 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/register" element={<Register />} />
-                
+
                 <Route element={<PrivateRoutes />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/dashboard/add-child" element={<AddChild title="Dodaj dziecko" method="POST"/>} />
-                    <Route path="/dashboard/manage-child" element={<ManageChild />} />
-                    <Route path="/dashboard/manage-child/:id" element={<ChildDetails />} />
-                    <Route path="/dashboard/manage-child/edit-child" element={<AddChild title="Edytuj dziecko" method="PUT"/>} />
+                    <Route
+                        path="/dashboard/add-child"
+                        element={
+                            <AddChild title="Dodaj dziecko" method="POST" />
+                        }
+                    />
+                    <Route
+                        path="/dashboard/manage-child"
+                        element={<ManageChild />}
+                    />
+                    <Route
+                        path="/dashboard/manage-child/:id"
+                        element={<ChildDetails />}
+                    />
+                    <Route
+                        path="/dashboard/manage-child/edit-child"
+                        element={
+                            <AddChild title="Edytuj dziecko" method="PUT" />
+                        }
+                    />
+                    <Route
+                        path="/dashboard/add-document"
+                        element={
+                            <AddDocuments
+                                title="Dodaj dokument"
+                                method="POST"
+                            />
+                        }
+                    />
                 </Route>
             </Routes>
         </>
@@ -49,3 +75,4 @@ const App = () => {
 };
 
 export default App;
+
