@@ -24,6 +24,9 @@ class ParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parent
         fields = "__all__"
+        extra_kwargs = {
+            'role': {'required': True}
+        }
 
 class NotesSerializer(serializers.ModelSerializer):
     """
@@ -42,6 +45,11 @@ class NotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notes
         fields = "__all__"
+        extra_kwargs = {
+            'create_date': {'required': True},
+            'modification_date': {'required': True},
+            'note_text': {'required': True}
+        }
 
 class AddressSerializer(serializers.ModelSerializer):
     """
@@ -58,6 +66,14 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = "__all__"
+        extra_kwargs = {
+            'country': {'required': True},
+            'city': {'required': True},
+            'street': {'required': True},
+            'postal_code': {'required': True},
+            'apartment_number': {'required': False},
+            'is_registered': {'required': False}
+        }
 
 class FosterCarerSerializer(serializers.ModelSerializer):
     """
@@ -77,6 +93,12 @@ class FosterCarerSerializer(serializers.ModelSerializer):
     class Meta:
         model = FosterCarer
         fields = "__all__"
+        extra_kwargs = {
+            'name': {'required': True},
+            'surname': {'required': True},
+            'email': {'required': True},
+            'address': {'required': True}
+        }
 
 class ChildSerializer(serializers.ModelSerializer):
     """
@@ -102,6 +124,19 @@ class ChildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Child
         fields = "__all__"
+        extra_kwargs = {
+            'name': {'required': True},
+            'surname': {'required': True},
+            'birth_date': {'required': True},
+            'birth_place': {'required': True},
+            'pesel': {'required': True},
+            'date_of_admission': {'required': True},
+            'court_decision': {'required': True},
+            'address': {'required': True},
+            'address_registered': {'required': True},
+            'mother': {'required': True},
+            'father': {'required': True}
+        }
         
     def create(self, validated_data):
         address_data = validated_data.pop('address')
@@ -186,6 +221,9 @@ class SiblingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Siblings
         fields = "__all__"
+        extra_kwargs = {
+            'child': {'required': True}
+        }
 
 class CategorySerializer(serializers.ModelSerializer):
     """
@@ -202,6 +240,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
+        extra_kwargs = {
+            'category_name': {'required': True}
+        }
 
 class DocumentsSerializer(serializers.ModelSerializer):
     """
@@ -220,6 +261,11 @@ class DocumentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Documents
         fields = "__all__"
+        extra_kwargs = {
+            'child': {'required': True},
+            'category': {'required': True},
+            'document': {'required': True}
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -237,7 +283,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name']
+        fields = "__all__"
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -280,7 +326,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'passwordRepeat', 'email', 'first_name', 'last_name']
+        fields = ['username', 'password', 'passwordRepeat', 'email', 'first_name', 'last_name']
         extra_kwargs = {
             'password': {'write_only': True},
             'passwordRepeat': {'write_only': True},

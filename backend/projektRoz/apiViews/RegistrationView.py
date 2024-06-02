@@ -9,15 +9,10 @@ class RegistrationView(APIView):
     """
     Creates the user.
     """
+    
     @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter('username', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-            openapi.Parameter('password', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-            openapi.Parameter('passwordRepeat', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-            openapi.Parameter('email', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-            openapi.Parameter('first_name', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-            openapi.Parameter('last_name', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True),
-        ],
+        request_body=UserRegistrationSerializer,
+        responses={201: UserRegistrationSerializer, 400: 'Bad Request'}
     )
     def post(self, request, format='json'):
         serializer = UserRegistrationSerializer(data=request.data)

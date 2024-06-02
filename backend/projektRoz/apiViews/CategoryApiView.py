@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Category
 from projektRoz.serializer import CategorySerializer
 
@@ -12,7 +13,13 @@ class CategoryApiView(APIView):
     """
 
     permission_classes = [permissions.IsAuthenticated]
-    
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('category_id', openapi.IN_QUERY, description="ID of the category", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: CategorySerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, category_id = None, *args, **kwargs):
         """
         Retrieve a list of categories or a specific category by ID.
@@ -33,6 +40,10 @@ class CategoryApiView(APIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        request_body=CategorySerializer,
+        responses={201: CategorySerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new category.
@@ -51,6 +62,10 @@ class CategoryApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=CategorySerializer,
+        responses={200: CategorySerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, category_id, *args, **kwargs):
         """
         Update an existing category or create a new category if it doesn't exist.
@@ -81,6 +96,9 @@ class CategoryApiView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, category_id, *args, **kwargs):
         """
         Delete a category by ID.

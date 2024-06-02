@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Parent, Child, FosterCarer
 from projektRoz.serializer import ParentSerializer
 
@@ -19,6 +20,13 @@ class ParentApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('role', openapi.IN_QUERY, description="Role of the parent ('M' for mother, 'F' for father)", type=openapi.TYPE_STRING),
+            openapi.Parameter('parent_id', openapi.IN_QUERY, description="ID of the parent", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: ParentSerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, role=None, parent_id=None, *args, **kwargs):
         """
         Retrieves a list of all parents or a specific parent by ID.
@@ -59,6 +67,10 @@ class ParentApiView(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @swagger_auto_schema(
+        request_body=ParentSerializer,
+        responses={201: ParentSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Creates a new parent.
@@ -81,6 +93,10 @@ class ParentApiView(APIView):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        request_body=ParentSerializer,
+        responses={200: ParentSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, role=None, parent_id=None, *args, **kwargs):
         """
         Updates an existing parent by ID.
@@ -113,6 +129,9 @@ class ParentApiView(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, role, parent_id, *args, **kwargs):
         """
         Deletes a parent by ID.
