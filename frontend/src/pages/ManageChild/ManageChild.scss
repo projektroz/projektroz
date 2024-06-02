@@ -1,3 +1,8 @@
 .manage-child-page {
     padding-top: 2vh;
+    .manageChild {
+        max-height: 90%;
+        overflow: auto;
+        position: relative;
+    }
 }

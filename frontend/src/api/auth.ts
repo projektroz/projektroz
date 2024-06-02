@@ -18,8 +18,8 @@ type LoginResponse = {
       return response.data; 
   }
 
-  export async function registerRequest(username: string, name: string, surname: string, email: string, password: string, passwordRepeat: string): Promise<RegisterResponse> {
-    const response = await register.post('/', {"username": username, "first_name": name, "last_name": surname, "email": email, "password": password, "passwordRepeat": passwordRepeat});
+  export async function registerRequest(username: string, password: string, passwordRepeat: string, email: string, name: string, surname: string): Promise<RegisterResponse> {
+    const response = await register.post('/', {"username": username, "password": password, "passwordRepeat": passwordRepeat, "email": email, "first_name": name, "last_name": surname});
     console.log(response);
 
     return response.data;

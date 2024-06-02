@@ -1,19 +1,33 @@
-/* components/Button/Button.scss */
-.btn {
-  padding: 8px 16px;
-  margin-bottom: 8px;
-  font-size: 16px;
+// components/Button/Button.scss
+
+.button {
+  // padding: 15px 40px;
+  // font-size: 16px;
+  // font-weight: bold;
+  // letter-spacing: 2px;
+  // color: var(--text-light);
   background-color: var(--secondary);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-color: var(--primary);
+  // border-radius: 5px;
+  // cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+
 
   &:hover {
-    background-color: #0056b3;
+    background-color: var(--third);
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px var(--secondary);
+    transform: scale(1.05);
   }
 
-  &:focus {
-    outline: none;
+  &:active {
+    background-color: var(--primary) !important;
+    border-color: var(--secondary) !important;
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    background-color: var(--disabled);
+    cursor: not-allowed;
   }
 }

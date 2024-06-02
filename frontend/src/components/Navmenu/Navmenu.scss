@@ -1,11 +1,19 @@
-// components/Navmenu/Navmenu.scss
-
 .nav-menu {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  // position: fixed;
+  height: 100%;
+  padding-top: 50px;
+
+  .logo {
+    margin-bottom: 50px; // Adds space below the logo
+    width: 100%;
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
 
   .menu-link {
     display: flex;
