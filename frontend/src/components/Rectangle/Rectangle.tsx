@@ -5,25 +5,27 @@ import Navmenu from "../Navmenu/Navmenu";
 
 interface RectangleProps {
   children: React.ReactNode;
-  links: { name: string; url: string; icon: string }[];
+  links?: { name: string; url: string; icon: string }[];
+  width?: string; 
+  height?: string;
 }
 
-const Rectangle: React.FC<RectangleProps> = ({ children, links }) => {
-  links = links;
-
+const Rectangle: React.FC<RectangleProps> = ({ 
+  children, 
+  links = [], 
+  width = '',  // Domyślna szerokość
+  height = '' // Domyślna wysokość
+  }) => {
   return (
-    <div id="rectangle">
-      <div id="rectangleFace">
-        <div id="rectangleLeft">{children}</div>
-        <div id="rectangleRight">
+    <div className="rectangle" style={{ width, height }}>
+      <div className="rectangle-content">
+        {children}
+      </div>
+      {links.length > 0 && (  // Renderuj Navmenu tylko jeśli 'links' zawiera elementy
+        <div className="rectangle-nav">
           <Navmenu links={links} />
-          <div className="blur"></div>
         </div>
-      </div>
-      <div className="blur">
-        <div id="elipse1"></div>
-        <div id="elipse2"></div>
-      </div>
+      )}
     </div>
   );
 };
