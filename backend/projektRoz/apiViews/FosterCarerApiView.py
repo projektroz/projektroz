@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import FosterCarer
 from projektRoz.serializer import FosterCarerSerializer
 
@@ -13,6 +14,12 @@ class FosterCarerApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('foster_carer_id', openapi.IN_QUERY, description="ID of the foster carer", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: FosterCarerSerializer(many=False), 404: 'Not Found'}
+    )
     def get(self, request, foster_carer_id = None, *args, **kwargs):
         """
         Retrieve a list of fosterCarer objects or a specific fosterCarer object by ID.
@@ -36,6 +43,10 @@ class FosterCarerApiView(APIView):
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @swagger_auto_schema(
+        request_body=FosterCarerSerializer,
+        responses={201: FosterCarerSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new fosterCarer object.
@@ -55,6 +66,10 @@ class FosterCarerApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=FosterCarerSerializer,
+        responses={200: FosterCarerSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, foster_carer_id = None, *args, **kwargs):
         """
         Update an existing fosterCarer object.
@@ -89,6 +104,9 @@ class FosterCarerApiView(APIView):
         
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, foster_carer_id, *args, **kwargs):
         """
         Delete an existing fosterCarer object.
