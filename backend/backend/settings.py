@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+import json
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -151,15 +152,17 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './django.log',
+        'console': {
+            'class': 'logging.StreamHandler',
         },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -183,5 +186,4 @@ SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
 }
 
-GOOGLE_API_CLIENT_ID = os.getenv("GOOGLE_API_CLIENT_ID")
-GOOGLE_API_CLIENT_SECRET = os.getenv("GOOGLE_API_CLIENT_SECRET")
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE_CONTENTS = json.loads(os.getenv('GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE_CONTENTS', '{}'))
