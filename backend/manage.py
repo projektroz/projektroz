@@ -7,7 +7,16 @@ import threading
 def run_entrypoint():
     script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'migration.sh')
     print(f"Running migration script at: {script_path}")
-    subprocess.call(script_path)
+    subprocess.call('dos2unix migration.sh', shell=True)
+    if os.path.exists(script_path):
+        print(f"Script {script_path} exists")
+        if os.access(script_path, os.X_OK):
+            print(f"Script {script_path} is executable")
+            subprocess.call(script_path, shell=True)
+        else:
+            print(f"Script {script_path} is not executable")
+    else:
+        print(f"Script {script_path} does not exist")
 
 def main():
     """Run administrative tasks."""

@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Notes, Child, FosterCarer
 from projektRoz.serializer import NotesSerializer
 
@@ -13,6 +14,12 @@ class NotesApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('note_id', openapi.IN_QUERY, description="ID of the note", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: NotesSerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, note_id=None, *args, **kwargs):
         """
         Retrieve a list of notes or a specific note by ID.
@@ -50,7 +57,10 @@ class NotesApiView(APIView):
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
                 
-
+    @swagger_auto_schema(
+        request_body=NotesSerializer,
+        responses={201: NotesSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new note.
@@ -69,6 +79,10 @@ class NotesApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=NotesSerializer,
+        responses={200: NotesSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, note_id = None, *args, **kwargs):
         """
         Update an existing note.
@@ -98,6 +112,9 @@ class NotesApiView(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, note_id, *args, **kwargs):
         """
         Delete a note.

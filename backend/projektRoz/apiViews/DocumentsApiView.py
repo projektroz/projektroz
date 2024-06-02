@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Documents, Child, FosterCarer
 from projektRoz.serializer import DocumentsSerializer
 
@@ -13,6 +14,12 @@ class DocumentsApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('document_id', openapi.IN_QUERY, description="ID of the document", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: DocumentsSerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, document_id = None, *args, **kwargs):
         """
         Retrieve a list of documents or a specific document by ID.
@@ -53,6 +60,10 @@ class DocumentsApiView(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @swagger_auto_schema(
+        request_body=DocumentsSerializer,
+        responses={201: DocumentsSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new document.
@@ -71,6 +82,10 @@ class DocumentsApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=DocumentsSerializer,
+        responses={200: DocumentsSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, document_id = None, *args, **kwargs):
         """
         Update an existing document.
@@ -102,6 +117,9 @@ class DocumentsApiView(APIView):
             
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, document_id, *args, **kwargs):
         """
         Delete an existing document.
