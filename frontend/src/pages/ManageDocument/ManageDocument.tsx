@@ -1,6 +1,6 @@
 import React from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import { useDocumentData } from "../../hooks/useDocumentData";
+import { useDocumentData } from "../../hooks/useDocumentData.ts";
 import "./ManageDocument.scss";
 import DocumentTable from "../../components/DocumentTable/DocumentTable";
 

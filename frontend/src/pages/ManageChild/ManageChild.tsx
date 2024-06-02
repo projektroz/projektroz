@@ -11,16 +11,20 @@ function ManageChild() {
             url: "/dashboard",
             icon: "../src/assets/icons/manage.png",
         },
-        { name: "Wyloguj", url: "/logout", icon: "../src/assets/icons/logout.png" },
+        {
+            name: "Wyloguj",
+            url: "/logout",
+            icon: "../src/assets/icons/logout.png",
+        },
     ];
 
-    const fosterCarerId = 4;
+    const fosterCarerId = 1;
     const children = useChildData(fosterCarerId);
 
     return (
         <div className="app-page manage-child-page">
             <Rectangle links={links}>
-                <div className='manageChild'>
+                <div className="manageChild">
                     <ChildTable children={children} />
                 </div>
             </Rectangle>
@@ -29,3 +33,4 @@ function ManageChild() {
 }
 
 export default ManageChild;
+
