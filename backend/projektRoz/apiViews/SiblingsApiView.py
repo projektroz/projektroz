@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Siblings, FosterCarer, Child
 from projektRoz.serializer import SiblingsSerializer
 
@@ -13,6 +14,12 @@ class SiblingsApiView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
     
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('siblings_id', openapi.IN_QUERY, description="ID of the siblings", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: SiblingsSerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, siblings_id = None, *args, **kwargs):
         """
         Retrieve siblings.
@@ -51,7 +58,10 @@ class SiblingsApiView(APIView):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    
+    @swagger_auto_schema(
+        request_body=SiblingsSerializer,
+        responses={201: SiblingsSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new sibling.
@@ -71,6 +81,10 @@ class SiblingsApiView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=SiblingsSerializer,
+        responses={200: SiblingsSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, siblings_id = None, *args, **kwargs):
         """
         Update an existing sibling.
@@ -110,6 +124,9 @@ class SiblingsApiView(APIView):
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, siblings_id, *args, **kwargs):
         """
         Delete a sibling.

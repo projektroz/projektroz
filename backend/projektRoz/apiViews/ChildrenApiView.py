@@ -2,7 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from projektRoz.models import Child, FosterCarer
 from projektRoz.serializer import ChildSerializer
 
@@ -21,6 +22,12 @@ class ChildrenApiView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('child_id', openapi.IN_QUERY, description="ID of the child", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: ChildSerializer(many=True), 404: 'Not Found'}
+    )
     def get(self, request, child_id=None, *args, **kwargs):
         """
         Retrieve a list of child objects or a specific child object.
@@ -51,6 +58,10 @@ class ChildrenApiView(APIView):
         serializer = ChildSerializer(children, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        request_body=ChildSerializer,
+        responses={201: ChildSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, *args, **kwargs):
         """
         Create a new child object.
@@ -78,6 +89,10 @@ class ChildrenApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        request_body=ChildSerializer,
+        responses={200: ChildSerializer, 404: 'Not Found', 400: 'Bad Request'}
+    )
     def put(self, request, child_id, *args, **kwargs):
         """
         Update an existing child object.
@@ -115,6 +130,9 @@ class ChildrenApiView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(
+        responses={204: 'No Content', 404: 'Not Found'}
+    )
     def delete(self, request, child_id, *args, **kwargs):
         """
         Delete a child object.
