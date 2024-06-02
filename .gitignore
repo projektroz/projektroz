@@ -1,3 +1,4 @@
 
 /minio/.minio.sys/buckets/.bloomcycle.bin
 /minio/.minio.sys/buckets
+service.json

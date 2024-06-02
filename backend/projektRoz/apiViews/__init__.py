@@ -6,3 +6,4 @@ from .SiblingsApiView import SiblingsApiView
 from .CategoryApiView import CategoryApiView
 from .DocumentsApiView import DocumentsApiView
 from .ParentApiView import ParentApiView
+from .FileApiView import FileApiView

@@ -10,3 +10,6 @@ psycopg2
 python-dotenv
 drf-yasg
 google-auth
+django-googledrive-storage
+google-api-python-client
+django-environ
