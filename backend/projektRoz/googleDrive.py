@@ -54,26 +54,34 @@ class GoogleDriveManager:
 
         return folder.get('id')
 
-    def ensure_folder_exists(self, folder_name, parent_id=None):
+    def ensure_folder_exists(self, folder_path, parent_id=None):
         try:
-            folder_id = self.get_folder_id(folder_name, parent_id)
-            if folder_id:
-                print(f"Folder '{folder_name}' already exists with ID: {folder_id}")
-            else:
-                folder_id = self.create_folder(folder_name, parent_id)
-                print(f"Folder '{folder_name}' created with ID: {folder_id}")
+            folders = folder_path.split('/')
+            current_parent_id = parent_id
 
-            return folder_id
+            for folder_name in folders:
+                folder_id = self.get_folder_id(folder_name, current_parent_id)
+                if folder_id:
+                    print(f"Folder '{folder_name}' already exists with ID: {folder_id}")
+                else:
+                    folder_id = self.create_folder(folder_name, current_parent_id)
+                    print(f"Folder '{folder_name}' created with ID: {folder_id}")
+
+                current_parent_id = folder_id
+
+            return current_parent_id
 
         except HttpError as error:
             print(f"An error occurred: {error}")
             return None
 
     def upload_file(self, name, file_obj, folder_id):
+        num_of_files = self.check_if_file_exists(name, folder_id)
         file_metadata = {
-            'name': name,
+            'name': name + f"_{num_of_files}" if num_of_files != 0 else name,
             'parents': [folder_id]
         }
+
         file_io = io.BytesIO(file_obj.read())
         media_body = MediaIoBaseUpload(file_io, mimetype=file_obj.content_type, resumable=True)
 
@@ -87,21 +95,58 @@ class GoogleDriveManager:
             print(f"An error occurred: {error}")
             raise
 
-    def get_files(self, folder_id):
+    def check_if_file_exists(self, file_name, folder_id, count=0):
         results = self.service.files().list(
-            q=f"'{folder_id}' in parents",
+            q=f"'{folder_id}' in parents and name='{file_name if count == 0 else file_name + f'_{count}'}'",
             spaces='drive',
             fields='files(id, name)'
         ).execute()
 
         items = results.get('files', [])
+        
+        if len(items) > 0:
+            return self.check_if_file_exists(file_name, folder_id, count + 1)
+
+        return count
+
+
+    def get_files(self, folder_id):
+        results = self.service.files().list(
+            q=f"'{folder_id}' in parents",
+            spaces='drive',
+            fields='files(id, name, mimeType)'
+        ).execute()
+
+        items = results.get('files', [])
         return items
+
 
     def get_download_url(self, file_id):
         return f"https://drive.google.com/uc?export=download&id={file_id}"
 
     def download_file(self, file_id, destination):
         request = self.service.files().get_media(fileId=file_id)
+        fileType = self.service.files().get(fileId=file_id).execute()['mimeType']
+        fileName = self.service.files().get(fileId=file_id).execute()['name']
+
+        extension = ''
+        if fileType == 'application/vnd.google-apps.document':
+            extension = 'docx'
+        elif fileType == 'application/vnd.google-apps.spreadsheet':
+            extension = 'xlsx'
+        elif fileType == 'application/vnd.google-apps.presentation':
+            extension = 'pptx'
+        elif fileType == 'application/vnd.google-apps.drawing':
+            extension = 'jpg'
+        elif fileType == 'application/vnd.google-apps.script':
+            extension = 'json'
+        elif fileType == 'text/plain':
+            extension = 'txt'
+        else:
+            extension = fileType.split('/')[-1]
+
+        destination = f"{destination}/{fileName}.{extension}"
+
         fh = io.FileIO(destination, 'wb')
         downloader = MediaIoBaseDownload(fh, request)
         
@@ -109,3 +154,5 @@ class GoogleDriveManager:
         while not done:
             status, done = downloader.next_chunk()
             self.logger.debug(f"Download {int(status.progress() * 100)}%.")
+
+        return destination

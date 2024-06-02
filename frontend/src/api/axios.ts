@@ -31,63 +31,70 @@ const refresh = axios.create({
         'Content-Type': 'application/json',
     }
 });
+const upload = axios.create({
+    baseURL: 'http://localhost:8000/upload',
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    }
+});
 
 
-api.interceptors.request.use(
-    (config: any) => {
+const addInterceptors = (instance: any) => {
+    instance.interceptors.request.use(
+        (config: any) => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
+    );
+
+    instance.interceptors.response.use(
+        (response: AxiosResponse) => response,
+        async (error: AxiosError) => {
+            const originalRequest = error.config as CustomAxiosRequestConfig;
         
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config
-    },
-    (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-    (response: AxiosResponse) => response,
-    async (error: AxiosError) => {
-        const originalRequest = error.config as CustomAxiosRequestConfig;
-    
-        if(originalRequest == undefined) return Promise.reject(error);
-        
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+            if (originalRequest == undefined) return Promise.reject(error);
             
-            try {
+            if (error.response && error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
                 
-                const refreshToken = localStorage.getItem('refresh_token');
-                
-                const response = await refresh.post('/', { 'refresh': refreshToken });
-                
-                const { access } = response.data;
-    
-                localStorage.setItem('access_token', access);
-                originalRequest.headers = originalRequest.headers || {};
-                originalRequest.headers['Authorization'] = `Bearer ${access}`;
-                
-                return api(originalRequest); 
-            } catch (refreshError: unknown) {
-                
-                if (refreshError instanceof AxiosError && refreshError.response) {
+                try {
+                    const refreshToken = localStorage.getItem('refresh_token');
                     
-                    if ([401, 403, 406].includes(refreshError.response.status)) {
+                    const response = await refresh.post('/', { 'refresh': refreshToken });
+                    
+                    const { access } = response.data;
+        
+                    localStorage.setItem('access_token', access);
+                    originalRequest.headers = originalRequest.headers || {};
+                    originalRequest.headers['Authorization'] = `Bearer ${access}`;
+                    
+                    return instance(originalRequest); 
+                } catch (refreshError: unknown) {
+                    
+                    if (refreshError instanceof AxiosError && refreshError.response) {
                         
-                        window.location.href = '/login';
+                        if ([401, 403, 406].includes(refreshError.response.status)) {
+                            window.location.href = '/login';
+                        } else {
+                            console.error("Nie udało się odświeżyć tokena z innego powodu", refreshError);
+                        }
                     } else {
-                        
-                        console.error("Nie udało się odświeżyć tokena z innego powodu", refreshError);
+                        console.error("Unhandled error type during token refresh", refreshError);
                     }
-                } else {
-                    
-                    console.error("Unhandled error type during token refresh", refreshError);
                 }
             }
+
+            return Promise.reject(error);
         }
+    );
+};
 
-        return Promise.reject(error);
-    }
-);
+addInterceptors(api);
+addInterceptors(upload);
 
-export { api, login, refresh, register };
+
+export { api, login, refresh, register, upload };
