@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import  Parent, Notes, Address, FosterCarer, Child, Siblings, Category, Documents
+from .models import  Parent, Notes, Address, FosterCarer, Child, Siblings, Documents
 from django.contrib.auth.models import User
 
 
@@ -225,24 +225,24 @@ class SiblingsSerializer(serializers.ModelSerializer):
             'child': {'required': True}
         }
 
-class CategorySerializer(serializers.ModelSerializer):
-    """
-    Serializer class for the Category model.
+# class CategorySerializer(serializers.ModelSerializer):
+#     """
+#     Serializer class for the Category model.
 
-    Serializes the Category model fields to JSON and vice versa.
+#     Serializes the Category model fields to JSON and vice versa.
 
-    Attributes:
-        model (Category): The Category model class.
-        fields (str): A string specifying the fields to include in the serialized representation.
-                      In this case, "__all__" is used to include all fields.
+#     Attributes:
+#         model (Category): The Category model class.
+#         fields (str): A string specifying the fields to include in the serialized representation.
+#                       In this case, "__all__" is used to include all fields.
 
-    """
-    class Meta:
-        model = Category
-        fields = "__all__"
-        extra_kwargs = {
-            'category_name': {'required': True}
-        }
+#     """
+#     class Meta:
+#         model = Category
+#         fields = "__all__"
+#         extra_kwargs = {
+#             'category_name': {'required': True}
+#         }
 
 class DocumentsSerializer(serializers.ModelSerializer):
     """
@@ -264,7 +264,8 @@ class DocumentsSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'child': {'required': True},
             'category': {'required': True},
-            'document': {'required': True}
+            'document_path': {'required': True},
+            'document_google_id': {'required': True}
         }
 
 class UserSerializer(serializers.ModelSerializer):

@@ -31,15 +31,6 @@ class Parent(Person):
     ]
     role = models.CharField(max_length=1, choices=ROLE_CHOICES)
 
-class Notes(models.Model):
-    """
-    Represents a note in the system.
-    """
-    id = models.AutoField(primary_key=True)
-    create_date = models.DateField()
-    modification_date = models.DateField()
-    note_text = models.TextField()
-
 class Address(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.TextField()
@@ -76,12 +67,22 @@ class Child(Person):
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True, related_name='address')
     address_registered = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True, related_name='address_registered')
     date_of_admission = models.DateField(null=True, blank=True)
+    date_of_discharge = models.DateField(null=True, blank=True)
     court_decision = models.CharField(max_length=30, null=True, unique=True)
     mother = models.ForeignKey(Parent, on_delete=models.CASCADE, null=True, blank=True, related_name='mother')
     father = models.ForeignKey(Parent, on_delete=models.CASCADE, null=True, blank=True, related_name='father')
     foster_carer = models.ForeignKey(FosterCarer, on_delete=models.CASCADE, null=True, blank=True)
-    note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
+    # note = models.ForeignKey(Notes, on_delete=models.CASCADE, null=True, blank=True)
 
+class Notes(models.Model):
+    """
+    Represents a note in the system.
+    """
+    id = models.AutoField(primary_key=True)
+    create_date = models.DateField()
+    modification_date = models.DateField()
+    note_text = models.TextField()
+    child = models.ForeignKey(Child, on_delete=models.CASCADE, null=True, blank=True)
 class Siblings(models.Model):
     """
     Represents a sibling relationship in the system.
@@ -90,18 +91,26 @@ class Siblings(models.Model):
     child = models.ForeignKey(Child, related_name='child', on_delete=models.CASCADE)
     child_sibling = models.ForeignKey(Child, related_name='child_sibling', on_delete=models.CASCADE)
 
-class Category(models.Model):
-    """
-    Represents a category in the system.
-    """
-    id = models.AutoField(primary_key=True)
-    category_name = models.TextField()
+# class Category(models.Model):
+#     """
+#     Represents a category in the system.
+#     """
+#     id = models.AutoField(primary_key=True)
+#     category_name = models.TextField()
+
+class AllowedCategories(models.TextChoices):
+    SZKOLA = 'Szkola'
+    SAD = 'Sad'
+    ZDROWIE = 'Zdrowie'
+    INNE = 'Inne'
 
 class Documents(models.Model):
     """
     Represents a document in the system.
     """
+
     id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    document_path = models.TextField()
+    category = models.CharField(max_length=7, choices=AllowedCategories.choices)
+    document_path = models.TextField(null=True, blank=True)
+    document_google_id = models.TextField(null=True, blank=True)

@@ -6,7 +6,7 @@ from rest_framework import status
 from projektRoz.googleDrive import GoogleDriveManager
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from projektRoz.models import Child
+from projektRoz.models import Child, AllowedCategories
 import logging
 import os
 import base64
@@ -15,7 +15,6 @@ import mimetypes
 class FileApiView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     logger = logging.getLogger(__name__)
-    allowed_file_types = ['szkola', 'sad', 'zdjecie', 'zdrowie', 'inne']
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -33,8 +32,9 @@ class FileApiView(APIView):
         name = request.data.get('name')
         child_id = request.data.get('child_id')
         file_type = request.data.get('file_type')
-        if file_type not in self.allowed_file_types:
-            return Response({'error': 'Invalid file type'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if file_type not in [category.value for category in AllowedCategories]:
+            return Response({'error': f'{AllowedCategories.choices}'}, status=status.HTTP_400_BAD_REQUEST)
 
         self.logger.info(f"Uploading file for child with ID: {child_id}")
 
@@ -49,8 +49,8 @@ class FileApiView(APIView):
             try:
                 googleDriveManager = GoogleDriveManager()
                 folder_id = googleDriveManager.ensure_folder_exists(drive_path)
-                googleDriveManager.upload_file(name, file_obj, folder_id)
-                return Response({"message": "File uploaded successfully"}, status=status.HTTP_201_CREATED)
+                fileData = googleDriveManager.upload_file(name, file_obj, folder_id)
+                return Response({"message": "File uploaded successfully", "file_id": f"{fileData[0]}", "file_path": f"{drive_path}/{fileData[1]}"}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
