@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Child from "../../types/Child";
 import "./ChildTable.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 interface ChildTableProps {
     children: Child[];
@@ -79,20 +80,72 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
         console.log(`Edytuj dziecko o ID: ${id}`);
     };
 
+    const handleNotes = (id: number) => {
+        console.log(`Notatki dla dziecka o ID: ${id}`);
+    };
+
     return (
-        <div>
-            <div className="form-floating mb-3">
-                <input
-                    type="text"
-                    placeholder="Szukaj..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-input form-control"
-                    id="floatingSearch"
-                />
-                <label htmlFor="floatingSearch">Szukaj...</label>
+        <div style={{ maxHeight: "100%" }}>
+            <div className="top-bar">
+                <div className="form-floating" style={{ width: "60%" }}>
+                    <input
+                        type="text"
+                        placeholder="Szukaj..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="form-control search-input"
+                        id="floatingSearch"
+                    />
+                    <label htmlFor="floatingSearch">Email address</label>
+                </div>
+                <div className="btn-group">
+                    <button
+                        className="btn btn-secondary btn-lg dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Sortowanie
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                onClick={() => requestSort("name")}>
+                                Sortuj po imieniu
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                onClick={() => requestSort("surname")}>
+                                Sortuj po nazwisku
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                onClick={() => requestSort("birth_date")}>
+                                Sortuj po dacie urodzenia
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                onClick={() => requestSort("birth_place")}>
+                                Sortuj po miejscu urodzenia
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                onClick={() => requestSort("pesel")}>
+                                Sortuj po peselu
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <table className="child-table">
+            {/* <table className="child-table">
                 <thead>
                     <tr>
                         <th onClick={() => requestSort("name")}>Imię</th>
@@ -134,10 +187,50 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table> */}
+
+            <div className="content-scroll">
+                {filteredChildren.map((child) => (
+                    <div className="child-card" key={child.id}>
+                        <div className="child-card-header">
+                            <h2 className="mb-3">
+                                {child.name} {child.surname}
+                            </h2>
+                            <div className="child-card-content">
+                                <p>
+                                    <strong>Data urodzenia: </strong>
+                                    {new Date(
+                                        child.birth_date
+                                    ).toLocaleDateString()}
+                                </p>
+                                <p>
+                                    <strong>Miejsce urodzenia: </strong>
+                                    {child.birth_place}
+                                </p>
+                                <p>
+                                    <strong>PESEL: </strong> {child.pesel}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="button-container">
+                            <button onClick={() => handleView(child.id)}>
+                                Wyświetl
+                            </button>
+                            <button onClick={() => handleEdit(child.id)}>
+                                Edytuj
+                            </button>
+                            <button onClick={() => handleDocuments(child.id)}>
+                                Dokumenty
+                            </button>
+                            <button onClick={() => handleNotes(child.id)}>
+                                Notatki
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
 
 export default ChildTable;
-

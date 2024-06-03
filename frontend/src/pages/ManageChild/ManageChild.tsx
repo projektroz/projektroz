@@ -24,7 +24,7 @@ function ManageChild() {
     return (
         <div className="app-page manage-child-page">
             <Rectangle links={links}>
-                <div className="manageChild">
+                <div className="manageChild" style={{ width: "80%" }}>
                     <ChildTable children={children} />
                 </div>
             </Rectangle>
@@ -33,4 +33,3 @@ function ManageChild() {
 }
 
 export default ManageChild;
-

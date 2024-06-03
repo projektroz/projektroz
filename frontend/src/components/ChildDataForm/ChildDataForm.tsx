@@ -69,7 +69,11 @@ const DataInputField: React.FC<{
                 placeholder={data.placeholder}
                 pattern={data.pattern}
                 required
-                style={{ width: "100%", padding: "1.2rem .75rem" }}
+                style={
+                    data.type === "date"
+                        ? { width: "100%", padding: "1.2rem .75rem" }
+                        : {}
+                }
             />
             {data.type !== "date" && (
                 <label htmlFor={`floatingInput-${data.id}-${index}`}>
@@ -185,4 +189,3 @@ const DataCard: React.FC<DataCardProps> = ({
 };
 
 export default DataCard;
-
