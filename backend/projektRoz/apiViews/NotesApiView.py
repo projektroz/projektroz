@@ -32,30 +32,35 @@ class NotesApiView(APIView):
         - Response: The serialized note(s) data.
         """
         if note_id:
-            note = Notes.objects.get(id=note_id)
-            child = Child.objects.get(note = note)
-            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            try:
+                note = Notes.objects.get(id=note_id)
+                child = Child.objects.get(id = note.child.id)
+                fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            except:
+                return Response(status=status.HTTP_204_NO_CONTENT)
             
             if child.foster_carer == fosterCarer:
                 serializer = NotesSerializer(note, many = False)
 
                 return Response(serializer.data, status = status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             children = Child.objects.filter(foster_carer = fosterCarer)
             notes = Notes.objects.all()
+
             ret = []
 
             for child in children:
                 for note in notes:
-                    if child.note == note:
+                    if child.id == note.child.id:
                         ret.append(note)
 
             if ret != []:
                 serializer = NotesSerializer(ret, many = True)
                 return Response(serializer.data, status = status.HTTP_200_OK)
             else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_204_NO_CONTENT)
                 
     @swagger_auto_schema(
         request_body=NotesSerializer,
@@ -96,7 +101,7 @@ class NotesApiView(APIView):
         """
         if note_id:
             note = Notes.objects.get(id=note_id)
-            child = Child.objects.get(note = note)
+            child = Child.objects.get(id = note.child.id)
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
             
             if child.foster_carer == fosterCarer:
@@ -127,7 +132,7 @@ class NotesApiView(APIView):
         - Response: No content if successful, or the error message if the note is not found.
         """
         note = Notes.objects.get(id=note_id)
-        child = Child.objects.get(note = note)
+        child = Child.objects.get(id = note.child.id)
         fosterCarer = FosterCarer.objects.get(id = request.user.id)
         
         if child.foster_carer == fosterCarer:

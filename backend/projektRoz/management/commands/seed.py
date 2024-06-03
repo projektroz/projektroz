@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 create_date=fake.date(),
                 modification_date=fake.date(),
                 note_text=fake.paragraph(),
-                child = Child.objects.order_by('?').first()
+                child = Child.objects.all().first()
             )
 
     def add_addresses_foster_carers(self):
