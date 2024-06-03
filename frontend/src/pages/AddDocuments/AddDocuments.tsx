@@ -11,10 +11,12 @@ import "./AddDocuments.scss";
 function AddDocuments({ title, method }: { title: string; method: string }) {
     const [childId, setChildId] = useState("");
     const [formData, setFormData] = useState({
+        file_path: "",
+        file_id: 1,
         file: new File([""], ""),
-        document_path: "",
-        child: 1,
-        category: 1,
+        name: "",
+        file_type: "",
+        child_id: 1,
     });
     const [error, setError] = useState("");
 
@@ -33,12 +35,13 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const request = getDocumentFile(formData);
+            const data = getDocumentFile(formData);
             console.log("Sending file:", formData); // Logowanie pliku
-            const response = await addDocumentFile(request.file, request.name);
+            const response = await addDocumentFile(data);
             if (response.status === 200) {
                 console.log("File uploaded successfully");
-                formData.document_path = response.data.document_path;
+                formData.file_path = response.data.file_path;
+                formData.file_id = response.data.file_id;
             }
         } catch (error: any) {
             console.error("Error:", error); // Logowanie błędu

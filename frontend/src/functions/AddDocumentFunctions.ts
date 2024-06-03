@@ -1,8 +1,9 @@
 function getDocumentData(formData: any) {
     return {
-        document_path: formData.document_path,
-        child: formData.child,
-        category: formData.category,
+        document_path: formData.file_path,
+        document_google_id: formData.file_id,
+        category: formData.file_type,
+        child: formData.child_id,
     };
 }
 
@@ -10,6 +11,8 @@ function getDocumentFile(formData: any) {
     return {
         file: formData.file,
         name: formData.file.name,
+        file_type: formData.file_type,
+        child_id: formData.child_id,
     };
 }
 
@@ -29,17 +32,22 @@ function parseBackToFormData(documentDataString: string) {
 
     return {
         document_path: documentData.document_path,
-        child: documentData.child,
-        category: documentData.category,
+        document_id: documentData.document_id,
+        file: new File([""], ""),
+        name: "",
+        file_type: "",
+        child_id: 1,
     };
 }
 
 function getDefaultFormData() {
     return {
-        file: "",
         document_path: "",
-        child: 1,
-        category: 1,
+        document_id: 1,
+        file: new File([""], ""),
+        name: "",
+        file_type: "",
+        child_id: 1,
     };
 }
 

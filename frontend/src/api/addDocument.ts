@@ -32,13 +32,13 @@ export async function addDocument(
     }
 }
 
-export async function addDocumentFile(file: File, name: string): Promise<any> {
-    console.log("Sending file:", file); // Logowanie pliku do wysyłki
+export async function addDocumentFile(data: any): Promise<any> {
+    console.log("Sending file:", JSON.stringify(data));
     try {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("name", name);
-        const response = await upload.post("/", formData);
+        // const formData = new FormData();
+        // formData.append("file", file);
+        // formData.append("name", name);
+        const response = await upload.post("/", data);
 
         return response.data;
     } catch (error: any) {

@@ -13,8 +13,8 @@ interface DocumentDataFormProps {
     formData: {
         file: File;
         document_path: string;
-        child: number;
-        category: number;
+        file_type: string;
+        child_id: number;
     };
     handleInputChange: (name: string, value: any) => void;
 }
@@ -29,7 +29,6 @@ enum DocumentType {
 
 const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
     dataSets,
-    formData,
     handleInputChange,
 }) => {
     const [documentType, setDocumentType] = useState<string>("Typ dokumentu");
@@ -38,16 +37,16 @@ const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
         setDocumentType(type);
         switch (type) {
             case DocumentType.SZKOLA:
-                handleInputChange("category", 1);
+                handleInputChange("file_type", "Szkola");
                 break;
             case DocumentType.SAD:
-                handleInputChange("category", 2);
+                handleInputChange("file_type", "Sad");
                 break;
             case DocumentType.ZDROWIE:
-                handleInputChange("category", 3);
+                handleInputChange("file_type", "Zdrowie");
                 break;
             case DocumentType.INNE:
-                handleInputChange("category", 4);
+                handleInputChange("file_type", "Inne");
                 break;
         }
     };
