@@ -405,7 +405,7 @@ const ChildDetails: React.FC = () => {
                                 Dodaj notatkę
                             </button>
                             <div className="details-item">
-                                <span className="label">Dokumenty:</span>
+                                <span className="label">Notatki:</span>
                                 {notes.length > 0 ? (
                                     <span className="value">
                                         {notes.map((note) => (
@@ -422,9 +422,7 @@ const ChildDetails: React.FC = () => {
                                         ))}
                                     </span>
                                 ) : (
-                                    <span className="value">
-                                        Brak dokumentów
-                                    </span>
+                                    <span className="value">Brak notatek</span>
                                 )}
                             </div>
                         </div>

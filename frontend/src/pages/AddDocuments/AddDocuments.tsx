@@ -11,7 +11,7 @@ import "./AddDocuments.scss";
 function AddDocuments({ title, method }: { title: string; method: string }) {
     const [childId, setChildId] = useState("");
     const [formData, setFormData] = useState({
-        file: new File([""], "filename"),
+        file: new File([""], ""),
         document_path: "",
         child: 1,
         category: 1,
@@ -23,7 +23,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
         if (id) setChildId(id);
     }, []);
 
-    const handleInputChange = (id: string, value: string) => {
+    const handleInputChange = (id: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [id]: value,
@@ -33,9 +33,9 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const file = getDocumentFile(formData).file;
-            console.log("Sending file:", file); // Logowanie pliku
-            const response = await addDocumentFile(file);
+            const request = getDocumentFile(formData);
+            console.log("Sending file:", formData); // Logowanie pliku
+            const response = await addDocumentFile(request.file, request.name);
             if (response.status === 200) {
                 console.log("File uploaded successfully");
                 formData.document_path = response.data.document_path;
@@ -71,20 +71,12 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
         },
     ];
 
-    interface DocumentInput {
-        id: string;
-        inputLabel: string;
-        type: "file" | "text";
-    }
-
-    const dataSets: DocumentInput[][] = [
-        [
-            {
-                id: "filename",
-                inputLabel: "Nazwa pliku",
-                type: "file",
-            },
-        ],
+    const dataSets = [
+        {
+            id: "file",
+            inputLabel: "Nazwa pliku",
+            type: "file",
+        },
     ];
 
     return (
@@ -98,6 +90,15 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
                             formData={formData}
                             handleInputChange={handleInputChange}
                         />
+                        <button
+                            type="submit"
+                            style={{
+                                opacity: "1",
+                                transition: "all 0.25s ease-out",
+                            }}
+                            className="btn btn-primary">
+                            Dodaj dokument
+                        </button>
                     </form>
                     {error && <div className="error">{error}</div>}
                 </div>

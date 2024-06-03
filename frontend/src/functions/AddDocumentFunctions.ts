@@ -9,6 +9,7 @@ function getDocumentData(formData: any) {
 function getDocumentFile(formData: any) {
     return {
         file: formData.file,
+        name: formData.file.name,
     };
 }
 
