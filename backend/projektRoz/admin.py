@@ -7,7 +7,7 @@ admin.site.register(Address)
 admin.site.register(FosterCarer)
 admin.site.register(Notes)
 admin.site.register(Siblings)
-admin.site.register(Category)
+# admin.site.register(Category)
 admin.site.register(Documents)
 
 

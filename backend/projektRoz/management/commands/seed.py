@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-from projektRoz.models import Parent, Notes, Address, FosterCarer, Child, Siblings, Category, Documents
-
+from projektRoz.models import Parent, Notes, Address, FosterCarer, Child, Siblings, Documents, AllowedCategories
+from random import randint
 fake = Faker('pl_PL')  
 
 """
@@ -12,7 +12,7 @@ How to use seeder:
     wait :)
 """
 
-
+# Nie działa, nie używać
 class Command(BaseCommand):
     help = 'Seeds the database.'
 
@@ -27,7 +27,8 @@ class Command(BaseCommand):
             Notes.objects.create(
                 create_date=fake.date(),
                 modification_date=fake.date(),
-                note_text=fake.paragraph()
+                note_text=fake.paragraph(),
+                child = Child.objects.order_by('?').first()
             )
 
     def add_addresses_foster_carers(self):
@@ -75,18 +76,18 @@ class Command(BaseCommand):
                 mother=mothers.order_by('?').first(),
                 father=fathers.order_by('?').first(),
                 foster_carer=FosterCarer.objects.order_by('?').first(),
-                note=Notes.objects.order_by('?').first()
+                # note=Notes.objects.order_by('?').first()
             )
             Siblings.objects.create(
                 child=child,
                 child_sibling=Child.objects.order_by('?').first()
             )
-            Category.objects.create(
-                category_name=fake.word()
-            )
+            # Category.objects.create(
+            #     category_name=fake.word()
+            # )
             Documents.objects.create(
                 child=child,
-                category=Category.objects.order_by('?').first(),
+                category=AllowedCategories.choices[randint(0, len(AllowedCategories.choices) - 1)][0],
                 document_path=fake.file_path(depth=1)
             )
 

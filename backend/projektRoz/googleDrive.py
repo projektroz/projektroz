@@ -91,6 +91,7 @@ class GoogleDriveManager:
                 media_body=media_body
             ).execute()
             print(f"Uploaded file with ID: {file.get('id')}")
+            return [file.get('id'), file.get('name')]
         except HttpError as error:
             print(f"An error occurred: {error}")
             raise
