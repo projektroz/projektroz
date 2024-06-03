@@ -11,8 +11,9 @@ interface DocumentInput {
 interface DocumentDataFormProps {
     dataSets: DocumentInput[];
     formData: {
+        file_path: string;
+        file_id: number;
         file: File;
-        document_path: string;
         file_type: string;
         child_id: number;
     };

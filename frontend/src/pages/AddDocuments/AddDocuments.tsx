@@ -9,6 +9,7 @@ import {
 import "./AddDocuments.scss";
 
 function AddDocuments({ title, method }: { title: string; method: string }) {
+    const [loading, setLoading] = useState(false);
     const [childId, setChildId] = useState("");
     const [formData, setFormData] = useState({
         file_path: "",
@@ -34,6 +35,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const data = getDocumentFile(formData);
             console.log("Sending file:", formData); // Logowanie pliku
@@ -59,6 +61,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
             setError(error.message);
             return;
         }
+        setLoading(false);
     };
 
     const links = [
@@ -93,6 +96,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
                             formData={formData}
                             handleInputChange={handleInputChange}
                         />
+                        {loading && <div className="loading">Loading...</div>}
                         <button
                             type="submit"
                             style={{
