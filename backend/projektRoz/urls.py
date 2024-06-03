@@ -53,8 +53,8 @@ urlpatterns = [
     path('api/siblings/', SiblingsApiView.as_view(), name='siblings'),
     path('api/siblings/<int:siblings_id>', SiblingsApiView.as_view(), name='siblings'),
     
-    path('api/category/', CategoryApiView.as_view(), name='category'),
-    path('api/category/<int:category_id>', CategoryApiView.as_view(), name='category'),
+    # path('api/category/', CategoryApiView.as_view(), name='category'),
+    # path('api/category/<int:category_id>', CategoryApiView.as_view(), name='category'),
     
     path('api/documents/', DocumentsApiView.as_view(), name='documents'),
     path('api/documents/<int:document_id>', DocumentsApiView.as_view(), name='documents'),

@@ -31,6 +31,9 @@ class DocumentsApiView(APIView):
         Returns:
         - Response: The serialized data of the documents or the specific document.
         """
+
+        page = int(request.data.get('page')) if request.data.get('page') else None
+
         if document_id:
             document = Documents.objects.get(id = document_id)
             child = document.child
@@ -40,6 +43,26 @@ class DocumentsApiView(APIView):
                 serializer = DocumentsSerializer(document, many = False)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        elif page:
+            fosterCarer = FosterCarer.objects.get(id = request.user.id)
+            children = Child.objects.filter(foster_carer = fosterCarer)
+            documents = Documents.objects.all()
+            ret = []
+
+            for child in children:
+                for document in documents:
+                    if child == document.child:
+                        ret.append(document)
+
+            if ret != []:
+                start = 5 * (page - 1)
+                end = 5 + 5 * (page - 1)
+                serializer = DocumentsSerializer(ret[start : end], many = True)
+                    
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
@@ -56,9 +79,9 @@ class DocumentsApiView(APIView):
                 serializer = DocumentsSerializer(ret, many = True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
+                return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
     @swagger_auto_schema(
         request_body=DocumentsSerializer,
