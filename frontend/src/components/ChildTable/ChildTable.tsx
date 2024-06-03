@@ -96,7 +96,7 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
                         className="form-control search-input"
                         id="floatingSearch"
                     />
-                    <label htmlFor="floatingSearch">Email address</label>
+                    <label htmlFor="floatingSearch">Szukaj...</label>
                 </div>
                 <div className="btn-group">
                     <button
@@ -234,3 +234,4 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
 };
 
 export default ChildTable;
+
