@@ -22,21 +22,15 @@
         }
 
         .login-form {
-            width: 100%;
             padding: 20px 40px;
 
-
             input {
-                padding: 10px;
                 border-radius: 15px;
-                border: none;
-                background-color: var(--disabled);
-                text-align: center;
                 transition: all 0.3s ease-in-out;
             }
 
-            input:focus {
-                background-color: var(--text-light);
+            .form-label {
+                background-color: transparent;
             }
         }
 

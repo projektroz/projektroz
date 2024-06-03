@@ -44,10 +44,7 @@ function Login() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="login-form">
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label">
-                                Nazwa użytkownika
-                            </label>
+                        <div className="form-floating mb-3">
                             <input
                                 type="text"
                                 className="form-control"
@@ -57,11 +54,11 @@ function Login() {
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
                             />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">
-                                Hasło
+                            <label htmlFor="username" className="form-label">
+                                Nazwa użytkownika
                             </label>
+                        </div>
+                        <div className="form-floating mb-3">
                             <input
                                 type="password"
                                 className="form-control"
@@ -71,6 +68,9 @@ function Login() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
+                            <label htmlFor="password" className="form-label">
+                                Hasło
+                            </label>
                         </div>
                         {error && <p className="text-danger">{error}</p>}
                         <Button
