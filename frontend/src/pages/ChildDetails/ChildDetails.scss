@@ -70,3 +70,14 @@
         filter: opacity(1) brightness(1.5);
     }
 }
+
+.btn-primary {
+    background-color: var((--primary));
+    border-color: var(--primary);
+    color: var(--third);
+}
+.btn-primary:hover {
+    background-color: var((--secondary));
+    border-color: var(--primary);
+    color: var(--primary);
+}

@@ -11,9 +11,11 @@ import Logout from "./pages/Logout/Logout";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddChild from "./pages/AddChild/AddChild";
+import EditChild from "./pages/EditChild/EditChild";
 import ManageChild from "./pages/ManageChild/ManageChild";
 import ChildDetails from "./pages/ChildDetails/ChildDetails";
 import AddDocuments from "./pages/AddDocuments/AddDocuments";
+import AddNotes from "./pages/AddNotes/AddNotes";
 
 const App = () => {
     const { isLoggedIn, logout } = useAuth();
@@ -60,13 +62,22 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/dashboard/add-document"
+                        path="/dashboard/add-document/:id"
                         element={
                             <AddDocuments
                                 title="Dodaj dokument"
                                 method="POST"
                             />
                         }
+                    />
+
+                    <Route
+                        path="/dashboard/edit-child/:id"
+                        element={<EditChild title="Edytuj dziecko" />}
+                    />
+                    <Route
+                        path="/dashboard/add-note/:id"
+                        element={<AddNotes title="Dodaj notatkę" />}
                     />
                 </Route>
             </Routes>
@@ -75,4 +86,3 @@ const App = () => {
 };
 
 export default App;
-

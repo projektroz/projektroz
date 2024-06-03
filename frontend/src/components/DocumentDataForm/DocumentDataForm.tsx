@@ -6,162 +6,197 @@ import "./DocumentDataForm.scss";
 interface DocumentInput {
     id: string;
     inputLabel: string;
-    type: "file" | "text";
+    type: string;
 }
 
 interface DocumentDataFormProps {
     dataSets: DocumentInput[][];
-    formData: { [key: string]: string };
+    formData: { document_path: string; child: number; category: number };
     handleInputChange: (name: string, value: string) => void;
 }
 
-// Komponent nawigacyjnego przycisku (lewo/prawo)
-const NavigationButton: React.FC<{
-    direction: "left" | "right";
-    onClick: () => void;
-    isVisible: boolean;
-}> = ({ direction, onClick, isVisible }) => (
-    <button
-        onClick={onClick}
-        type="button"
-        className="btn-half"
-        style={{
-            visibility: isVisible ? "visible" : "hidden",
-            opacity: isVisible ? 1 : 0,
-            transition: "all 0.25s ease-out",
-        }}>
-        <img
-            src={`../src/assets/icons/${
-                direction === "left" ? "previous" : "next"
-            }-light.png`}
-            alt={`${direction === "left" ? "Poprzedni" : "Następny"} zestaw`}
-            className="btn-icon"
-        />
-    </button>
-);
-
-// Komponent pojedynczego pola danych
-const DocumentInputField: React.FC<{
+interface DocumentInputFieldProps {
     data: DocumentInput;
     index: number;
     value: string;
     handleInputChange: (name: string, value: string) => void;
-}> = ({ data, index, value, handleInputChange }) => (
-    <div className="document-input content-center">
-        <h3>{data.inputLabel}</h3>
-        <div className="form-floating" style={{ width: "100%" }}>
-            <input
-                className="form-control"
-                id={`floatingInput-${data.id}-${index}`}
-                type={data.type}
-                name={data.id}
-                value={value}
-                onChange={(e) => handleInputChange(data.id, e.target.value)}
-                required
-                style={{ width: "100%", padding: "1.2rem .75rem" }}
-            />
-            {data.type !== "file" && (
-                <label htmlFor={`floatingInput-${data.id}-${index}`}>
-                    {data.id}
-                </label>
+}
+
+// make enum
+enum DocumentType {
+    SZKOLA = "Szkoła",
+    SAD = "Sąd",
+    ZDROWIE = "Zdrowie",
+    INNE = "Inne",
+}
+
+const DocumentInputField: React.FC<DocumentInputFieldProps> = ({
+    data,
+    index,
+    value,
+    handleInputChange,
+}) => {
+    const [documentType, setDocumentType] = useState<string>("Typ dokumentu");
+
+    const handleDropdownChange = (type: string) => {
+        setDocumentType(type);
+        // Przypisz wartość do odpowiadających z enuma
+        switch (type) {
+            case DocumentType.SZKOLA:
+                handleInputChange(data.id, DocumentType.SZKOLA);
+                break;
+            case DocumentType.SAD:
+                handleInputChange(data.id, DocumentType.SAD);
+                break;
+            case DocumentType.ZDROWIE:
+                handleInputChange(data.id, DocumentType.ZDROWIE);
+                break;
+            case DocumentType.INNE:
+                handleInputChange(data.id, DocumentType.INNE);
+                break;
+        }
+    };
+
+    return (
+        <div className="document-input content-center">
+            {data.type === "file" ? (
+                <div>
+                    <label
+                        htmlFor={`formFile-${data.id}`}
+                        className="form-label">
+                        {data.inputLabel}
+                    </label>
+                    <input
+                        className="form-control"
+                        type="file"
+                        id={`formFile-${data.id}`}
+                        name={data.id}
+                        onChange={(e) =>
+                            handleInputChange(
+                                data.id,
+                                e.target.files ? e.target.files[0].name : ""
+                            )
+                        }
+                        required
+                    />
+                </div>
+            ) : (
+                <div className="form-floating" style={{ width: "100%" }}>
+                    <input
+                        className="form-control"
+                        id={`floatingInput-${data.id}-${index}`}
+                        type={data.type}
+                        name={data.id}
+                        value={value}
+                        onChange={(e) =>
+                            handleInputChange(data.id, e.target.value)
+                        }
+                        required
+                        style={{ width: "100%" }}
+                    />
+                    <label htmlFor={`floatingInput-${data.id}`}>
+                        {data.id}
+                    </label>
+                </div>
             )}
+            <div className="dropdown">
+                <button
+                    className="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    {documentType}
+                </button>
+                <ul className="dropdown-menu">
+                    <li>
+                        <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={() => handleDropdownChange("Szkoła")}>
+                            Szkoła
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={() => handleDropdownChange("Sąd")}>
+                            Sąd
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={() => handleDropdownChange("Zdrowie")}>
+                            Zdrowie
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            className="dropdown-item"
+                            href="#"
+                            onClick={() => handleDropdownChange("Inne")}>
+                            Inne
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 // Komponent reprezentujący pojedynczy zestaw danych
 const DocumentDataSet: React.FC<{
     dataSet: DocumentInput[];
     index: number;
-    currentSetIndex: number;
-    formData: { [key: string]: string };
+    formData: { document_path: string; child: number; category: number };
     handleInputChange: (name: string, value: string) => void;
-}> = ({ dataSet, index, currentSetIndex, formData, handleInputChange }) => (
-    <CSSTransition
-        key={index}
-        classNames={`slide-${currentSetIndex > index ? "left" : "right"}`}
-        timeout={300}>
-        <div
-            style={{
-                visibility: currentSetIndex === index ? "visible" : "hidden",
-                opacity: currentSetIndex === index ? 1 : 0,
-                height: currentSetIndex === index ? "auto" : 0,
-                overflow: currentSetIndex === index ? "visible" : "hidden",
-                transition: "all 0.25s ease-out",
-            }}
-            className="content-center">
-            {dataSet.map((data, dataIndex) => (
-                <DocumentInputField
-                    key={dataIndex}
-                    data={data}
-                    index={index}
-                    value={formData[data.id]}
-                    handleInputChange={handleInputChange}
-                />
-            ))}
-        </div>
-    </CSSTransition>
+}> = ({ dataSet, index, formData, handleInputChange }) => (
+    <div className="content-center">
+        {dataSet.map((data, dataIndex) => (
+            <DocumentInputField
+                key={dataIndex}
+                data={data}
+                index={index}
+                value={formData[data.id as keyof typeof formData] as string}
+                handleInputChange={handleInputChange}
+            />
+        ))}
+    </div>
 );
-
 // Główny komponent zarządzający zestawami danych
 const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
     dataSets,
     formData,
     handleInputChange,
 }) => {
-    const [currentSetIndex, setCurrentSetIndex] = useState(0);
-
-    const nextSet = () =>
-        setCurrentSetIndex((prevIndex) =>
-            Math.min(prevIndex + 1, dataSets.length - 1)
-        );
-    const prevSet = () =>
-        setCurrentSetIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-
     return (
         <div className="document-data-form-wrapper">
-            <div className="document-data-form content-between">
-                <NavigationButton
-                    direction="left"
-                    onClick={prevSet}
-                    isVisible={currentSetIndex > 0}
-                />
+            <div className="document-data-form">
                 <TransitionGroup>
                     {dataSets.map((dataSet, index) => (
-                        <DocumentDataSet
+                        <CSSTransition
                             key={index}
-                            dataSet={dataSet}
-                            index={index}
-                            currentSetIndex={currentSetIndex}
-                            formData={formData}
-                            handleInputChange={handleInputChange}
-                        />
+                            timeout={500}
+                            classNames="fade">
+                            <DocumentDataSet
+                                dataSet={dataSet}
+                                index={index}
+                                formData={formData}
+                                handleInputChange={handleInputChange}
+                            />
+                        </CSSTransition>
                     ))}
                 </TransitionGroup>
-                <NavigationButton
-                    direction="right"
-                    onClick={nextSet}
-                    isVisible={currentSetIndex < dataSets.length - 1}
-                />
-            </div>
-            <div className="scroll-progress-container">
-                <div
-                    className="progress-bar"
-                    style={{
-                        width: `${
-                            ((currentSetIndex + 1) / dataSets.length) * 100
-                        }%`,
-                        transition: "width 0.3s ease-in-out",
-                    }}></div>
             </div>
             <button
                 type="submit"
                 style={{
-                    opacity: currentSetIndex === dataSets.length - 1 ? 1 : 0.3,
+                    opacity: "1",
                     transition: "all 0.25s ease-out",
                 }}
-                className="btn"
-                disabled={currentSetIndex !== dataSets.length - 1}>
+                className="btn btn-primary">
                 Dodaj dokument
             </button>
         </div>
@@ -169,4 +204,3 @@ const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
 };
 
 export default DocumentDataForm;
-

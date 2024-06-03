@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import DocumentDataForm from "../../components/DocumentDataForm/DocumentDataForm";
-import { addDocument, addDocumentFile } from "../../api/addDocument";
-import {
-    getDocumentData,
-    getDocumentFile,
-} from "../../functions/AddDocumentFunctions";
-import "./AddDocuments.scss";
+import NotesDataForm from "../../components/NotesDataForm/NotesDataForm";
+import { addNote } from "../../api/addNote";
+import { getNoteData } from "../../functions/AddNoteFunctions";
+import "./AddNotes.scss";
 
-function AddDocuments({ title, method }: { title: string; method: string }) {
+function AddNotes({ title }: { title: string }) {
     const [childId, setChildId] = useState("");
     const [formData, setFormData] = useState({
-        file: new File([""], "filename"),
-        document_path: "",
-        child: 1,
-        category: 1,
+        create_date: "",
+        modification_date: "",
+        note_text: "",
     });
     const [error, setError] = useState("");
 
@@ -33,28 +29,16 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const file = getDocumentFile(formData).file;
-            console.log("Sending file:", file); // Logowanie pliku
-            const response = await addDocumentFile(file);
-            if (response.status === 200) {
-                console.log("File uploaded successfully");
-                formData.document_path = response.data.document_path;
-            }
-        } catch (error: any) {
-            console.error("Error:", error); // Logowanie błędu
-            setError(error.message);
-            return;
-        }
-        try {
-            const data = getDocumentData(formData);
+            const data = getNoteData(formData);
             console.log("Sending data:", data); // Logowanie danych
-            await addDocument(data, method);
+            data.create_date = new Date().toISOString().slice(0, 10);
+            data.modification_date = new Date().toISOString().slice(0, 10);
+            await addNote(data);
 
             window.location.href = `/dashboard/manage-child/${childId}`;
         } catch (error: any) {
             console.error("Error:", error); // Logowanie błędu
             setError(error.message);
-            return;
         }
     };
 
@@ -71,29 +55,31 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
         },
     ];
 
-    interface DocumentInput {
+    interface NoteInput {
         id: string;
         inputLabel: string;
-        type: "file" | "text";
+        type: "text" | "date";
     }
 
-    const dataSets: DocumentInput[][] = [
+    const dataSets: NoteInput[][] = [
         [
+            { id: "create_date", inputLabel: "Data utworzenia", type: "date" },
             {
-                id: "filename",
-                inputLabel: "Nazwa pliku",
-                type: "file",
+                id: "modification_date",
+                inputLabel: "Data modyfikacji",
+                type: "date",
             },
+            { id: "note_text", inputLabel: "Treść notatki", type: "text" },
         ],
     ];
 
     return (
-        <div className="app-page add-documents-page">
+        <div className="app-page add-notes-page">
             <Rectangle links={links}>
-                <div className="document-content">
+                <div className="note-content">
                     <h2>{title}</h2>
                     <form onSubmit={handleSubmit}>
-                        <DocumentDataForm
+                        <NotesDataForm
                             dataSets={dataSets}
                             formData={formData}
                             handleInputChange={handleInputChange}
@@ -106,4 +92,4 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
     );
 }
 
-export default AddDocuments;
+export default AddNotes;

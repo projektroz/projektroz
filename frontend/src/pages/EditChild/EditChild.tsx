@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import ChildDataForm from "../../components/ChildDataForm/ChildDataForm";
-import { addChild } from "../../api/crudChild";
+import { putChild } from "../../api/crudChild";
+import { api } from "../../api/axios";
 import {
     getChildData,
     parseBackToFormData,
 } from "../../functions/AddChildFunctions";
-import "./AddChild.scss";
+import "./EditChild.scss";
 // import Child from "types/Child";
 
-function AddChild({ title, method }: { title: string; method: string }) {
+function EditChild({ title }: { title: string }) {
     const [formData, setFormData] = useState({
         name: "",
         surname: "",
@@ -40,6 +41,30 @@ function AddChild({ title, method }: { title: string; method: string }) {
             setFormData(parseBackToFormData(JSON.parse(dataFromStorage)));
             localStorage.removeItem("childData");
         }
+
+        const fetchChildData = async () => {
+            const childId = localStorage.getItem("childId");
+
+            const fetchChild = async () => {
+                try {
+                    const response = await api.get(`children/${childId}`);
+                    if (response.status !== 200) {
+                        throw new Error("Błąd sieci!");
+                    }
+                    console.log("Response:", response); // Logowanie odpowiedzi
+                    const childData = response.data;
+                    setFormData(parseBackToFormData(childData));
+                } catch (error: any) {
+                    console.error("Error:", error); // Logowanie błędu
+                    setError(error.message);
+                }
+            };
+
+            // const childData = fetchChild;
+            // setFormData(parseBackToFormData(childData));
+        };
+
+        fetchChildData();
     }, []);
 
     const [error, setError] = useState("");
@@ -56,7 +81,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
         try {
             const data = getChildData(formData);
             console.log("Sending data:", data); // Logowanie danych
-            await addChild(data, method);
+            await putChild(data);
             setError("");
 
             window.location.href = "/dashboard";
@@ -84,6 +109,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
         inputLabel: string;
         placeholder: string;
         type: "date" | "text";
+        value?: string;
         regex?: string;
         pattern?: string;
     }
@@ -95,18 +121,21 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Imie",
                 placeholder: "Wpisz imię",
                 type: "text",
+                value: formData.name,
             },
             {
                 id: "surname",
                 inputLabel: "Nazwisko",
                 placeholder: "Wpisz nazwisko",
                 type: "text",
+                value: formData.surname,
             },
             {
                 id: "birthDate",
                 inputLabel: "Data Urodzenia",
                 placeholder: "Wpisz datę urodzenia",
                 type: "date",
+                value: formData.birthDate,
                 // regex: "^[0-9]{0,2}-?[0-9]{0,2}-?[0-9]{0,4}$",
                 // pattern: "d{2}-d{2}-d{4}",
             },
@@ -115,6 +144,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Miejsce Urodzenia",
                 placeholder: "Wpisz miejsce urodzenia",
                 type: "text",
+                value: formData.birthPlace,
             },
         ],
         [
@@ -123,6 +153,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "PESEL",
                 placeholder: "Wpisz PESEL",
                 type: "text",
+                value: formData.pesel,
                 regex: "[0-9]{11}$",
             },
             {
@@ -130,6 +161,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Data Przyjęcia",
                 placeholder: "Wpisz datę przyjęcia",
                 type: "date",
+                value: formData.admissionDate,
                 // regex: "^[0-9]{2}-[0-9]{2}-[0-9]{4}$",
             },
             {
@@ -137,6 +169,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Decyzja Sadu",
                 placeholder: "Wpisz decyzję sądu",
                 type: "text",
+                value: formData.courtDecision,
             },
         ],
         [
@@ -145,30 +178,35 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Kraj Zameldowania",
                 placeholder: "Wpisz kraj",
                 type: "text",
+                value: formData.addressRegisteredCountry,
             },
             {
                 id: "addressRegisteredCity",
                 inputLabel: "Miasto Zameldowania",
                 placeholder: "Wpisz miasto",
                 type: "text",
+                value: formData.addressRegisteredCity,
             },
             {
                 id: "addressRegisteredStreet",
                 inputLabel: "Ulica Zameldowania",
                 placeholder: "Wpisz ulicę",
                 type: "text",
+                value: formData.addressRegisteredStreet,
             },
             {
                 id: "addressRegisteredPostalCode",
                 inputLabel: "Kod Pocztowy Zameldowania",
                 placeholder: "Wpisz kod pocztowy",
                 type: "text",
+                value: formData.addressRegisteredPostalCode,
             },
             {
                 id: "addressRegisteredHouseNumber",
                 inputLabel: "Numer Domu Zameldowania",
                 placeholder: "Wpisz numer domu",
                 type: "text",
+                value: formData.addressRegisteredHouseNumber,
             },
         ],
         [
@@ -177,30 +215,35 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Kraj Zamieszkania",
                 placeholder: "Wpisz kraj",
                 type: "text",
+                value: formData.addressCurrentCountry,
             },
             {
                 id: "addressCurrentCity",
                 inputLabel: "Miasto Zamieszkania",
                 placeholder: "Wpisz miasto",
                 type: "text",
+                value: formData.addressCurrentCity,
             },
             {
                 id: "addressCurrentStreet",
                 inputLabel: "Ulica Zamieszkania",
                 placeholder: "Wpisz ulicę",
                 type: "text",
+                value: formData.addressCurrentStreet,
             },
             {
                 id: "addressCurrentPostalCode",
                 inputLabel: "Kod pocztowy Zamieszkania",
                 placeholder: "Wpisz kod pocztowy",
                 type: "text",
+                value: formData.addressCurrentPostalCode,
             },
             {
                 id: "addressCurrentHouseNumber",
                 inputLabel: "Numer domu Zamieszkania",
                 placeholder: "Wpisz numer domu",
                 type: "text",
+                value: formData.addressCurrentHouseNumber,
             },
         ],
         [
@@ -209,12 +252,14 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Imie Matki",
                 placeholder: "Wpisz imię matki",
                 type: "text",
+                value: formData.motherName,
             },
             {
                 id: "motherSurname",
                 inputLabel: "Nazwisko Matki",
                 placeholder: "Wpisz nazwisko matki",
                 type: "text",
+                value: formData.motherSurname,
             },
         ],
         [
@@ -223,12 +268,14 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Imie Ojca",
                 placeholder: "Wpisz imię ojca",
                 type: "text",
+                value: formData.fatherName,
             },
             {
                 id: "fatherSurname",
                 inputLabel: "Nazwisko Ojca",
                 placeholder: "Wpisz nazwisko ojca",
                 type: "text",
+                value: formData.fatherSurname,
             },
         ],
     ];
@@ -252,4 +299,4 @@ function AddChild({ title, method }: { title: string; method: string }) {
     );
 }
 
-export default AddChild;
+export default EditChild;

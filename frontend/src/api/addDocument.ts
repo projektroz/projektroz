@@ -1,4 +1,4 @@
-import { api } from "./axios";
+import { api, upload } from "./axios";
 
 type AddDocumentResponse = {
     id: number;
@@ -32,3 +32,17 @@ export async function addDocument(
     }
 }
 
+export async function addDocumentFile(documentFile: File): Promise<any> {
+    console.log("Sending file:", documentFile); // Logowanie pliku do wysyłki
+    try {
+        const response = await upload.post("/", documentFile);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error:", error.response.data); // Logowanie błędu
+        throw new Error(
+            error.response.data.detail ||
+                "An error occurred while processing your request."
+        );
+    }
+}
