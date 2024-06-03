@@ -1,4 +1,4 @@
-.data-card-wrapper {
+.document-data-form-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,7 +7,7 @@
   width: 450px;
 }
 
-.child-data-card {
+.document-data-card {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -15,7 +15,6 @@
   height: 80%;
   width: 80%; /* Dodane szerokości */
   margin: auto; /* Dodane wyśrodkowanie */
-  gap: 1em;
 }
 
 .content-between {

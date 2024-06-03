@@ -1,35 +1,26 @@
 import React, { useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "./ChildDataForm.scss";
+import "./DocumentDataForm.scss";
 
 // Interfejsy definiujące dane wejściowe i właściwości komponentów
-interface DataInput {
+interface DocumentInput {
     id: string;
     inputLabel: string;
-    placeholder: string;
-    type: "date" | "text";
-    regex?: string;
-    pattern?: string;
+    type: "file" | "text";
 }
 
-interface DataCardProps {
-    dataSets: DataInput[][];
+interface DocumentDataFormProps {
+    dataSets: DocumentInput[][];
     formData: { [key: string]: string };
     handleInputChange: (name: string, value: string) => void;
 }
 
-interface NavigationButtonProps {
+// Komponent nawigacyjnego przycisku (lewo/prawo)
+const NavigationButton: React.FC<{
     direction: "left" | "right";
     onClick: () => void;
     isVisible: boolean;
-}
-
-// Komponent nawigacyjnego przycisku (lewo/prawo)
-const NavigationButton: React.FC<NavigationButtonProps> = ({
-    direction,
-    onClick,
-    isVisible,
-}) => (
+}> = ({ direction, onClick, isVisible }) => (
     <button
         onClick={onClick}
         type="button"
@@ -50,13 +41,13 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
 );
 
 // Komponent pojedynczego pola danych
-const DataInputField: React.FC<{
-    data: DataInput;
+const DocumentInputField: React.FC<{
+    data: DocumentInput;
     index: number;
     value: string;
     handleInputChange: (name: string, value: string) => void;
 }> = ({ data, index, value, handleInputChange }) => (
-    <div className="childData-input content-center">
+    <div className="document-input content-center">
         <h3>{data.inputLabel}</h3>
         <div className="form-floating" style={{ width: "100%" }}>
             <input
@@ -66,18 +57,12 @@ const DataInputField: React.FC<{
                 name={data.id}
                 value={value}
                 onChange={(e) => handleInputChange(data.id, e.target.value)}
-                placeholder={data.placeholder}
-                pattern={data.pattern}
                 required
-                style={
-                    data.type === "date"
-                        ? { width: "100%", padding: "1.2rem .75rem" }
-                        : {}
-                }
+                style={{ width: "100%", padding: "1.2rem .75rem" }}
             />
-            {data.type !== "date" && (
+            {data.type !== "file" && (
                 <label htmlFor={`floatingInput-${data.id}-${index}`}>
-                    {data.placeholder}
+                    {data.id}
                 </label>
             )}
         </div>
@@ -85,8 +70,8 @@ const DataInputField: React.FC<{
 );
 
 // Komponent reprezentujący pojedynczy zestaw danych
-const DataSet: React.FC<{
-    dataSet: DataInput[];
+const DocumentDataSet: React.FC<{
+    dataSet: DocumentInput[];
     index: number;
     currentSetIndex: number;
     formData: { [key: string]: string };
@@ -106,16 +91,11 @@ const DataSet: React.FC<{
             }}
             className="content-center">
             {dataSet.map((data, dataIndex) => (
-                <DataInputField
+                <DocumentInputField
                     key={dataIndex}
                     data={data}
                     index={index}
-                    value={
-                        formData[data.id] ||
-                        (data.type === "date"
-                            ? new Date().toISOString().substr(0, 10)
-                            : "")
-                    }
+                    value={formData[data.id]}
                     handleInputChange={handleInputChange}
                 />
             ))}
@@ -124,7 +104,7 @@ const DataSet: React.FC<{
 );
 
 // Główny komponent zarządzający zestawami danych
-const DataCard: React.FC<DataCardProps> = ({
+const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
     dataSets,
     formData,
     handleInputChange,
@@ -139,8 +119,8 @@ const DataCard: React.FC<DataCardProps> = ({
         setCurrentSetIndex((prevIndex) => Math.max(prevIndex - 1, 0));
 
     return (
-        <div className="data-card-wrapper">
-            <div className="child-data-card content-between">
+        <div className="document-data-form-wrapper">
+            <div className="document-data-form content-between">
                 <NavigationButton
                     direction="left"
                     onClick={prevSet}
@@ -148,7 +128,7 @@ const DataCard: React.FC<DataCardProps> = ({
                 />
                 <TransitionGroup>
                     {dataSets.map((dataSet, index) => (
-                        <DataSet
+                        <DocumentDataSet
                             key={index}
                             dataSet={dataSet}
                             index={index}
@@ -182,10 +162,11 @@ const DataCard: React.FC<DataCardProps> = ({
                 }}
                 className="btn"
                 disabled={currentSetIndex !== dataSets.length - 1}>
-                Dodaj dziecko
+                Dodaj dokument
             </button>
         </div>
     );
 };
 
-export default DataCard;
+export default DocumentDataForm;
+

@@ -1,10 +1,10 @@
 import React from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
-import { useChildData } from "../../hooks/useChildData";
-import "./ManageChild.scss";
-import ChildTable from "../../components/ChildTable/ChildTable";
+import { useDocumentData } from "../../hooks/useDocumentData.ts";
+import "./ManageDocument.scss";
+import DocumentTable from "../../components/DocumentTable/DocumentTable";
 
-function ManageChild() {
+function ManageDocument() {
     const links = [
         {
             name: "Panel sterowania",
@@ -18,18 +18,19 @@ function ManageChild() {
         },
     ];
 
-    const fosterCarerId = 1;
-    const children = useChildData(fosterCarerId);
+    const fosterCarerId = 4;
+    const document = useDocumentData(fosterCarerId);
 
     return (
         <div className="app-page manage-child-page">
             <Rectangle links={links}>
-                <div className="manageChild" style={{ width: "80%" }}>
-                    <ChildTable children={children} />
+                <div className="manageChild">
+                    <DocumentTable document={document} />
                 </div>
             </Rectangle>
         </div>
     );
 }
 
-export default ManageChild;
+export default ManageDocument;
+

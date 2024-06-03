@@ -1,4 +1,9 @@
 .app-page.child-details {
+    .rectangle {
+        .rectangle-content {
+            justify-content: flex-start;
+        }
+    }
   .details-grid {
       display: grid;
       grid-template-columns: 1fr 1fr; /* Two columns */
@@ -55,4 +60,13 @@
           background-color: var(--secondary);
       }
   }
+}
+
+.tab-content{
+    width: 80%;
+    filter: opacity(0.7);
+
+    span {
+        filter: opacity(1) brightness(1.5);
+    }
 }

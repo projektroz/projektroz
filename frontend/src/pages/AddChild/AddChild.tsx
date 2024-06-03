@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import ChildDataForm from "../../components/ChildDataForm/ChildDataForm";
 import { addChild } from "../../api/addChild";
-import { getChildData, parseBackToFormData } from "../../functions/AddChildFunctions";
+import {
+    getChildData,
+    parseBackToFormData,
+} from "../../functions/AddChildFunctions";
 import "./AddChild.scss";
-import Child from "types/Child";
+// import Child from "types/Child";
 
 function AddChild({ title, method }: { title: string; method: string }) {
     const [formData, setFormData] = useState({
@@ -28,7 +31,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
         motherName: "",
         motherSurname: "",
         fatherName: "",
-        fatherSurname: ""
+        fatherSurname: "",
     });
 
     useEffect(() => {
@@ -41,7 +44,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
 
     const [error, setError] = useState("");
 
-    const handleInputChange = (id: string, value: string | Date) => {
+    const handleInputChange = (id: string, value: string) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [id]: value,
@@ -82,6 +85,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
         placeholder: string;
         type: "date" | "text";
         regex?: string;
+        pattern?: string;
     }
 
     const dataSets: DataInput[][] = [
@@ -103,6 +107,8 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Data Urodzenia",
                 placeholder: "Wpisz datę urodzenia",
                 type: "date",
+                // regex: "^[0-9]{0,2}-?[0-9]{0,2}-?[0-9]{0,4}$",
+                // pattern: "d{2}-d{2}-d{4}",
             },
             {
                 id: "birthPlace",
@@ -124,6 +130,7 @@ function AddChild({ title, method }: { title: string; method: string }) {
                 inputLabel: "Data Przyjęcia",
                 placeholder: "Wpisz datę przyjęcia",
                 type: "date",
+                // regex: "^[0-9]{2}-[0-9]{2}-[0-9]{4}$",
             },
             {
                 id: "courtDecision",
@@ -246,3 +253,4 @@ function AddChild({ title, method }: { title: string; method: string }) {
 }
 
 export default AddChild;
+
