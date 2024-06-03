@@ -34,7 +34,7 @@ function getChildData(formData: any) {
             surname: formData.fatherSurname || "",
             role: "F",
         },
-        note: formData.note || 1  // Assuming a default note ID, adjust as necessary
+        note: formData.note || null  // Assuming a default note ID, adjust as necessary
     };
 };
 
