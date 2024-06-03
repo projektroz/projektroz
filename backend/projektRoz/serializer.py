@@ -48,7 +48,8 @@ class NotesSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'create_date': {'required': True},
             'modification_date': {'required': True},
-            'note_text': {'required': True}
+            'note_text': {'required': True},
+            'child': {'required': True}
         }
 
 class AddressSerializer(serializers.ModelSerializer):
