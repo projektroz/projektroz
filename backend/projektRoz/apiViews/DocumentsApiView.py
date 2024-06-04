@@ -16,7 +16,8 @@ class DocumentsApiView(APIView):
     
     @swagger_auto_schema(
         manual_parameters=[
-            openapi.Parameter('document_id', openapi.IN_QUERY, description="ID of the document", type=openapi.TYPE_INTEGER)
+            openapi.Parameter('document_id', openapi.IN_QUERY, description="ID of the document", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('page', openapi.IN_QUERY, description="Page number must be greater than 0 or else get method will return all data", type=openapi.TYPE_INTEGER)
         ],
         responses={200: DocumentsSerializer(many=True), 404: 'Not Found'}
     )
@@ -43,26 +44,6 @@ class DocumentsApiView(APIView):
                 serializer = DocumentsSerializer(document, many = False)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            
-        elif page:
-            fosterCarer = FosterCarer.objects.get(id = request.user.id)
-            children = Child.objects.filter(foster_carer = fosterCarer)
-            documents = Documents.objects.all()
-            ret = []
-
-            for child in children:
-                for document in documents:
-                    if child == document.child:
-                        ret.append(document)
-
-            if ret != []:
-                start = 5 * (page - 1)
-                end = 5 + 5 * (page - 1)
-                serializer = DocumentsSerializer(ret[start : end], many = True)
-                    
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             
             fosterCarer = FosterCarer.objects.get(id = request.user.id)
@@ -76,7 +57,13 @@ class DocumentsApiView(APIView):
                         ret.append(document)
 
             if ret != []:
-                serializer = DocumentsSerializer(ret, many = True)
+                if page:
+                    start = (page - 1) * 5
+                    end = (page - 1) * 5 + 5
+                    serializer = DocumentsSerializer(ret[start:end], many = True)
+                else:
+                    serializer = DocumentsSerializer(ret, many = True)
+                
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
