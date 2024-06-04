@@ -41,8 +41,8 @@ class NotesSerializer(serializers.ModelSerializer):
         model = Notes
         fields = "__all__"
         extra_kwargs = {
-            'create_date': {'required': True},
-            'modification_date': {'required': True},
+            'create_date': {'required': False},
+            'modification_date': {'required': False},
             'note_text': {'required': True},
             'child': {'required': True}
         }
