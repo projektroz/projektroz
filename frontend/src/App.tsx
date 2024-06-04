@@ -17,6 +17,7 @@ import ChildDetails from "./pages/ChildDetails/ChildDetails";
 import AddDocuments from "./pages/AddDocuments/AddDocuments";
 import AddNotes from "./pages/AddNotes/AddNotes";
 import Notes from "./pages/Notes/Notes";
+import Documents from "./pages/Documents/Documents";
 
 const App = () => {
     const { isLoggedIn, logout } = useAuth();
@@ -85,6 +86,11 @@ const App = () => {
                     <Route
                         path="/dashboard/note/:noteId/:action"
                         element={<Notes />}
+                    />
+
+                    <Route
+                        path="/dashboard/document/:document_google_id/:action"
+                        element={<Documents />}
                     />
                 </Route>
             </Routes>

@@ -15,9 +15,15 @@ interface Note {
 }
 
 interface Document {
-    documentId: number;
-    name: string;
-    filePath: string;
+    id: number;
+    document_google_id: string;
+    document_path: string;
+    category: string;
+    child: number;
+}
+
+interface Page {
+    page: number;
 }
 
 const ChildDetails: React.FC = () => {
@@ -28,6 +34,7 @@ const ChildDetails: React.FC = () => {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [documentPage, setDocumentPage] = useState<Page>({ page: 0 });
 
     useEffect(() => {
         const fetchChildData = async () => {
@@ -53,7 +60,7 @@ const ChildDetails: React.FC = () => {
                 }
 
                 const fetchedNotes = response.data;
-                console.log("fetchedNotes", fetchedNotes.length);
+                // console.log("fetchedNotes", fetchedNotes.length);
 
                 setNotes(fetchedNotes);
 
@@ -63,12 +70,19 @@ const ChildDetails: React.FC = () => {
             }
         };
 
+        fetchChildNotes();
+    }, [child]);
+
+    useEffect(() => {
         const fetchChildDoccuments = async () => {
             try {
-                const response = await api.get(`/documents/page=0`);
+                const response = await api.get(
+                    "/documents?page=" + documentPage.page
+                );
                 if (response.status === 404) {
-                    console.log("No documents found");
+                    console.error("No documents found");
                 } else {
+                    console.log("Documents found", response.data);
                     setDocuments(response.data);
                 }
             } catch (err: any) {
@@ -76,15 +90,13 @@ const ChildDetails: React.FC = () => {
             }
         };
 
-        fetchChildNotes();
-        // fetchChildDoccuments();
-    }, [child]);
+        fetchChildDoccuments();
 
-    // Separate useEffect to log updated notes
-    useEffect(() => {
-        console.log("noteslength", notes.length);
-        console.log(notes);
-    }, [notes]);
+        documents.map((document) => {
+            console.log(document);
+            console.log(document.document_path.split("/").pop());
+        });
+    }, [child, documentPage]);
 
     useEffect(() => {
         // Set active tab from link
@@ -134,6 +146,14 @@ const ChildDetails: React.FC = () => {
 
     const handleNoteEdit = (note_id: number) => {
         navigate(`/dashboard/note/${note_id}/edit`);
+    };
+
+    const handleDocumentDownload = (document_google_id: string) => {
+        navigate(`/dashboard/document/${document_google_id}/download`);
+    };
+
+    const handleDocumentUpload = (document_google_id: string) => {
+        navigate(`/dashboard/document/${document_google_id}/upload`);
     };
 
     return (
@@ -409,7 +429,7 @@ const ChildDetails: React.FC = () => {
                             <div>
                                 <span className="label">Notatki:</span>
                                 {notes.length > 0 ? (
-                                    <span className="value">
+                                    <div className="value">
                                         {notes.map((note) => (
                                             <div
                                                 className="note mb-3"
@@ -446,9 +466,9 @@ const ChildDetails: React.FC = () => {
                                                 </div>
                                             </div>
                                         ))}
-                                    </span>
+                                    </div>
                                 ) : (
-                                    <span className="value">Brak notatek</span>
+                                    <div className="value">Brak notatek</div>
                                 )}
                             </div>
                         </div>
@@ -466,23 +486,54 @@ const ChildDetails: React.FC = () => {
                                 onClick={handleAddDocument}>
                                 Dodaj dokument
                             </button>
-                            <div className="details-item">
+                            <div>
                                 <span className="label">Dokumenty:</span>
                                 {documents.length > 0 ? (
-                                    <span className="value">
-                                        {documents.map((document) => (
-                                            <a
-                                                href={document.filePath}
-                                                target="_blank"
-                                                rel="noreferrer">
-                                                {document.name}
-                                            </a>
+                                    <div className="value">
+                                        {documents.map((document, index) => (
+                                            <div>
+                                                <img
+                                                    src="../../src/assets/icons/download.png"
+                                                    alt="download icon"
+                                                    width={"40px"}
+                                                    onClick={() =>
+                                                        handleDocumentDownload(
+                                                            document.document_google_id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
+                                                <img
+                                                    src="../../src/assets/icons/upload.png"
+                                                    alt="upload icon"
+                                                    width={"40px"}
+                                                    onClick={() =>
+                                                        handleDocumentUpload(
+                                                            document.document_google_id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
+                                                <a
+                                                    href={
+                                                        document.document_path
+                                                    }
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    key={index}>
+                                                    {document.document_path
+                                                        .split("/")
+                                                        .pop()}
+                                                </a>
+                                            </div>
                                         ))}
-                                    </span>
+                                    </div>
                                 ) : (
-                                    <span className="value">
-                                        Brak dokumentów
-                                    </span>
+                                    <div className="value">Brak dokumentów</div>
                                 )}
                             </div>
                         </div>

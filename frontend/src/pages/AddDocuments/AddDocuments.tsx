@@ -38,12 +38,13 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
         setLoading(true);
         try {
             const data = getDocumentFile(formData);
-            console.log("Sending file:", formData); // Logowanie pliku
+            console.log("Sending file: ", formData); // Logowanie pliku
             const response = await addDocumentFile(data);
-            if (response.status === 200) {
+            console.log("Google response: ", response); // Logowanie odpowiedzi z Google
+            if (response) {
                 console.log("File uploaded successfully");
-                formData.file_path = response.data.file_path;
-                formData.file_id = response.data.file_id;
+                formData.file_path = response.file_path;
+                formData.file_id = response.file_id;
             }
         } catch (error: any) {
             console.error("Error:", error); // Logowanie błędu

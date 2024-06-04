@@ -124,3 +124,14 @@
         }
     }
 }
+
+a,
+.nav-link {
+    color: var(--additional-light);
+
+    :hover {
+        color: var(--additional);
+    }
+}
+
+
