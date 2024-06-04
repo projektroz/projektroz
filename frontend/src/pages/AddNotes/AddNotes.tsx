@@ -4,21 +4,18 @@ import NotesDataForm from "../../components/NotesDataForm/NotesDataForm";
 import { addNote } from "../../api/addNote";
 import { getNoteData } from "../../functions/AddNoteFunctions";
 import "./AddNotes.scss";
+import { useParams } from "react-router-dom";
 
 function AddNotes({ title }: { title: string }) {
-    const [childId, setChildId] = useState(-1);
     const [formData, setFormData] = useState({
         create_date: "",
         modification_date: "",
         note_text: "",
-        child_id: -1,
+        child: -1,
     });
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const id = window.location.pathname.split("/").pop();
-        if (id) setChildId(parseInt(id));
-    }, []);
+    const childId = useParams<{ childId: string }>().childId;
 
     const handleInputChange = (id: string, value: string) => {
         setFormData((prevFormData) => ({
@@ -34,7 +31,10 @@ function AddNotes({ title }: { title: string }) {
             console.log("Sending data:", data); // Logowanie danych
             data.create_date = new Date().toISOString().slice(0, 10);
             data.modification_date = new Date().toISOString().slice(0, 10);
-            data.child_id = childId;
+            if (childId === undefined) {
+                throw new Error("Nie znaleziono id dziecka");
+            }
+            data.child = parseInt(childId);
             await addNote(data);
 
             window.location.href = `/dashboard/manage-child/${childId}`;

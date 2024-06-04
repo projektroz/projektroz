@@ -1,4 +1,3 @@
-import React from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import { useChildData } from "../../hooks/useChildData";
 import "./ManageChild.scss";

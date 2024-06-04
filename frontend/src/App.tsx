@@ -73,11 +73,11 @@ const App = () => {
                     />
 
                     <Route
-                        path="/dashboard/edit-child/:id"
+                        path="/dashboard/edit-child/:childId"
                         element={<EditChild title="Edytuj dziecko" />}
                     />
                     <Route
-                        path="/dashboard/add-note/:id"
+                        path="/dashboard/add-note/:childId"
                         element={<AddNotes title="Dodaj notatkę" />}
                     />
 

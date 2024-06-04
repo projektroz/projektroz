@@ -218,7 +218,7 @@ const ChildDetails: React.FC = () => {
                             role="tab"
                             aria-controls="documents-tab-pane"
                             aria-selected="false">
-                            Dokumnety
+                            Dokumenty
                         </button>
                     </li>
                 </ul>
@@ -411,7 +411,9 @@ const ChildDetails: React.FC = () => {
                                 {notes.length > 0 ? (
                                     <span className="value">
                                         {notes.map((note) => (
-                                            <div className="note mb-3">
+                                            <div
+                                                className="note mb-3"
+                                                key={note.id}>
                                                 <div className="note-content">
                                                     <h2 className="note-date">
                                                         {new Date(
