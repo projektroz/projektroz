@@ -3,11 +3,6 @@ from .models import  Parent, Notes, Address, FosterCarer, Child, Siblings, Docum
 from django.contrib.auth.models import User
 
 
-# class MapSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Map
-#         fields = "__all__"
-
 class ParentSerializer(serializers.ModelSerializer):
     """
     Serializer class for the Parent model.
@@ -46,8 +41,8 @@ class NotesSerializer(serializers.ModelSerializer):
         model = Notes
         fields = "__all__"
         extra_kwargs = {
-            'create_date': {'required': True},
-            'modification_date': {'required': True},
+            'create_date': {'required': False},
+            'modification_date': {'required': False},
             'note_text': {'required': True},
             'child': {'required': True}
         }
@@ -140,6 +135,16 @@ class ChildSerializer(serializers.ModelSerializer):
         }
         
     def create(self, validated_data):
+        """
+        Create a new child object with the provided validated data.
+
+        Args:
+            validated_data (dict): The validated data for creating the child object.
+
+        Returns:
+            Child: The newly created child object.
+
+        """
         address_data = validated_data.pop('address')
         address = Address.objects.create(**address_data)
         
@@ -153,11 +158,21 @@ class ChildSerializer(serializers.ModelSerializer):
         father = Parent.objects.create(**father_data)
         
         child = Child.objects.create(
-            address=address, address_registered=address_registered, father = father, mother = mother, **validated_data)
+            address=address, address_registered=address_registered, father=father, mother=mother, **validated_data)
         
         return child
     
     def update(self, instance, validated_data):
+        """
+        Updates the instance with the provided validated data.
+
+        Args:
+            instance: The instance to be updated.
+            validated_data: The validated data containing the updated values.
+
+        Returns:
+            The updated instance.
+        """
         address_data = validated_data.pop('address')
         address = instance.address
         address.country = address_data.get('country', address.country)
@@ -226,24 +241,6 @@ class SiblingsSerializer(serializers.ModelSerializer):
             'child': {'required': True}
         }
 
-# class CategorySerializer(serializers.ModelSerializer):
-#     """
-#     Serializer class for the Category model.
-
-#     Serializes the Category model fields to JSON and vice versa.
-
-#     Attributes:
-#         model (Category): The Category model class.
-#         fields (str): A string specifying the fields to include in the serialized representation.
-#                       In this case, "__all__" is used to include all fields.
-
-#     """
-#     class Meta:
-#         model = Category
-#         fields = "__all__"
-#         extra_kwargs = {
-#             'category_name': {'required': True}
-#         }
 
 class DocumentsSerializer(serializers.ModelSerializer):
     """
@@ -270,10 +267,22 @@ class DocumentsSerializer(serializers.ModelSerializer):
         }
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for the User model.
+    """
     
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
+        """
+        Create and return a new User instance.
+
+        Args:
+            validated_data (dict): Validated data for creating a new User.
+
+        Returns:
+            User: The created User instance.
+        """
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -291,9 +300,40 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for user registration.
+
+    This serializer is used to validate and serialize user registration data.
+    It performs various validations on the input data, such as checking for
+    existing email, password strength, and matching password fields.
+
+    Attributes:
+        passwordRepeat (CharField): A write-only field for password confirmation.
+
+    Methods:
+        create(validated_data): Creates a new user instance based on the validated data.
+        validate_email(value): Validates the uniqueness of the email field.
+        validate(data): Performs additional validations on the input data.
+
+    Meta:
+        model (User): The User model to be used for serialization.
+        fields (list): The fields to be included in the serialized output.
+        extra_kwargs (dict): Additional keyword arguments for field customization.
+    """
+
     passwordRepeat = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     def create(self, validated_data):
+        """
+        Create a new user instance with the provided validated data.
+
+        Args:
+            validated_data (dict): A dictionary containing the validated data for creating a new user.
+
+        Returns:
+            User: The newly created user instance.
+
+        """
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -305,24 +345,49 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
 
     def validate_email(self, value):
+        """
+        Validates the email field to ensure it is unique.
+
+        Args:
+            value (str): The email value to be validated.
+
+        Raises:
+            serializers.ValidationError: If the email already exists in the User model.
+
+        Returns:
+            str: The validated email value.
+        """
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Email already exists")
         return value
 
 
     def validate(self, data):
+        """
+        Validates the input data for password.
+
+        Args:
+            data (dict): The input data containing the password and passwordRepeat fields.
+
+        Raises:
+            serializers.ValidationError: If the password does not meet the validation criteria.
+
+        Returns:
+            dict: The validated data.
+
+        """
         if data['password'].isdigit() or data['password'].isalpha():
             raise serializers.ValidationError({'password': 'Password must contain both letters and numbers.'})
 
         if data['password'].islower():
             raise serializers.ValidationError({'password': 'Password must contain at least one uppercase letter.'})
-    
+
         if len(data['password']) < 8:
             raise serializers.ValidationError({'password': 'Password must be at least 8 characters long.'})
 
         if data['password'] != data['passwordRepeat']:
             raise serializers.ValidationError({'password': 'Passwords must match.'})
-        
+
         return data
 
 
