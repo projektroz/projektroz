@@ -16,6 +16,7 @@ import ManageChild from "./pages/ManageChild/ManageChild";
 import ChildDetails from "./pages/ChildDetails/ChildDetails";
 import AddDocuments from "./pages/AddDocuments/AddDocuments";
 import AddNotes from "./pages/AddNotes/AddNotes";
+import Notes from "./pages/Notes/Notes";
 
 const App = () => {
     const { isLoggedIn, logout } = useAuth();
@@ -78,6 +79,12 @@ const App = () => {
                     <Route
                         path="/dashboard/add-note/:id"
                         element={<AddNotes title="Dodaj notatkę" />}
+                    />
+
+                    <Route path="/dashboard/note/:noteId" element={<Notes />} />
+                    <Route
+                        path="/dashboard/note/:noteId/:action"
+                        element={<Notes />}
                     />
                 </Route>
             </Routes>

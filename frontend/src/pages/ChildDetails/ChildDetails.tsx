@@ -47,21 +47,17 @@ const ChildDetails: React.FC = () => {
     useEffect(() => {
         const fetchChildNotes = async () => {
             try {
-                const response = await api.get(`/notes/`);
+                const response = await api.get<Note[]>(`/notes/`);
                 if (response.status === 404) {
-                    console.log("No notes found");
-                } else {
-                    setNotes((prev) => {
-                        if (prev) {
-                            return {
-                                ...prev,
-                                notes: response.data,
-                            };
-                        }
-                        return prev;
-                    });
+                    throw new Error("No notes found");
                 }
-                console.log(response.data);
+
+                const fetchedNotes = response.data;
+                console.log("fetchedNotes", fetchedNotes.length);
+
+                setNotes(fetchedNotes);
+
+                // Use a separate useEffect or a callback to log notes after the state has updated
             } catch (err: any) {
                 setError("Nie udało się pobrać notatek dziecka.");
             }
@@ -73,24 +69,22 @@ const ChildDetails: React.FC = () => {
                 if (response.status === 404) {
                     console.log("No documents found");
                 } else {
-                    setDocuments((prev) => {
-                        if (prev) {
-                            return {
-                                ...prev,
-                                documents: response.data,
-                            };
-                        }
-                        return prev;
-                    });
+                    setDocuments(response.data);
                 }
             } catch (err: any) {
                 setError("Nie udało się pobrać dokumentów dziecka.");
             }
         };
 
-        // fetchChildNotes();
+        fetchChildNotes();
         // fetchChildDoccuments();
     }, [child]);
+
+    // Separate useEffect to log updated notes
+    useEffect(() => {
+        console.log("noteslength", notes.length);
+        console.log(notes);
+    }, [notes]);
 
     useEffect(() => {
         // Set active tab from link
@@ -132,6 +126,14 @@ const ChildDetails: React.FC = () => {
 
     const handleAddNote = () => {
         navigate(`/dashboard/add-note/${id}`);
+    };
+
+    const handleNoteView = () => {
+        navigate(`/dashboard/note/${id}`);
+    };
+
+    const handleNoteEdit = () => {
+        navigate(`/dashboard/edit-note/${id}`);
     };
 
     return (
@@ -404,20 +406,38 @@ const ChildDetails: React.FC = () => {
                                 onClick={handleAddNote}>
                                 Dodaj notatkę
                             </button>
-                            <div className="details-item">
+                            <div>
                                 <span className="label">Notatki:</span>
                                 {notes.length > 0 ? (
                                     <span className="value">
                                         {notes.map((note) => (
-                                            <div className="note">
-                                                <span className="note-date">
-                                                    {new Date(
-                                                        note.create_date
-                                                    ).toLocaleDateString()}
-                                                </span>
-                                                <span className="note-text">
-                                                    {note.note_text}
-                                                </span>
+                                            <div className="note mb-3">
+                                                <div className="note-content">
+                                                    <h2 className="note-date">
+                                                        {new Date(
+                                                            note.create_date
+                                                        ).toLocaleDateString()}
+                                                    </h2>
+                                                    <p className="note-text">
+                                                        {note.note_text}
+                                                    </p>
+                                                </div>
+                                                <div className="note-actions">
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={
+                                                            handleNoteView
+                                                        }>
+                                                        Wyświetl
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={
+                                                            handleNoteEdit
+                                                        }>
+                                                        Edytuj
+                                                    </button>
+                                                </div>
                                             </div>
                                         ))}
                                     </span>
