@@ -14,6 +14,31 @@ import base64
 import mimetypes
 
 class FileApiView(APIView):
+    """
+    API view for handling file uploads, downloads, and deletions.
+
+    This view provides endpoints for uploading files, retrieving files, and deleting files.
+    It supports multipart/form-data requests for file uploads.
+
+    Endpoints:
+    - POST: Upload a file.
+    - GET: Retrieve a file or a list of files.
+    - DELETE: Delete a file.
+
+    The view uses Google Drive as the storage backend for file operations.
+
+    Attributes:
+    - parser_classes (tuple): The parser classes used for parsing the request data.
+    - logger (Logger): The logger instance for logging messages.
+
+    Methods:
+    - post: Handle file upload requests.
+    - get: Handle file retrieval requests.
+    - delete: Handle file deletion requests.
+    - get_files_recursively: Recursively retrieve files from a folder in Google Drive.
+    - sendFile: Upload a file to Google Drive.
+    - handle_photo_upload: Handle file upload requests specifically for profile photos.
+    """
     parser_classes = (MultiPartParser, FormParser)
     logger = logging.getLogger(__name__)
 
@@ -31,6 +56,21 @@ class FileApiView(APIView):
         }
     )
     def post(self, request, *args, **kwargs):
+        """
+        Handle the HTTP POST request for uploading a file.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            A Response object with the result of the file upload.
+
+        Raises:
+            Child.DoesNotExist: If the child with the specified ID does not exist.
+
+        """
         file_obj = request.FILES.get('file')
         name = request.data.get('name')
         child_id = request.data.get('child_id')
@@ -89,6 +129,20 @@ class FileApiView(APIView):
     )
 
     def get(self, request, *args, **kwargs):
+        """
+        Retrieves a file from Google Drive or a list of files in a folder.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            Response: The HTTP response object containing the file data or a list of files.
+
+        Raises:
+            Exception: If there is an error while retrieving the file(s) from Google Drive.
+        """
         file_id = kwargs.get('id')
         if file_id:
             try:
@@ -126,6 +180,21 @@ class FileApiView(APIView):
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
     def delete(self, request,  *args, **kwargs):
+        """
+        Deletes a file from the server and Google Drive.
+
+        Args:
+            request: The HTTP request object.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            A Response object with a success message if the file is deleted successfully,
+            or an error message if an exception occurs.
+
+        Raises:
+            Exception: If an error occurs during the deletion process.
+        """
         file_id = kwargs.get('id')
         try:
             googleDriveManager = GoogleDriveManager()
@@ -136,6 +205,17 @@ class FileApiView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get_files_recursively(self, folder_id):
+        """
+        Recursively retrieves all files and subfolders within a given folder.
+
+        Args:
+            folder_id (str): The ID of the folder to retrieve files from.
+
+        Returns:
+            list: A list of dictionaries representing the files and subfolders within the given folder.
+                  Each dictionary contains information such as file name, ID, MIME type, and download URL (for files).
+
+        """
         googleDriveManager = GoogleDriveManager()
         files = googleDriveManager.get_files(folder_id)
 
@@ -150,6 +230,22 @@ class FileApiView(APIView):
         return files
     
     def sendFile(self, name, file_obj, drive_path, googleDriveManager):
+        """
+        Sends a file to Google Drive.
+
+        Args:
+            name (str): The name of the file.
+            file_obj (file-like object): The file object to be uploaded.
+            drive_path (str): The path to the Google Drive folder where the file should be uploaded.
+            googleDriveManager (GoogleDriveManager): An instance of the GoogleDriveManager class.
+
+        Returns:
+            str: The ID of the uploaded file on Google Drive.
+
+        Raises:
+            Exception: If an error occurs during the file upload.
+
+        """
         try:   
             folder_id = googleDriveManager.ensure_folder_exists(drive_path)
             return googleDriveManager.upload_file(name, file_obj, folder_id)
@@ -157,6 +253,23 @@ class FileApiView(APIView):
             raise e
         
     def handle_photo_upload(self, name, file_obj, drive_path, child, file_type, googleDriveManager):
+        """
+        Handles the upload of a photo file.
+
+        Args:
+            name (str): The name of the photo file.
+            file_obj (file): The file object representing the photo.
+            drive_path (str): The path to the Google Drive folder where the photo will be uploaded.
+            child (Child): The Child object associated with the photo.
+            file_type (str): The category of the photo file.
+            googleDriveManager (GoogleDriveManager): An instance of the GoogleDriveManager class.
+
+        Returns:
+            Response: A response object containing the result of the file upload.
+
+        Raises:
+            Exception: If an error occurs while uploading the photo.
+        """
         try:
             photoFromDb = Documents.objects.get(document_path=drive_path + "/" + name)
             googleDriveManager.deleteFileById(photoFromDb.document_google_id)

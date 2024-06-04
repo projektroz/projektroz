@@ -18,7 +18,7 @@ function ManageChild() {
         },
     ];
 
-    const fosterCarerId = 1;
+    const fosterCarerId = 2;
     const children = useChildData(fosterCarerId);
 
     return (

@@ -15,6 +15,17 @@ class RegistrationView(APIView):
         responses={201: UserRegistrationSerializer, 400: 'Bad Request'}
     )
     def post(self, request, format='json'):
+        """
+        Handle POST requests for user registration.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            format (str, optional): The format of the response data. Defaults to 'json'.
+
+        Returns:
+            Response: The HTTP response object.
+
+        """
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()

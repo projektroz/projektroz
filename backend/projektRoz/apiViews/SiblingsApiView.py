@@ -108,19 +108,7 @@ class SiblingsApiView(APIView):
                 if serializer.is_valid():
                     serializer.save()
 
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                    
-        # else:
-        #     siblings = Siblings.objects.get(id = siblings_id)
-        #     child = siblings.child
-        #     fosterCarer = FosterCarer.objects.get(id = request.user.id)
-
-        #     if child.foster_carer == fosterCarer:
-        #         serializer = SiblingsSerializer(siblings, data = request.data)
-        #         if serializer.is_valid():
-        #             serializer.save()
-
-        #             return Response(serializer.data, status=status.HTTP_200_OK)
+                    return Response(serializer.data, status=status.HTTP_200_OK)                   
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
