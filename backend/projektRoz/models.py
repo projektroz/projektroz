@@ -102,6 +102,8 @@ class AllowedCategories(models.TextChoices):
     SZKOLA = 'Szkola'
     SAD = 'Sad'
     ZDROWIE = 'Zdrowie'
+    SCHEMATY = 'Schematy'
+    ZDJECIE = 'Zdjecie'
     INNE = 'Inne'
 
 class Documents(models.Model):
@@ -111,6 +113,6 @@ class Documents(models.Model):
 
     id = models.AutoField(primary_key=True)
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
-    category = models.CharField(max_length=7, choices=AllowedCategories.choices)
+    category = models.CharField(max_length=8, choices=AllowedCategories.choices)
     document_path = models.TextField(null=True, blank=True)
     document_google_id = models.TextField(null=True, blank=True)

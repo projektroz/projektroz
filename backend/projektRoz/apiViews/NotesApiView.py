@@ -16,7 +16,8 @@ class NotesApiView(APIView):
     
     @swagger_auto_schema(
         manual_parameters=[
-            openapi.Parameter('note_id', openapi.IN_QUERY, description="ID of the note", type=openapi.TYPE_INTEGER)
+            openapi.Parameter('note_id', openapi.IN_QUERY, description="ID of the note", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('page', openapi.IN_QUERY, description="Page number must be greater than 0 or else get method will return all data", type=openapi.TYPE_INTEGER)
         ],
         responses={200: NotesSerializer(many=True), 404: 'Not Found'}
     )
@@ -31,6 +32,9 @@ class NotesApiView(APIView):
         Returns:
         - Response: The serialized note(s) data.
         """
+
+        page = int(request.data.get('page')) if request.data.get('page') else None
+
         if note_id:
             try:
                 note = Notes.objects.get(id=note_id)
@@ -57,14 +61,23 @@ class NotesApiView(APIView):
                         ret.append(note)
 
             if ret != []:
-                serializer = NotesSerializer(ret, many = True)
+                if page:
+                    start = 5 * (page - 1)
+                    end = 5 + 5 * (page - 1)
+                    serializer = NotesSerializer(ret[start : end], many = True)
+                else:
+                    serializer = NotesSerializer(ret, many = True)
+
                 return Response(serializer.data, status = status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
                 
     @swagger_auto_schema(
         request_body=NotesSerializer,
-        responses={201: NotesSerializer, 400: 'Bad Request'}
+        responses={
+            201: NotesSerializer, 
+            400: 'Bad Request'
+            }
     )
     def post(self, request, *args, **kwargs):
         """

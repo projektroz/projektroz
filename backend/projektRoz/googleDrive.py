@@ -157,3 +157,10 @@ class GoogleDriveManager:
             self.logger.debug(f"Download {int(status.progress() * 100)}%.")
 
         return destination
+
+    def deleteFileById(self, file_id):
+        try:
+            self.service.files().delete(fileId=file_id).execute()
+            return True
+        except Exception as e:
+            raise e
