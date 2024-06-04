@@ -124,6 +124,16 @@ class FileApiView(APIView):
                 return Response(files, status=status.HTTP_200_OK)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+    def delete(self, request,  *args, **kwargs):
+        file_id = kwargs.get('id')
+        try:
+            googleDriveManager = GoogleDriveManager()
+            googleDriveManager.deleteFileById(file_id)
+            Documents.objects.get(document_google_id=file_id).delete()
+            return Response({"message": "File deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get_files_recursively(self, folder_id):
         googleDriveManager = GoogleDriveManager()
