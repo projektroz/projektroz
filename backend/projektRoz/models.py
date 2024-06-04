@@ -91,14 +91,12 @@ class Siblings(models.Model):
     child = models.ForeignKey(Child, related_name='child', on_delete=models.CASCADE)
     child_sibling = models.ForeignKey(Child, related_name='child_sibling', on_delete=models.CASCADE)
 
-# class Category(models.Model):
-#     """
-#     Represents a category in the system.
-#     """
-#     id = models.AutoField(primary_key=True)
-#     category_name = models.TextField()
 
 class AllowedCategories(models.TextChoices):
+    """
+    Represents the allowed categories for a document model.
+    
+    """
     SZKOLA = 'Szkola'
     SAD = 'Sad'
     ZDROWIE = 'Zdrowie'
