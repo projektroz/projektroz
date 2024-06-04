@@ -128,12 +128,12 @@ const ChildDetails: React.FC = () => {
         navigate(`/dashboard/add-note/${id}`);
     };
 
-    const handleNoteView = () => {
-        navigate(`/dashboard/note/${id}`);
+    const handleNoteView = (note_id: number) => {
+        navigate(`/dashboard/note/${note_id}`);
     };
 
-    const handleNoteEdit = () => {
-        navigate(`/dashboard/edit-note/${id}`);
+    const handleNoteEdit = (note_id: number) => {
+        navigate(`/dashboard/note/${note_id}/edit`);
     };
 
     return (
@@ -425,15 +425,19 @@ const ChildDetails: React.FC = () => {
                                                 <div className="note-actions">
                                                     <button
                                                         className="btn btn-primary"
-                                                        onClick={
-                                                            handleNoteView
+                                                        onClick={() =>
+                                                            handleNoteView(
+                                                                note.id
+                                                            )
                                                         }>
                                                         Wyświetl
                                                     </button>
                                                     <button
                                                         className="btn btn-primary"
-                                                        onClick={
-                                                            handleNoteEdit
+                                                        onClick={() =>
+                                                            handleNoteEdit(
+                                                                note.id
+                                                            )
                                                         }>
                                                         Edytuj
                                                     </button>

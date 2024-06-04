@@ -139,7 +139,7 @@ const NoteDataForm: React.FC<NoteDataFormProps> = ({
                     transition: "all 0.25s ease-out",
                     width: "100%",
                 }}
-                className="btn btn-primary">
+                className="btn btn-primary btn-submit">
                 Dodaj notatkę
             </button>
         </div>

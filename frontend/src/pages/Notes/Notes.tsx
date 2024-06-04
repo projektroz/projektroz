@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../api/axios";
 import Rectangle from "../../components/Rectangle/Rectangle";
+import BackButton from "../../components/BackButton/BackButton";
 
 import "./Notes.scss";
 
@@ -68,13 +69,8 @@ const Notes = () => {
         const fetchData = async () => {
             try {
                 data.modification_date = new Date().toISOString().split("T")[0];
-                console.log(JSON.stringify({ data: data, note_id: data.id }));
 
-                const formData = new FormData();
-                formData.append("data", JSON.stringify(data));
-                formData.append("note_id", data.id.toString());
-
-                const response = await api.put(`/notes/${data.id}`, formData);
+                const response = await api.put(`/notes/${data.id}`, data);
                 console.log("Note updated:", response.data);
                 if (response.status === 200) {
                     console.log("Note updated successfully");
@@ -94,6 +90,7 @@ const Notes = () => {
     return (
         <div className="app-page note-container">
             <Rectangle>
+                <BackButton />
                 <h1>Notatka</h1>
                 <form
                     className="content-center"
