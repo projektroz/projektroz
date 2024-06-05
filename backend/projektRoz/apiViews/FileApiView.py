@@ -130,16 +130,13 @@ class FileApiView(APIView):
                             status=status.HTTP_400_BAD_REQUEST,
                         )
 
-                    drive_path = f"projektRoz/{
-                        child.surname}_{
-                        child.name}_{child_id}"
+                    drive_path = f"projektRoz/{child.surname}_{child.name}_{child_id}"
                     name = "profile_photo"
                     return self.handle_photo_upload(
                         name, file_obj, drive_path, child, file_type, googleDriveManager
                     )
                 else:
-                    drive_path = f"projektRoz/{child.surname}_{
-                        child.name}_{child_id}/{file_type}"
+                    drive_path = f"projektRoz/{child.surname}_{child.name}_{child_id}/{file_type}"
 
         except Exception as e:
             self.logger.error(f"An error occurred: {e}")

@@ -192,9 +192,7 @@ class GoogleDriveManager:
         results = (
             self.service.files()
             .list(
-                q=f"'{folder_id}' in parents and name='{
-                    file_name if count == 0 else file_name +
-                    f'_{count}'}'",
+                q=f"'{folder_id}' in parents and name='{file_name if count == 0 else file_name + f'_{count}'}'",
                 spaces="drive",
                 fields="files(id, name)",
             )
