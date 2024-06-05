@@ -1,5 +1,4 @@
-"""
-WSGI config for projektRoz project.
+"""WSGI config for projektRoz project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
