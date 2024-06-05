@@ -6,4 +6,4 @@ class ProjektrozConfig(AppConfig):
     name = "projektRoz"
 
     def ready(self):
-        import projektRoz.signals
+        pass
