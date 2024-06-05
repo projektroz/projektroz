@@ -6,8 +6,10 @@ export function useChildData(fosterCarerId: number) {
     const [childData, setChildData] = useState<Child[]>([]);
 
     useEffect(() => {
-        api.get('/children').then((response) => {
+        api.get('/children/').then((response) => {
             const children = response.data.filter((child: Child) => child.foster_carer === fosterCarerId);
+            // const children = response.data;
+            console.log("no kurwa", children);
             console.log('Fetched children:', children);  // Log the fetched data
             setChildData(children);
         });

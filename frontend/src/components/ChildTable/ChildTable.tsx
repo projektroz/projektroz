@@ -17,6 +17,9 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
     const navigate = useNavigate();
 
     console.log("Children passed to table:", children); // Log the children data
+    if (children.length > 0) {
+        localStorage.setItem("childrenData", JSON.stringify(children));
+    }
 
     const sortedChildren = React.useMemo(() => {
         const sortableChildren = [...children];
@@ -78,10 +81,17 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
 
     const handleEdit = (id: number) => {
         console.log(`Edytuj dziecko o ID: ${id}`);
+        navigate(`/dashboard/edit-child/${id}`);
     };
 
     const handleNotes = (id: number) => {
         console.log(`Notatki dla dziecka o ID: ${id}`);
+        navigate(`/dashboard/manage-child/${id}#notes`);
+    };
+
+    const handleDocuments = (id: number) => {
+        console.log(`Dokumenty dla dziecka o ID: ${id}`);
+        navigate(`/dashboard/manage-child/${id}#documents`);
     };
 
     return (
@@ -145,49 +155,6 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
                     </ul>
                 </div>
             </div>
-            {/* <table className="child-table">
-                <thead>
-                    <tr>
-                        <th onClick={() => requestSort("name")}>Imię</th>
-                        <th onClick={() => requestSort("surname")}>Nazwisko</th>
-                        <th onClick={() => requestSort("birth_date")}>
-                            Data urodzenia
-                        </th>
-                        <th onClick={() => requestSort("birth_place")}>
-                            Miejsce urodzenia
-                        </th>
-                        <th onClick={() => requestSort("pesel")}>PESEL</th>
-                        <th>Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredChildren.map((child) => (
-                        <tr key={child.id}>
-                            <td>{child.name}</td>
-                            <td>{child.surname}</td>
-                            <td>
-                                {new Date(
-                                    child.birth_date
-                                ).toLocaleDateString()}
-                            </td>
-                            <td>{child.birth_place}</td>
-                            <td>{child.pesel}</td>
-                            <td>
-                                <div className="button-container">
-                                    <button
-                                        onClick={() => handleView(child.id)}>
-                                        Wyświetl
-                                    </button>
-                                    <button
-                                        onClick={() => handleEdit(child.id)}>
-                                        Edytuj
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table> */}
 
             <div className="content-scroll">
                 {filteredChildren.map((child) => (
@@ -234,4 +201,3 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
 };
 
 export default ChildTable;
-

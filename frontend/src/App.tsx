@@ -11,9 +11,13 @@ import Logout from "./pages/Logout/Logout";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddChild from "./pages/AddChild/AddChild";
+import EditChild from "./pages/EditChild/EditChild";
 import ManageChild from "./pages/ManageChild/ManageChild";
 import ChildDetails from "./pages/ChildDetails/ChildDetails";
 import AddDocuments from "./pages/AddDocuments/AddDocuments";
+import AddNotes from "./pages/AddNotes/AddNotes";
+import Notes from "./pages/Notes/Notes";
+import Documents from "./pages/Documents/Documents";
 
 const App = () => {
     const { isLoggedIn, logout } = useAuth();
@@ -60,13 +64,33 @@ const App = () => {
                         }
                     />
                     <Route
-                        path="/dashboard/add-document"
+                        path="/dashboard/add-document/:id"
                         element={
                             <AddDocuments
                                 title="Dodaj dokument"
                                 method="POST"
                             />
                         }
+                    />
+
+                    <Route
+                        path="/dashboard/edit-child/:childId"
+                        element={<EditChild title="Edytuj dziecko" />}
+                    />
+                    <Route
+                        path="/dashboard/add-note/:childId"
+                        element={<AddNotes title="Dodaj notatkę" />}
+                    />
+
+                    <Route path="/dashboard/note/:noteId" element={<Notes />} />
+                    <Route
+                        path="/dashboard/note/:noteId/:action"
+                        element={<Notes />}
+                    />
+
+                    <Route
+                        path="/dashboard/document/:document_google_id/:action"
+                        element={<Documents />}
                     />
                 </Route>
             </Routes>
@@ -75,4 +99,3 @@ const App = () => {
 };
 
 export default App;
-

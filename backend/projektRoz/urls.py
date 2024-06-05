@@ -9,7 +9,6 @@ from projektRoz.apiViews import (
     NotesApiView,
     FosterCarerApiView,
     SiblingsApiView,
-    CategoryApiView,
     DocumentsApiView,
     FileApiView,
 )

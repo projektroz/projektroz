@@ -1,0 +1,34 @@
+.btn-primary {
+    background-color: var((--primary));
+    border-color: var(--primary);
+    color: var(--third);
+    transition: all 0.05s;
+}
+.btn-primary:active {
+    background-color: var(--secondary) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+    scale: 0.9;
+}
+.btn-primary:disabled {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--third);
+    opacity: 0.5;
+
+}
+
+.note-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+textarea {
+    border-radius: 15px;
+    resize: none;
+    min-height: 300px;
+    width: 60%;
+    padding: 1em;
+}

@@ -1,172 +1,134 @@
 import React, { useState } from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./DocumentDataForm.scss";
 
 // Interfejsy definiujące dane wejściowe i właściwości komponentów
 interface DocumentInput {
     id: string;
     inputLabel: string;
-    type: "file" | "text";
+    type: string;
 }
 
 interface DocumentDataFormProps {
-    dataSets: DocumentInput[][];
-    formData: { [key: string]: string };
-    handleInputChange: (name: string, value: string) => void;
+    dataSets: DocumentInput[];
+    formData: {
+        file_path: string;
+        file_id: number;
+        file: File;
+        file_type: string;
+        child_id: number;
+    };
+    handleInputChange: (name: string, value: any) => void;
 }
 
-// Komponent nawigacyjnego przycisku (lewo/prawo)
-const NavigationButton: React.FC<{
-    direction: "left" | "right";
-    onClick: () => void;
-    isVisible: boolean;
-}> = ({ direction, onClick, isVisible }) => (
-    <button
-        onClick={onClick}
-        type="button"
-        className="btn-half"
-        style={{
-            visibility: isVisible ? "visible" : "hidden",
-            opacity: isVisible ? 1 : 0,
-            transition: "all 0.25s ease-out",
-        }}>
-        <img
-            src={`../src/assets/icons/${
-                direction === "left" ? "previous" : "next"
-            }-light.png`}
-            alt={`${direction === "left" ? "Poprzedni" : "Następny"} zestaw`}
-            className="btn-icon"
-        />
-    </button>
-);
+// make enum
+enum DocumentType {
+    SZKOLA = "Szkoła",
+    SAD = "Sąd",
+    ZDROWIE = "Zdrowie",
+    INNE = "Inne",
+}
 
-// Komponent pojedynczego pola danych
-const DocumentInputField: React.FC<{
-    data: DocumentInput;
-    index: number;
-    value: string;
-    handleInputChange: (name: string, value: string) => void;
-}> = ({ data, index, value, handleInputChange }) => (
-    <div className="document-input content-center">
-        <h3>{data.inputLabel}</h3>
-        <div className="form-floating" style={{ width: "100%" }}>
-            <input
-                className="form-control"
-                id={`floatingInput-${data.id}-${index}`}
-                type={data.type}
-                name={data.id}
-                value={value}
-                onChange={(e) => handleInputChange(data.id, e.target.value)}
-                required
-                style={{ width: "100%", padding: "1.2rem .75rem" }}
-            />
-            {data.type !== "file" && (
-                <label htmlFor={`floatingInput-${data.id}-${index}`}>
-                    {data.id}
-                </label>
-            )}
-        </div>
-    </div>
-);
-
-// Komponent reprezentujący pojedynczy zestaw danych
-const DocumentDataSet: React.FC<{
-    dataSet: DocumentInput[];
-    index: number;
-    currentSetIndex: number;
-    formData: { [key: string]: string };
-    handleInputChange: (name: string, value: string) => void;
-}> = ({ dataSet, index, currentSetIndex, formData, handleInputChange }) => (
-    <CSSTransition
-        key={index}
-        classNames={`slide-${currentSetIndex > index ? "left" : "right"}`}
-        timeout={300}>
-        <div
-            style={{
-                visibility: currentSetIndex === index ? "visible" : "hidden",
-                opacity: currentSetIndex === index ? 1 : 0,
-                height: currentSetIndex === index ? "auto" : 0,
-                overflow: currentSetIndex === index ? "visible" : "hidden",
-                transition: "all 0.25s ease-out",
-            }}
-            className="content-center">
-            {dataSet.map((data, dataIndex) => (
-                <DocumentInputField
-                    key={dataIndex}
-                    data={data}
-                    index={index}
-                    value={formData[data.id]}
-                    handleInputChange={handleInputChange}
-                />
-            ))}
-        </div>
-    </CSSTransition>
-);
-
-// Główny komponent zarządzający zestawami danych
 const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
     dataSets,
-    formData,
     handleInputChange,
 }) => {
-    const [currentSetIndex, setCurrentSetIndex] = useState(0);
+    const [documentType, setDocumentType] = useState<string>("Typ dokumentu");
 
-    const nextSet = () =>
-        setCurrentSetIndex((prevIndex) =>
-            Math.min(prevIndex + 1, dataSets.length - 1)
-        );
-    const prevSet = () =>
-        setCurrentSetIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    const handleDropdownChange = (type: string) => {
+        setDocumentType(type);
+        switch (type) {
+            case DocumentType.SZKOLA:
+                handleInputChange("file_type", "Szkola");
+                break;
+            case DocumentType.SAD:
+                handleInputChange("file_type", "Sad");
+                break;
+            case DocumentType.ZDROWIE:
+                handleInputChange("file_type", "Zdrowie");
+                break;
+            case DocumentType.INNE:
+                handleInputChange("file_type", "Inne");
+                break;
+        }
+    };
 
     return (
         <div className="document-data-form-wrapper">
-            <div className="document-data-form content-between">
-                <NavigationButton
-                    direction="left"
-                    onClick={prevSet}
-                    isVisible={currentSetIndex > 0}
-                />
-                <TransitionGroup>
-                    {dataSets.map((dataSet, index) => (
-                        <DocumentDataSet
-                            key={index}
-                            dataSet={dataSet}
-                            index={index}
-                            currentSetIndex={currentSetIndex}
-                            formData={formData}
-                            handleInputChange={handleInputChange}
-                        />
-                    ))}
-                </TransitionGroup>
-                <NavigationButton
-                    direction="right"
-                    onClick={nextSet}
-                    isVisible={currentSetIndex < dataSets.length - 1}
-                />
+            <div className="document-data-form content-center">
+                {dataSets.map((data, index) => (
+                    <div className="document-input" key={index}>
+                        {data.type === "file" ? (
+                            <div>
+                                <label
+                                    htmlFor={`formFile-${data.id}`}
+                                    className="form-label">
+                                    {data.inputLabel}
+                                </label>
+                                <input
+                                    className="form-control"
+                                    type="file"
+                                    id={`formFile-${data.id}`}
+                                    name={data.id}
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            data.id,
+                                            e.target.files
+                                                ? e.target.files[0]
+                                                : null
+                                        )
+                                    }
+                                    required
+                                />
+                            </div>
+                        ) : null}
+                    </div>
+                ))}
+                <div className="dropdown">
+                    <button
+                        className="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        {documentType}
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => handleDropdownChange("Szkoła")}>
+                                Szkoła
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => handleDropdownChange("Sąd")}>
+                                Sąd
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => handleDropdownChange("Zdrowie")}>
+                                Zdrowie
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                className="dropdown-item"
+                                href="#"
+                                onClick={() => handleDropdownChange("Inne")}>
+                                Inne
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div className="scroll-progress-container">
-                <div
-                    className="progress-bar"
-                    style={{
-                        width: `${
-                            ((currentSetIndex + 1) / dataSets.length) * 100
-                        }%`,
-                        transition: "width 0.3s ease-in-out",
-                    }}></div>
-            </div>
-            <button
-                type="submit"
-                style={{
-                    opacity: currentSetIndex === dataSets.length - 1 ? 1 : 0.3,
-                    transition: "all 0.25s ease-out",
-                }}
-                className="btn"
-                disabled={currentSetIndex !== dataSets.length - 1}>
-                Dodaj dokument
-            </button>
         </div>
     );
 };
 
 export default DocumentDataForm;
-
