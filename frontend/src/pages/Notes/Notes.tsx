@@ -49,8 +49,8 @@ const Notes = () => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error! {error}</div>;
+    if (loading) return <div>Ładowanie...</div>;
+    if (error) return <div>Błąd! {error}</div>;
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const text = e.target.value;

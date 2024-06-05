@@ -34,7 +34,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
             }));
         }
     }, [childId]);
-    
+
     const handleInputChange = (id: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -106,7 +106,7 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
                             formData={formData}
                             handleInputChange={handleInputChange}
                         />
-                        {loading && <div className="loading">Loading...</div>}
+                        {loading && <div className="loading">Wysyłanie...</div>}
                         <button
                             type="submit"
                             style={{
