@@ -40,7 +40,7 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
             transition: "all 0.25s ease-out",
         }}>
         <img
-            src={`../src/assets/icons/${
+            src={`../../src/assets/icons/${
                 direction === "left" ? "previous" : "next"
             }-light.png`}
             alt={`${direction === "left" ? "Poprzedni" : "Następny"} zestaw`}

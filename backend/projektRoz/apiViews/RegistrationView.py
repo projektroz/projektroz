@@ -1,20 +1,22 @@
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from ..serializer import UserRegistrationSerializer
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class RegistrationView(APIView):
-    """Creates the user."""
-
+    """
+    Creates the user.
+    """
+    
     @swagger_auto_schema(
         request_body=UserRegistrationSerializer,
-        responses={201: UserRegistrationSerializer, 400: "Bad Request"},
+        responses={201: UserRegistrationSerializer, 400: 'Bad Request'}
     )
-    def post(self, request, format="json"):
-        """Handle POST requests for user registration.
+    def post(self, request, format='json'):
+        """
+        Handle POST requests for user registration.
 
         Args:
             request (HttpRequest): The HTTP request object.
@@ -22,6 +24,7 @@ class RegistrationView(APIView):
 
         Returns:
             Response: The HTTP response object.
+
         """
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():

@@ -1,30 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Rectangle from "../../components/Rectangle/Rectangle";
 import DocumentDataForm from "../../components/DocumentDataForm/DocumentDataForm";
-import { addDocument } from "../../api/addDocument";
+import { addDocument, addDocumentFile } from "../../api/addDocument";
+import {
+    getDocumentData,
+    getDocumentFile,
+} from "../../functions/AddDocumentFunctions";
 import "./AddDocuments.scss";
 
 function AddDocuments({ title, method }: { title: string; method: string }) {
+    const [loading, setLoading] = useState(false);
+    const [childId, setChildId] = useState<number | null>(null);
     const [formData, setFormData] = useState({
-        documentType: "",
-        documentNumber: "",
-        issueDate: "",
-        expirationDate: "",
-        issuingAuthority: "",
-        additionalInformation: "",
+        file_path: "",
+        file_id: 1,
+        file: new File([""], ""),
+        name: "",
+        file_type: "",
+        child_id: 1,
     });
-
-    // useEffect(() => {
-    //     const dataFromStorage = localStorage.getItem("documentData");
-    //     if (dataFromStorage) {
-    //         setFormData(parseBackToFormData(JSON.parse(dataFromStorage)));
-    //         localStorage.removeItem("documentData");
-    //     }
-    // }, []);
-
     const [error, setError] = useState("");
 
-    const handleInputChange = (id: string, value: string) => {
+    useEffect(() => {
+        const id = window.location.pathname.split("/").pop();
+        if (id) setChildId(parseInt(id, 10));
+    }, []);
+
+    useEffect(() => {
+        if (childId) {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                child_id: childId,
+            }));
+        }
+    }, [childId]);
+
+    const handleInputChange = (id: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [id]: value,
@@ -33,46 +44,55 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        try {
+            const data = getDocumentFile(formData);
+            console.log("Sending file: ", formData); // Logowanie pliku
+            const response = await addDocumentFile(data);
+            console.log("Google response: ", response); // Logowanie odpowiedzi z Google
+            if (response) {
+                console.log("File uploaded successfully");
+                formData.file_path = response.file_path;
+                formData.file_id = response.file_id;
+            }
+        } catch (error: any) {
+            console.error("Error:", error); // Logowanie błędu
+            setError(error.message);
+            return;
+        }
         try {
             const data = getDocumentData(formData);
             console.log("Sending data:", data); // Logowanie danych
             await addDocument(data, method);
-            setError("");
 
-            window.location.href = "/dashboard";
+            window.location.href = `/dashboard/manage-child/${childId}`;
         } catch (error: any) {
             console.error("Error:", error); // Logowanie błędu
             setError(error.message);
+            return;
         }
+        setLoading(false);
     };
 
     const links = [
         {
             name: "Panel sterowania",
             url: "/dashboard",
-            icon: "../src/assets/icons/manage.png",
+            icon: "../../src/assets/icons/manage.png",
         },
         {
             name: "Wyloguj",
             url: "/logout",
-            icon: "../src/assets/icons/logout.png",
+            icon: "../../src/assets/icons/logout.png",
         },
     ];
 
-    interface DocumentInput {
-        id: string;
-        inputLabel: string;
-        type: "file" | "text";
-    }
-
-    const dataSets: DocumentInput[][] = [
-        [
-            {
-                id: "filename",
-                inputLabel: "Nazwa pliku",
-                type: "file",
-            },
-        ],
+    const dataSets = [
+        {
+            id: "file",
+            inputLabel: "Nazwa pliku",
+            type: "file",
+        },
     ];
 
     return (
@@ -86,6 +106,16 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
                             formData={formData}
                             handleInputChange={handleInputChange}
                         />
+                        {loading && <div className="loading">Wysyłanie...</div>}
+                        <button
+                            type="submit"
+                            style={{
+                                opacity: "1",
+                                transition: "all 0.25s ease-out",
+                            }}
+                            className="btn btn-primary">
+                            Dodaj dokument
+                        </button>
                     </form>
                     {error && <div className="error">{error}</div>}
                 </div>
@@ -95,4 +125,3 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
 }
 
 export default AddDocuments;
-

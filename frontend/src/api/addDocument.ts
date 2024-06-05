@@ -1,4 +1,4 @@
-import { api } from "./axios";
+import { api, upload } from "./axios";
 
 type AddDocumentResponse = {
     id: number;
@@ -12,15 +12,16 @@ type AddDocumentResponse = {
 
 export async function addDocument(
     documentData: any,
-    method: string
+    method: string,
+    id?: number
 ): Promise<AddDocumentResponse> {
-    const documentId = documentData.id;
-    console.log("Sending data:", documentData); // Logowanie danych do wysyłki
+    console.log("Sending data:", documentData, id); // Logowanie danych do wysyłki
+    // return;
     try {
         const response =
             method === "POST"
                 ? await api.post("documents/", documentData)
-                : await api.put(`documents/${documentId}/`, documentData);
+                : await api.put(`documents/${id}`, documentData);
 
         return response.data;
     } catch (error: any) {
@@ -32,3 +33,20 @@ export async function addDocument(
     }
 }
 
+export async function addDocumentFile(data: any): Promise<any> {
+    console.log("Sending file:", JSON.stringify(data));
+    try {
+        // const formData = new FormData();
+        // formData.append("file", file);
+        // formData.append("name", name);
+        const response = await upload.post("/", data);
+
+        return response.data;
+    } catch (error: any) {
+        console.error("Error:", error.response.data); // Logowanie błędu
+        throw new Error(
+            error.response.data.detail ||
+                "An error occurred while processing your request."
+        );
+    }
+}

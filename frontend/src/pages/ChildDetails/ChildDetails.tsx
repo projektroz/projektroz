@@ -7,12 +7,35 @@ import { api } from "../../api/axios";
 import BackButton from "../../components/BackButton/BackButton";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
+interface Note {
+    id: number;
+    create_date: string;
+    modification_date: string;
+    note_text: string;
+    child: number;
+}
+
+interface Document {
+    id: number;
+    document_google_id: string;
+    document_path: string;
+    category: string;
+    child: number;
+}
+
+interface Page {
+    page: number;
+}
+
 const ChildDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [child, setChild] = useState<Child | null>(null);
+    const [notes, setNotes] = useState<Note[]>([]);
+    const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [documentPage, setDocumentPage] = useState<Page>({ page: 0 });
 
     useEffect(() => {
         const fetchChildData = async () => {
@@ -29,6 +52,75 @@ const ChildDetails: React.FC = () => {
         fetchChildData();
     }, [id]);
 
+    useEffect(() => {
+        if (child) {
+            const fetchChildNotes = async () => {
+                try {
+                    const response = await api.get<Note[]>(`/notes/`);
+                    if (response.status === 404) {
+                        throw new Error("No notes found");
+                    }
+
+                    const fetchedNotes = response.data.filter(
+                        (note) => note.child === child.id
+                    );
+                    setNotes(fetchedNotes);
+                } catch (err: any) {
+                    setError("Nie udało się pobrać notatek dziecka.");
+                }
+            };
+
+            fetchChildNotes();
+        }
+    }, [child]);
+
+    useEffect(() => {
+        if (child) {
+            const fetchChildDocuments = async () => {
+                try {
+                    const response = await api.get(
+                        `/documents?child_id=${child.id}&page=${documentPage.page}`
+                    );
+                    if (response.status === 404) {
+                        throw new Error("No documents found");
+                    }
+                    const fetchedDocuments = response.data.filter(
+                        (document: { child: number }) =>
+                            document.child === child.id
+                    );
+                    console.log(fetchedDocuments);
+                    setDocuments(fetchedDocuments);
+                } catch (err: any) {
+                    setError("Nie udało się pobrać dokumentów dziecka.");
+                }
+            };
+
+            fetchChildDocuments();
+        }
+    }, [child, documentPage]);
+
+    useEffect(() => {
+        // Set active tab from link
+        const url = window.location.href;
+        const tab = url.split("#")[1];
+        const tabPane = document.getElementById(`${tab}-tab-pane`);
+        const tabButton = document.getElementById(`${tab}-tab`);
+        if (tab) {
+            if (tabPane && tabButton) {
+                tabPane.classList.add("show", "active");
+                tabButton.classList.add("active");
+            }
+        } else {
+            // set data-tab as default active tab if not tab set
+            const dataTabPane = document.getElementById("data-tab-pane");
+            const dataTabButton = document.getElementById("data-tab");
+            if (dataTabPane && dataTabButton) {
+                dataTabPane.classList.add("show", "active");
+                dataTabButton.classList.add("active");
+            }
+        }
+    }, [child]);
+
     if (loading) {
         return <div>Ładowanie...</div>;
     }
@@ -41,6 +133,30 @@ const ChildDetails: React.FC = () => {
         return <div>Dziecko nie zostało znalezione</div>;
     }
 
+    const handleAddDocument = () => {
+        navigate(`/dashboard/add-document/${id}`);
+    };
+
+    const handleAddNote = () => {
+        navigate(`/dashboard/add-note/${id}`);
+    };
+
+    const handleNoteView = (note_id: number) => {
+        navigate(`/dashboard/note/${note_id}`);
+    };
+
+    const handleNoteEdit = (note_id: number) => {
+        navigate(`/dashboard/note/${note_id}/edit`);
+    };
+
+    const handleDocumentDownload = (document_id: number) => {
+        navigate(`/dashboard/document/${child.id}/download/${document_id}`);
+    };
+
+    const handleDocumentUpload = (document_id: number) => {
+        navigate(`/dashboard/document/${child.id}/upload/${document_id}`);
+    };
+
     return (
         <div className="app-page child-details">
             <Rectangle>
@@ -50,13 +166,13 @@ const ChildDetails: React.FC = () => {
                 <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item" role="presentation">
                         <button
-                            className="nav-link active"
-                            id="dane-tab"
+                            className="nav-link"
+                            id="data-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#dane-tab-pane"
+                            data-bs-target="#data-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="dane-tab-pane"
+                            aria-controls="data-tab-pane"
                             aria-selected="true">
                             Dane dziecka
                         </button>
@@ -64,12 +180,12 @@ const ChildDetails: React.FC = () => {
                     <li className="nav-item" role="presentation">
                         <button
                             className="nav-link"
-                            id="adres-tab"
+                            id="address-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#adres-tab-pane"
+                            data-bs-target="#address-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="adres-tab-pane"
+                            aria-controls="address-tab-pane"
                             aria-selected="false">
                             Adres zameldowania
                         </button>
@@ -77,12 +193,12 @@ const ChildDetails: React.FC = () => {
                     <li className="nav-item" role="presentation">
                         <button
                             className="nav-link"
-                            id="rodzice-tab"
+                            id="parents-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#rodzice-tab-pane"
+                            data-bs-target="#parents-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="rodzice-tab-pane"
+                            aria-controls="parents-tab-pane"
                             aria-selected="false">
                             Rodzice
                         </button>
@@ -90,12 +206,12 @@ const ChildDetails: React.FC = () => {
                     <li className="nav-item" role="presentation">
                         <button
                             className="nav-link"
-                            id="zmieszkanie-tab"
+                            id="living-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#zmieszkanie-tab-pane"
+                            data-bs-target="#living-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="zmieszkanie-tab-pane"
+                            aria-controls="living-tab-pane"
                             aria-selected="false">
                             Adres zamieszkania
                         </button>
@@ -103,12 +219,12 @@ const ChildDetails: React.FC = () => {
                     <li className="nav-item" role="presentation">
                         <button
                             className="nav-link"
-                            id="notatki-tab"
+                            id="notes-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#notatki-tab-pane"
+                            data-bs-target="#notes-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="notatki-tab-pane"
+                            aria-controls="notes-tab-pane"
                             aria-selected="false">
                             Notatki
                         </button>
@@ -116,23 +232,23 @@ const ChildDetails: React.FC = () => {
                     <li className="nav-item" role="presentation">
                         <button
                             className="nav-link"
-                            id="dokumenty-tab"
+                            id="documents-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#dokumenty-tab-pane"
+                            data-bs-target="#documents-tab-pane"
                             type="button"
                             role="tab"
-                            aria-controls="dokumenty-tab-pane"
+                            aria-controls="documents-tab-pane"
                             aria-selected="false">
-                            Dokumnety
+                            Dokumenty
                         </button>
                     </li>
                 </ul>
                 <div className="tab-content mt-3" id="myTabContent">
                     <div
-                        className="tab-pane fade show active"
-                        id="dane-tab-pane"
+                        className="tab-pane fade"
+                        id="data-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="dane-tab"
+                        aria-labelledby="data-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Dane dziecka</h2>
@@ -186,9 +302,9 @@ const ChildDetails: React.FC = () => {
                     </div>
                     <div
                         className="tab-pane fade"
-                        id="adres-tab-pane"
+                        id="address-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="adres-tab"
+                        aria-labelledby="address-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Adres zameldowania</h2>
@@ -226,9 +342,9 @@ const ChildDetails: React.FC = () => {
                     </div>
                     <div
                         className="tab-pane fade"
-                        id="rodzice-tab-pane"
+                        id="parents-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="rodzice-tab"
+                        aria-labelledby="parents-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Rodzice</h2>
@@ -260,9 +376,9 @@ const ChildDetails: React.FC = () => {
                     </div>
                     <div
                         className="tab-pane fade"
-                        id="zmieszkanie-tab-pane"
+                        id="living-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="zmieszkanie-tab"
+                        aria-labelledby="living-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Adres zamieszkania</h2>
@@ -300,29 +416,126 @@ const ChildDetails: React.FC = () => {
                     </div>
                     <div
                         className="tab-pane fade"
-                        id="notatki-tab-pane"
+                        id="notes-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="notatki-tab"
+                        aria-labelledby="notes-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Notatki</h2>
-                            <div className="details-item">
+                            <button
+                                className="btn btn-primary mb-3"
+                                onClick={handleAddNote}>
+                                Dodaj notatkę
+                            </button>
+                            <div>
                                 <span className="label">Notatki:</span>
-                                <span className="value">{child.note}</span>
+                                {notes.length > 0 ? (
+                                    <div className="value">
+                                        {notes.map((note) => (
+                                            <div
+                                                className="note mb-3"
+                                                key={note.id}>
+                                                <div className="note-content">
+                                                    <h2 className="note-date">
+                                                        {new Date(
+                                                            note.create_date
+                                                        ).toLocaleDateString()}
+                                                    </h2>
+                                                    <p className="note-text">
+                                                        {note.note_text}
+                                                    </p>
+                                                </div>
+                                                <div className="note-actions">
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={() =>
+                                                            handleNoteView(
+                                                                note.id
+                                                            )
+                                                        }>
+                                                        Wyświetl
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={() =>
+                                                            handleNoteEdit(
+                                                                note.id
+                                                            )
+                                                        }>
+                                                        Edytuj
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="value">Brak notatek</div>
+                                )}
                             </div>
                         </div>
                     </div>
                     <div
                         className="tab-pane fade"
-                        id="dokumenty-tab-pane"
+                        id="documents-tab-pane"
                         role="tabpanel"
-                        aria-labelledby="dokumenty-tab"
+                        aria-labelledby="documents-tab"
                         tabIndex={0}>
                         <div className="details-section">
                             <h2>Dokumenty</h2>
-                            <div className="details-item">
+                            <button
+                                className="btn btn-primary mb-3"
+                                onClick={handleAddDocument}>
+                                Dodaj dokument
+                            </button>
+                            <div>
                                 <span className="label">Dokumenty:</span>
-                                <span className="value">Brak dokumentów</span>
+                                {documents.length > 0 ? (
+                                    <div className="value">
+                                        {documents.map((document, index) => (
+                                            <div key={index}>
+                                                <img
+                                                    src="../../src/assets/icons/download.png"
+                                                    alt="download icon"
+                                                    width={"40px"}
+                                                    onClick={() =>
+                                                        handleDocumentDownload(
+                                                            document.id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
+                                                <img
+                                                    src="../../src/assets/icons/upload.png"
+                                                    alt="upload icon"
+                                                    width={"40px"}
+                                                    onClick={() =>
+                                                        handleDocumentUpload(
+                                                            document.id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
+                                                <a
+                                                    href={
+                                                        document.document_path
+                                                    }
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    key={index}>
+                                                    {document.document_path
+                                                        .split("/")
+                                                        .pop()}
+                                                </a>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="value">Brak dokumentów</div>
+                                )}
                             </div>
                         </div>
                     </div>

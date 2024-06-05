@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
-import subprocess
 import sys
+import subprocess
 import threading
 
 
