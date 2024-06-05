@@ -10,7 +10,7 @@ import "./AddDocuments.scss";
 
 function AddDocuments({ title, method }: { title: string; method: string }) {
     const [loading, setLoading] = useState(false);
-    const [childId, setChildId] = useState("");
+    const [childId, setChildId] = useState<number | null>(null);
     const [formData, setFormData] = useState({
         file_path: "",
         file_id: 1,
@@ -23,9 +23,18 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
 
     useEffect(() => {
         const id = window.location.pathname.split("/").pop();
-        if (id) setChildId(id);
+        if (id) setChildId(parseInt(id, 10));
     }, []);
 
+    useEffect(() => {
+        if (childId) {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                child_id: childId,
+            }));
+        }
+    }, [childId]);
+    
     const handleInputChange = (id: string, value: any) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
@@ -69,12 +78,12 @@ function AddDocuments({ title, method }: { title: string; method: string }) {
         {
             name: "Panel sterowania",
             url: "/dashboard",
-            icon: "../src/assets/icons/manage.png",
+            icon: "../../src/assets/icons/manage.png",
         },
         {
             name: "Wyloguj",
             url: "/logout",
-            icon: "../src/assets/icons/logout.png",
+            icon: "../../src/assets/icons/logout.png",
         },
     ];
 

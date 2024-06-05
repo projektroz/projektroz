@@ -17,6 +17,9 @@ const ChildTable: React.FC<ChildTableProps> = ({ children }) => {
     const navigate = useNavigate();
 
     console.log("Children passed to table:", children); // Log the children data
+    if (children.length > 0) {
+        localStorage.setItem("childrenData", JSON.stringify(children));
+    }
 
     const sortedChildren = React.useMemo(() => {
         const sortableChildren = [...children];

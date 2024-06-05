@@ -12,6 +12,7 @@ interface Note {
     create_date: string;
     modification_date: string;
     note_text: string;
+    child: number;
 }
 
 interface Document {
@@ -52,50 +53,46 @@ const ChildDetails: React.FC = () => {
     }, [id]);
 
     useEffect(() => {
-        const fetchChildNotes = async () => {
-            try {
-                const response = await api.get<Note[]>(`/notes/`);
-                if (response.status === 404) {
-                    throw new Error("No notes found");
+        if (child) {
+            const fetchChildNotes = async () => {
+                try {
+                    const response = await api.get<Note[]>(`/notes/`);
+                    if (response.status === 404) {
+                        throw new Error("No notes found");
+                    }
+
+                    const fetchedNotes = response.data.filter(note => note.child === child.id);
+                    setNotes(fetchedNotes);
+                } catch (err: any) {
+                    setError("Nie udało się pobrać notatek dziecka.");
                 }
+            };
 
-                const fetchedNotes = response.data;
-                // console.log("fetchedNotes", fetchedNotes.length);
-
-                setNotes(fetchedNotes);
-
-                // Use a separate useEffect or a callback to log notes after the state has updated
-            } catch (err: any) {
-                setError("Nie udało się pobrać notatek dziecka.");
-            }
-        };
-
-        fetchChildNotes();
+            fetchChildNotes();
+        }
     }, [child]);
 
     useEffect(() => {
-        const fetchChildDoccuments = async () => {
-            try {
-                const response = await api.get(
-                    "/documents?page=" + documentPage.page
-                );
-                if (response.status === 404) {
-                    console.error("No documents found");
-                } else {
-                    console.log("Documents found", response.data);
-                    setDocuments(response.data);
+        if (child) {
+            const fetchChildDocuments = async () => {
+                try {
+                    const response = await api.get(
+                        `/documents?child_id=${child.id}&page=${documentPage.page}`
+                    );
+                    if (response.status === 404) {
+                        throw new Error("No documents found");
+                    } 
+                    const fetchedDocuments = response.data.filter((document: { child: number; }) => document.child === child.id);
+                    console.log(fetchedDocuments);
+                    setDocuments(fetchedDocuments);
+                    
+                } catch (err: any) {
+                    setError("Nie udało się pobrać dokumentów dziecka.");
                 }
-            } catch (err: any) {
-                setError("Nie udało się pobrać dokumentów dziecka.");
-            }
-        };
+            };
 
-        fetchChildDoccuments();
-
-        documents.map((document) => {
-            console.log(document);
-            console.log(document.document_path.split("/").pop());
-        });
+            fetchChildDocuments();
+        }
     }, [child, documentPage]);
 
     useEffect(() => {
@@ -491,7 +488,7 @@ const ChildDetails: React.FC = () => {
                                 {documents.length > 0 ? (
                                     <div className="value">
                                         {documents.map((document, index) => (
-                                            <div>
+                                            <div key={index}>
                                                 <img
                                                     src="../../src/assets/icons/download.png"
                                                     alt="download icon"

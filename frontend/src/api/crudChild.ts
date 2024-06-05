@@ -56,11 +56,10 @@ export async function addChild(
     }
 }
 
-export async function putChild(childData: any): Promise<EditChildResponse> {
-    const childId = childData.id;
-    console.log("Sending data:", childData); // Logowanie danych do wysyłki
+export async function putChild(childData: any, childId: string): Promise<EditChildResponse> {
+    console.log("Sending data:", childData, " ", childId); // Logowanie danych do wysyłki
     try {
-        const response = await api.put(`children/${childId}/`, childData);
+        const response = await api.put(`children/${childId}`, childData);
 
         return response.data;
     } catch (error: any) {

@@ -8,7 +8,6 @@ import {
     parseBackToFormData,
 } from "../../functions/AddChildFunctions";
 import "./EditChild.scss";
-// import Child from "types/Child";
 
 function EditChild({ title }: { title: string }) {
     const [formData, setFormData] = useState({
@@ -35,39 +34,40 @@ function EditChild({ title }: { title: string }) {
         fatherSurname: "",
     });
 
-    useEffect(() => {
-        const dataFromStorage = localStorage.getItem("childData");
-        if (dataFromStorage) {
-            setFormData(parseBackToFormData(JSON.parse(dataFromStorage)));
-            localStorage.removeItem("childData");
-        }
-
-        const fetchChildData = async () => {
-            const childId = localStorage.getItem("childId");
-
-            const fetchChild = async () => {
-                try {
-                    const response = await api.get(`children/${childId}`);
-                    if (response.status !== 200) {
-                        throw new Error("Błąd sieci!");
-                    }
-                    console.log("Response:", response); // Logowanie odpowiedzi
-                    const childData = response.data;
-                    setFormData(parseBackToFormData(childData));
-                } catch (error: any) {
-                    console.error("Error:", error); // Logowanie błędu
-                    setError(error.message);
-                }
-            };
-
-            // const childData = fetchChild;
-            // setFormData(parseBackToFormData(childData));
-        };
-
-        fetchChildData();
-    }, []);
-
     const [error, setError] = useState("");
+    const childId = window.location.pathname.split("/").pop() || "";
+
+    useEffect(() => {
+        if (childId) {
+            const childrenData = JSON.parse(localStorage.getItem("childrenData") || "[]");
+            const childData = childrenData.find((child: any) => child.id === parseInt(childId, 10));
+            if (childData) {
+                setFormData({
+                    name: childData.name,
+                    surname: childData.surname,
+                    birthDate: childData.birth_date,
+                    birthPlace: childData.birth_place,
+                    pesel: childData.pesel,
+                    admissionDate: childData.date_of_admission,
+                    courtDecision: childData.court_decision,
+                    addressRegisteredCountry: childData.address_registered.country,
+                    addressRegisteredCity: childData.address_registered.city,
+                    addressRegisteredStreet: childData.address_registered.street,
+                    addressRegisteredPostalCode: childData.address_registered.postal_code,
+                    addressRegisteredHouseNumber: childData.address_registered.apartment_number,
+                    addressCurrentCountry: childData.address.country,
+                    addressCurrentCity: childData.address.city,
+                    addressCurrentStreet: childData.address.street,
+                    addressCurrentPostalCode: childData.address.postal_code,
+                    addressCurrentHouseNumber: childData.address.apartment_number,
+                    motherName: childData.mother.name,
+                    motherSurname: childData.mother.surname,
+                    fatherName: childData.father.name,
+                    fatherSurname: childData.father.surname,
+                });
+            }
+        }
+    }, []);
 
     const handleInputChange = (id: string, value: string) => {
         setFormData((prevFormData) => ({
@@ -81,7 +81,7 @@ function EditChild({ title }: { title: string }) {
         try {
             const data = getChildData(formData);
             console.log("Sending data:", data); // Logowanie danych
-            await putChild(data);
+            await putChild(data, childId);
             setError("");
 
             window.location.href = "/dashboard";
@@ -95,12 +95,12 @@ function EditChild({ title }: { title: string }) {
         {
             name: "Panel sterowania",
             url: "/dashboard",
-            icon: "../src/assets/icons/manage.png",
+            icon: "../../src/assets/icons/manage.png",
         },
         {
             name: "Wyloguj",
             url: "/logout",
-            icon: "../src/assets/icons/logout.png",
+            icon: "../../src/assets/icons/logout.png",
         },
     ];
 
