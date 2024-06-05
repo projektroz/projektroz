@@ -61,7 +61,9 @@ const ChildDetails: React.FC = () => {
                         throw new Error("No notes found");
                     }
 
-                    const fetchedNotes = response.data.filter(note => note.child === child.id);
+                    const fetchedNotes = response.data.filter(
+                        (note) => note.child === child.id
+                    );
                     setNotes(fetchedNotes);
                 } catch (err: any) {
                     setError("Nie udało się pobrać notatek dziecka.");
@@ -81,11 +83,13 @@ const ChildDetails: React.FC = () => {
                     );
                     if (response.status === 404) {
                         throw new Error("No documents found");
-                    } 
-                    const fetchedDocuments = response.data.filter((document: { child: number; }) => document.child === child.id);
+                    }
+                    const fetchedDocuments = response.data.filter(
+                        (document: { child: number }) =>
+                            document.child === child.id
+                    );
                     console.log(fetchedDocuments);
                     setDocuments(fetchedDocuments);
-                    
                 } catch (err: any) {
                     setError("Nie udało się pobrać dokumentów dziecka.");
                 }
@@ -145,12 +149,12 @@ const ChildDetails: React.FC = () => {
         navigate(`/dashboard/note/${note_id}/edit`);
     };
 
-    const handleDocumentDownload = (document_google_id: string) => {
-        navigate(`/dashboard/document/${document_google_id}/download`);
+    const handleDocumentDownload = (document_id: number) => {
+        navigate(`/dashboard/document/${child.id}/download/${document_id}`);
     };
 
-    const handleDocumentUpload = (document_google_id: string) => {
-        navigate(`/dashboard/document/${document_google_id}/upload`);
+    const handleDocumentUpload = (document_id: number) => {
+        navigate(`/dashboard/document/${child.id}/upload/${document_id}`);
     };
 
     return (
@@ -495,7 +499,7 @@ const ChildDetails: React.FC = () => {
                                                     width={"40px"}
                                                     onClick={() =>
                                                         handleDocumentDownload(
-                                                            document.document_google_id
+                                                            document.id
                                                         )
                                                     }
                                                     style={{
@@ -508,7 +512,7 @@ const ChildDetails: React.FC = () => {
                                                     width={"40px"}
                                                     onClick={() =>
                                                         handleDocumentUpload(
-                                                            document.document_google_id
+                                                            document.id
                                                         )
                                                     }
                                                     style={{

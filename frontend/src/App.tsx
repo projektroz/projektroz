@@ -89,7 +89,7 @@ const App = () => {
                     />
 
                     <Route
-                        path="/dashboard/document/:document_google_id/:action"
+                        path="/dashboard/document/:child_id/:action/:document_id"
                         element={<Documents />}
                     />
                 </Route>

@@ -1,18 +1,16 @@
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 import io
 import logging
 
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
-
-SCOPES = ["https://www.googleapis.com/auth/drive"]
-SERVICE_ACCOUNT_FILE = "/app/projektRoz/service.json"
-
+SCOPES = ['https://www.googleapis.com/auth/drive']
+SERVICE_ACCOUNT_FILE = '/app/projektRoz/service.json'
 
 class GoogleDriveManager:
-    """A class that provides methods for managing files and folders on Google
-    Drive.
+    """
+    A class that provides methods for managing files and folders on Google Drive.
 
     Attributes:
         service_account_file (str): The path to the service account file.
@@ -30,12 +28,13 @@ class GoogleDriveManager:
         get_download_url(self, file_id): Retrieves the download URL for a file with the given ID.
         download_file(self, file_id, destination): Downloads a file with the given ID to the specified destination.
         deleteFileById(self, file_id): Deletes a file with the given ID.
-    """
 
+    """
     logger = logging.getLogger(__name__)
 
     def __init__(self, service_account_file=SERVICE_ACCOUNT_FILE, scopes=SCOPES):
-        """Initializes the GoogleDriveManager instance.
+        """
+        Initializes the GoogleDriveManager instance.
 
         Args:
             service_account_file (str, optional): The path to the service account file. Defaults to SERVICE_ACCOUNT_FILE.
@@ -44,22 +43,22 @@ class GoogleDriveManager:
         self.service_account_file = service_account_file
         self.scopes = scopes
         self.creds = self.authenticate()
-        self.service = build("drive", "v3", credentials=self.creds)
+        self.service = build('drive', 'v3', credentials=self.creds)
 
     def authenticate(self):
-        """Authenticates the Google Drive service account.
+        """
+        Authenticates the Google Drive service account.
 
         Returns:
             Credentials: The authenticated credentials.
         """
         credentials = service_account.Credentials.from_service_account_file(
-            self.service_account_file, scopes=self.scopes
-        )
+            self.service_account_file, scopes=self.scopes)
         return credentials
 
     def get_folder_id(self, folder_name, parent_id=None):
-        """Retrieves the ID of a folder with the given name and optional parent
-        ID.
+        """
+        Retrieves the ID of a folder with the given name and optional parent ID.
 
         Args:
             folder_name (str): The name of the folder to search for.
@@ -68,26 +67,25 @@ class GoogleDriveManager:
         Returns:
             str or None: The ID of the folder if found, None otherwise.
         """
-        query = (
-            f"mimeType='application/vnd.google-apps.folder' and name='{folder_name}'"
-        )
+        query = f"mimeType='application/vnd.google-apps.folder' and name='{folder_name}'"
         if parent_id:
             query += f" and '{parent_id}' in parents"
 
-        results = (
-            self.service.files()
-            .list(q=query, spaces="drive", fields="files(id, name)")
-            .execute()
-        )
+        results = self.service.files().list(
+            q=query,
+            spaces='drive',
+            fields='files(id, name)'
+        ).execute()
 
-        items = results.get("files", [])
+        items = results.get('files', [])
         if items:
-            return items[0]["id"]
+            return items[0]['id']
         else:
             return None
 
     def create_folder(self, folder_name, parent_id=None):
-        """Creates a new folder in Google Drive.
+        """
+        Creates a new folder in Google Drive.
 
         Args:
             folder_name (str): The name of the folder to be created.
@@ -97,32 +95,33 @@ class GoogleDriveManager:
             str: The ID of the newly created folder.
         """
         folder_metadata = {
-            "name": folder_name,
-            "mimeType": "application/vnd.google-apps.folder",
+            'name': folder_name,
+            'mimeType': 'application/vnd.google-apps.folder'
         }
         if parent_id:
-            folder_metadata["parents"] = [parent_id]
+            folder_metadata['parents'] = [parent_id]
 
-        folder = (
-            self.service.files().create(body=folder_metadata, fields="id").execute()
-        )
+        folder = self.service.files().create(
+            body=folder_metadata,
+            fields='id'
+        ).execute()
 
-        return folder.get("id")
+        return folder.get('id')
 
     def ensure_folder_exists(self, folder_path, parent_id=None):
-        """Ensures that a folder exists in Google Drive with the given folder
-        path.
-
+        """
+        Ensures that a folder exists in Google Drive with the given folder path.
+        
         Args:
             folder_path (str): The path of the folder to be created.
             parent_id (str, optional): The ID of the parent folder where the new folder should be created. Defaults to None.
-
+        
         Returns:
             str: The ID of the created or existing folder.
             None: If an error occurs during the process.
         """
         try:
-            folders = folder_path.split("/")
+            folders = folder_path.split('/')
             current_parent_id = parent_id
 
             for folder_name in folders:
@@ -142,7 +141,8 @@ class GoogleDriveManager:
             return None
 
     def upload_file(self, name, file_obj, folder_id):
-        """Uploads a file to Google Drive.
+        """
+        Uploads a file to Google Drive.
 
         Args:
             name (str): The name of the file.
@@ -157,29 +157,27 @@ class GoogleDriveManager:
         """
         num_of_files = self.check_if_file_exists(name, folder_id)
         file_metadata = {
-            "name": name + f"_{num_of_files}" if num_of_files != 0 else name,
-            "parents": [folder_id],
+            'name': name + f"_{num_of_files}" if num_of_files != 0 else name,
+            'parents': [folder_id]
         }
 
         file_io = io.BytesIO(file_obj.read())
-        media_body = MediaIoBaseUpload(
-            file_io, mimetype=file_obj.content_type, resumable=True
-        )
+        media_body = MediaIoBaseUpload(file_io, mimetype=file_obj.content_type, resumable=True)
 
         try:
-            file = (
-                self.service.files()
-                .create(body=file_metadata, media_body=media_body)
-                .execute()
-            )
+            file = self.service.files().create(
+                body=file_metadata,
+                media_body=media_body
+            ).execute()
             print(f"Uploaded file with ID: {file.get('id')}")
-            return [file.get("id"), file.get("name")]
+            return [file.get('id'), file.get('name')]
         except HttpError as error:
             print(f"An error occurred: {error}")
             raise
 
     def check_if_file_exists(self, file_name, folder_id, count=0):
-        """Checks if a file with the given name exists in the specified folder.
+        """
+        Checks if a file with the given name exists in the specified folder.
 
         Args:
             file_name (str): The name of the file to check.
@@ -189,25 +187,23 @@ class GoogleDriveManager:
         Returns:
             int: The count of files with the same name in the folder.
         """
-        results = (
-            self.service.files()
-            .list(
-                q=f"'{folder_id}' in parents and name='{file_name if count == 0 else file_name + f'_{count}'}'",
-                spaces="drive",
-                fields="files(id, name)",
-            )
-            .execute()
-        )
+        results = self.service.files().list(
+            q=f"'{folder_id}' in parents and name='{file_name if count == 0 else file_name + f'_{count}'}'",
+            spaces='drive',
+            fields='files(id, name)'
+        ).execute()
 
-        items = results.get("files", [])
-
+        items = results.get('files', [])
+        
         if len(items) > 0:
             return self.check_if_file_exists(file_name, folder_id, count + 1)
 
         return count
 
+
     def get_files(self, folder_id):
-        """Retrieves a list of files within a specified folder.
+        """
+        Retrieves a list of files within a specified folder.
 
         Args:
             folder_id (str): The ID of the folder to retrieve files from.
@@ -215,21 +211,19 @@ class GoogleDriveManager:
         Returns:
             list: A list of dictionaries representing the files, each containing the 'id', 'name', and 'mimeType' properties.
         """
-        results = (
-            self.service.files()
-            .list(
-                q=f"'{folder_id}' in parents",
-                spaces="drive",
-                fields="files(id, name, mimeType)",
-            )
-            .execute()
-        )
+        results = self.service.files().list(
+            q=f"'{folder_id}' in parents",
+            spaces='drive',
+            fields='files(id, name, mimeType)'
+        ).execute()
 
-        items = results.get("files", [])
+        items = results.get('files', [])
         return items
 
+
     def get_download_url(self, file_id):
-        """Returns the download URL for a file with the given file ID.
+        """
+        Returns the download URL for a file with the given file ID.
 
         Parameters:
         - file_id (str): The ID of the file to get the download URL for.
@@ -240,7 +234,8 @@ class GoogleDriveManager:
         return f"https://drive.google.com/uc?export=download&id={file_id}"
 
     def download_file(self, file_id, destination):
-        """Downloads a file from Google Drive.
+        """
+        Downloads a file from Google Drive.
 
         Args:
             file_id (str): The ID of the file to download.
@@ -253,30 +248,30 @@ class GoogleDriveManager:
             Any exceptions that may occur during the file download process.
         """
         request = self.service.files().get_media(fileId=file_id)
-        fileType = self.service.files().get(fileId=file_id).execute()["mimeType"]
-        fileName = self.service.files().get(fileId=file_id).execute()["name"]
+        fileType = self.service.files().get(fileId=file_id).execute()['mimeType']
+        fileName = self.service.files().get(fileId=file_id).execute()['name']
 
-        extension = ""
-        if fileType == "application/vnd.google-apps.document":
-            extension = "docx"
-        elif fileType == "application/vnd.google-apps.spreadsheet":
-            extension = "xlsx"
-        elif fileType == "application/vnd.google-apps.presentation":
-            extension = "pptx"
-        elif fileType == "application/vnd.google-apps.drawing":
-            extension = "jpg"
-        elif fileType == "application/vnd.google-apps.script":
-            extension = "json"
-        elif fileType == "text/plain":
-            extension = "txt"
+        extension = ''
+        if fileType == 'application/vnd.google-apps.document':
+            extension = 'docx'
+        elif fileType == 'application/vnd.google-apps.spreadsheet':
+            extension = 'xlsx'
+        elif fileType == 'application/vnd.google-apps.presentation':
+            extension = 'pptx'
+        elif fileType == 'application/vnd.google-apps.drawing':
+            extension = 'jpg'
+        elif fileType == 'application/vnd.google-apps.script':
+            extension = 'json'
+        elif fileType == 'text/plain':
+            extension = 'txt'
         else:
-            extension = fileType.split("/")[-1]
+            extension = fileType.split('/')[-1]
 
         destination = f"{destination}/{fileName}.{extension}"
 
-        fh = io.FileIO(destination, "wb")
+        fh = io.FileIO(destination, 'wb')
         downloader = MediaIoBaseDownload(fh, request)
-
+        
         done = False
         while not done:
             status, done = downloader.next_chunk()

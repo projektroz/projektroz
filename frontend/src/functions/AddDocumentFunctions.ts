@@ -1,4 +1,5 @@
 function getDocumentData(formData: any) {
+    console.log("Document data:", formData);
     return {
         document_path: formData.file_path,
         document_google_id: formData.file_id,

@@ -1,4 +1,5 @@
-"""ASGI config for projektRoz project.
+"""
+ASGI config for projektRoz project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

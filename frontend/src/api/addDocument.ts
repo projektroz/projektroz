@@ -12,15 +12,16 @@ type AddDocumentResponse = {
 
 export async function addDocument(
     documentData: any,
-    method: string
+    method: string,
+    id?: number
 ): Promise<AddDocumentResponse> {
-    const documentId = documentData.id;
-    console.log("Sending data:", documentData); // Logowanie danych do wysyłki
+    console.log("Sending data:", documentData, id); // Logowanie danych do wysyłki
+    // return;
     try {
         const response =
             method === "POST"
                 ? await api.post("documents/", documentData)
-                : await api.put(`documents/${documentId}/`, documentData);
+                : await api.put(`documents/${id}`, documentData);
 
         return response.data;
     } catch (error: any) {

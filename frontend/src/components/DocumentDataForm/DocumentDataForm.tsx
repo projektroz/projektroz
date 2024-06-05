@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DocumentDataForm.scss";
 
 // Interfejsy definiujące dane wejściowe i właściwości komponentów
@@ -6,6 +6,7 @@ interface DocumentInput {
     id: string;
     inputLabel: string;
     type: string;
+    category?: string;
 }
 
 interface DocumentDataFormProps {
@@ -30,9 +31,20 @@ enum DocumentType {
 
 const DocumentDataForm: React.FC<DocumentDataFormProps> = ({
     dataSets,
+    formData,
     handleInputChange,
 }) => {
     const [documentType, setDocumentType] = useState<string>("Typ dokumentu");
+
+    console.log(dataSets);
+    console.log(formData);
+
+    useEffect(() => {
+        if (formData.file_type) {
+            console.log("Document type:", formData.file_type);
+            setDocumentType(formData.file_type);
+        }
+    }, [formData.file_type]);
 
     const handleDropdownChange = (type: string) => {
         setDocumentType(type);
